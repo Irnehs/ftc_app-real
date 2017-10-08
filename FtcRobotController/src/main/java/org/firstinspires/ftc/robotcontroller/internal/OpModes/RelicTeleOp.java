@@ -73,15 +73,20 @@ public class RelicTeleOp extends LinearOpMode {
         telemetry.addData("RelicTeleOp: ", "Connected"); //Check to make sure program is selected
         telemetry.update();
 
+
         boolean forward; //Used for dpad control
         boolean backward; //^
         boolean leftward; //^
         boolean rightward;//^
         boolean aButtonGp1;//^
         boolean bButtonGp1;//^
+        boolean leftBumperGp1;
+        boolean rightBumperGp1;
         double adjustmentSpeed = 0.5; //^
 
         robot.init(hardwareMap); //Runs when init button is pressed, sets up robot
+
+        double jewelMoverStart = robot.jewelMover.getPosition();
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status: ", "It is working and you loaded the package.");  //Check to make sure variable initialized correctly
@@ -89,7 +94,7 @@ public class RelicTeleOp extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        telemetry.addData("Status: ", "Op Mode Active"); //Checks to make sure Op Mode is running
+        telemetry.addData("Status: ", "TeleOp Active"); //Checks to make sure Op Mode is running
         telemetry.update();
 
         // run until the end of the match (driver presses STOP)
@@ -102,21 +107,24 @@ public class RelicTeleOp extends LinearOpMode {
             rightward = gamepad1.dpad_right;//Right dpad
             aButtonGp1 = gamepad1.a;        //A
             bButtonGp1 = gamepad1.b;        //B
+            rightBumperGp1 = gamepad1.right_bumper; //Right bumper
+            leftBumperGp1 = gamepad1.left_bumper;   //Left bumper
+
 
             //Joystick control
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
             double rightX = gamepad1.right_stick_x;                                                     //^
 
-            double v1 = r * Math.cos(robotAngle) + rightX; //Calculates power
-            double v2 = r * Math.sin(robotAngle) - rightX; //^
-            double v3 = r * Math.sin(robotAngle) + rightX; //^
-            double v4 = r * Math.cos(robotAngle) - rightX; //^
+            double leftFrontPower = r * Math.cos(robotAngle) + rightX; //Calculates power
+            double rightFrontPower = r * Math.sin(robotAngle) - rightX; //^
+            double leftBackPower = r * Math.sin(robotAngle) + rightX;   //^
+            double rightBackPower = r * Math.cos(robotAngle) - rightX; //^
 
-            Range.clip(v1,-1, 1);  //Limits values to acceptable motor inputs
-            Range.clip(v2, -1, 1); //^
-            Range.clip(v3, -1, 1); //^
-            Range.clip(v4, -1, 1); //^
+            Range.clip(leftFrontPower,-1, 1);  //Limits values to acceptable motor inputs
+            Range.clip(rightFrontPower, -1, 1); //^
+            Range.clip(leftBackPower, -1, 1);   //^
+            Range.clip(rightBackPower, -1, 1); //^
 
             //WARNING: DPAD CONTROL OVERRIDES JOYSTICK CONTROL
 
@@ -125,37 +133,42 @@ public class RelicTeleOp extends LinearOpMode {
             if(bButtonGp1) {adjustmentSpeed--;} //B on gamepad 2 decreases adjustment speed
 
             if(forward) {              //If dpad up pressed, drive forwards at adjustment speed
-                v1 = adjustmentSpeed;  //Sets new motor power
-                v2 = adjustmentSpeed;  //^
-                v3 = adjustmentSpeed;  //^
-                v4 = adjustmentSpeed;  //^
+                leftFrontPower = -adjustmentSpeed;  //Sets new motor power
+                rightFrontPower = -adjustmentSpeed;  //^
+                leftBackPower = -adjustmentSpeed;    //^
+                rightBackPower = -adjustmentSpeed;  //^
             }
 
             if(backward) {             //If dpad down pressed, drive backwards at adjustment speed
-                v1 = -adjustmentSpeed; //Sets new motor power
-                v2 = -adjustmentSpeed; //^
-                v3 = -adjustmentSpeed; //^
-                v4 = -adjustmentSpeed; //^
+                leftFrontPower = adjustmentSpeed; //Sets new motor power
+                rightFrontPower = adjustmentSpeed; //^
+                leftBackPower = adjustmentSpeed;   //^
+                rightBackPower = adjustmentSpeed; //^
             }
 
             if(leftward) {            //If dpad left pressed, drive left at adjustment speed
-                v1 = -adjustmentSpeed; //Sets new motor power
-                v2 = adjustmentSpeed;  //^
-                v3 = adjustmentSpeed;  //^
-                v4 = -adjustmentSpeed; //^
+                leftFrontPower = adjustmentSpeed; //Sets new motor power
+                rightFrontPower = -adjustmentSpeed; //^
+                leftBackPower = -adjustmentSpeed;  //^
+                rightBackPower = adjustmentSpeed;  //^
             }
 
             if(rightward) {          //If dpad right pressed, drive right at adjustment speed
-                v1 = adjustmentSpeed;  //Sets new motor power
-                v2 = -adjustmentSpeed; //^
-                v3 = -adjustmentSpeed; //^
-                v4 = adjustmentSpeed;  //^
+                leftFrontPower = -adjustmentSpeed;  //Sets new motor power
+                rightFrontPower = adjustmentSpeed; //^
+                leftBackPower = adjustmentSpeed;   //^
+                rightBackPower = -adjustmentSpeed; //^
             }
 
-            robot.leftFrontMotor.setPower(v1);  //Sets power
-            robot.rightFrontMotor.setPower(v2); //^
-            robot.leftBackMotor.setPower(v3);   //^
-            robot.rightBackMotor.setPower(v4);  //^
+            robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
+            robot.rightFrontMotor.setPower(rightFrontPower); //^
+            robot.leftBackMotor.setPower(leftBackPower);    //^
+            robot.rightBackMotor.setPower(rightBackPower);  //^
+
+            //Test Jewel Arm
+            if(rightBumperGp1){robot.jewelMover.setPosition(0.5);} //Go to 90 degrees
+            if(leftBumperGp1) {robot.jewelMover.setPosition(jewelMoverStart);} //Return to start
+
 
             telemetry.addData("Status: ", "Updated"); //Checks to make sure it ran correctly
             telemetry.update();

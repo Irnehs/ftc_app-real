@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+import org.firstinspires.ftc.robotcontroller.internal.OpModes.RelicAuto;
 import org.firstinspires.ftc.robotcontroller.internal.OpModes.RelicTeleOp;
 
 /**
@@ -68,5 +69,6 @@ public class FtcOpModeRegister implements OpModeRegister {
          * Any manual OpMode class registrations should go here.
          */
         manager.register("RelicTeleOp", RelicTeleOp.class);
+        manager.register("RelicAuto", RelicAuto.class);
     }
 }

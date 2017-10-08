@@ -3,6 +3,7 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -30,6 +31,8 @@ public class RelicRecoveryHardware
     public DcMotor leftBackMotor = null;
     public DcMotor rightBackMotor = null;
 
+    //Create servo object out of Servo class
+    public Servo   jewelMover = null;
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -50,11 +53,14 @@ public class RelicRecoveryHardware
         leftBackMotor = hwMap.dcMotor.get("leftBackMotor");      //Left back drive motor
         rightBackMotor = hwMap.dcMotor.get("rightBackMotor");    //Right back drive motor
 
+        //" " " Servos
+        jewelMover = hwMap.servo.get("jewelMover");
+
         //Sets spin directions to make writing power easier
         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power to prevent it from accidentally turning on
         leftFrontMotor.setPower(0);
