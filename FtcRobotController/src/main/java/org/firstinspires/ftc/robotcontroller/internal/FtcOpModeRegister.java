@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 import org.firstinspires.ftc.robotcontroller.internal.OpModes.RelicAuto;
 import org.firstinspires.ftc.robotcontroller.internal.OpModes.RelicTeleOp;
+import org.firstinspires.ftc.robotcontroller.internal.OpModes.Test;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
@@ -70,5 +71,6 @@ public class FtcOpModeRegister implements OpModeRegister {
          */
         manager.register("RelicTeleOp", RelicTeleOp.class);
         manager.register("RelicAuto", RelicAuto.class);
+        manager.register("TestingOpMode", Test.class);
     }
 }

@@ -104,6 +104,9 @@ public class RelicAuto extends LinearOpMode {
         sleep(1000);
         robot.jewelMover.setPosition(0.0);
         telemetry.addData("Jewel Mover Start: ", jewelMoverStart);
+        robot.armSlide.setPower(1);
+        sleep(1000);
+        robot.armSlide.setPower(0);
 
 
 

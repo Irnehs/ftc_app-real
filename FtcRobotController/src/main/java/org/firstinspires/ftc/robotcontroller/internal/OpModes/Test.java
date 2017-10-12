@@ -54,7 +54,7 @@ public class Test extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-    RelicRecoveryHardware robot           = new RelicRecoveryHardware();
+   RelicTestingHardware robot           = new RelicTestingHardware();
     String Version = "0.0.3";
 
     // could also use HardwarePushbotMatrix class.
@@ -62,24 +62,7 @@ public class Test extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        double left;
-        double right;
-        double max;
-        boolean CB = false;
-        boolean EB = false;
-        int activeCount = 0;
-        boolean RightBumper;
-        boolean rightBumper;
-        boolean a;
-        boolean b;
-        boolean x;
-        boolean y;
-        boolean k;
-        boolean forward;
-        boolean backward;
-        boolean leftward;
-        boolean rightward;
-        boolean start;
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
@@ -91,70 +74,13 @@ public class Test extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
-
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            activeCount ++;
-
-            // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
-            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            //left  = -gamepad1.left_stick_y + gamepad1.right_stick_x;
-            //right = -gamepad1.left_stick_y - gamepad1.right_stick_x;
-            rightBumper = gamepad2.right_bumper;
-            RightBumper = gamepad2.right_bumper;
-            a = gamepad2.a;
-            b = gamepad2.b;
-            x = gamepad1.x;
-            y = gamepad1.y;
-            k = gamepad2.x;
-            EB = gamepad2.left_bumper;
-            CB = gamepad2.left_bumper;
-            forward = gamepad1.dpad_up;
-            backward = gamepad1.dpad_down;
-            leftward = gamepad1.dpad_left;
-            rightward = gamepad1.dpad_right;
-
-            //D-pad Driving
-            if(forward) {
-                //fDrive(1);
-            }
-            if(backward) {
-                //bDrive(1);
-            }
-            if(rightward) {
-                //rDrive(1);
-            }
-            if(leftward) {
-                //lDrive(1);
-            }
-
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            double rightX = gamepad1.right_stick_x;
-
-            final double v1 = r * Math.cos(robotAngle) + rightX;
-            final double v2 = r * Math.sin(robotAngle) - rightX;
-            final double v3 = r * Math.sin(robotAngle) + rightX;
-            final double v4 = r * Math.cos(robotAngle) - rightX;
-
-            robot.leftFrontMotor.setPower(v1);
-            robot.rightFrontMotor.setPower(v2);
-            robot.leftBackMotor.setPower(v3);
-            robot.rightBackMotor.setPower(v4);
-
-            /* Normalize the values so neither exceed +/- 1.0
-            max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
-                left /= max;
-                right /= max;
-            }
-*/
-
+        robot.armSlideTest.setPower(1);
+        sleep(1000);
+        robot.armSlideTest.setPower(-1);
+        sleep(1000);
+        robot.armSlideTest.setPower(0);
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
             robot.waitForTick(40);
         }
     }
-}

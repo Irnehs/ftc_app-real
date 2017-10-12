@@ -23,27 +23,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class RelicRecoveryHardware
+public class RelicTestingHardware
 {
     /* Public OpMode members. */
     // Create motor object out of DcMotor class
-    public DcMotor leftFrontMotor   = null;
-    public DcMotor rightFrontMotor  = null;
-    public DcMotor leftBackMotor = null;
-    public DcMotor rightBackMotor = null;
-    public DcMotor arm = null;
+
 
     //Create servo object out of Servo class
-    public Servo   jewelMover = null;
-    public Servo   leftPincher = null;
-    public Servo   rightPincher = null;
-    public CRServo armSlide = null;
+    public CRServo armSlideTest = null;
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public RelicRecoveryHardware(){
+    public RelicTestingHardware(){
 
     }
 
@@ -53,39 +46,20 @@ public class RelicRecoveryHardware
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftFrontMotor   = hwMap.dcMotor.get("leftFrontMotor"); //Left front drive motor
-        rightFrontMotor  = hwMap.dcMotor.get("rightFrontMotor"); //Right front drive motor
-        leftBackMotor = hwMap.dcMotor.get("leftBackMotor");      //Left back drive motor
-        rightBackMotor = hwMap.dcMotor.get("rightBackMotor");    //Right back drive motor
-        arm = hwMap.dcMotor.get("arm");
+
 
         //" " " Servos
-        jewelMover = hwMap.servo.get("jewelMover");
-        leftPincher = hwMap.servo.get("leftPincher");
-        rightPincher = hwMap.servo.get("rightPincher");
-        armSlide = hwMap.crservo.get("armSlide");
+        armSlideTest = hwMap.crservo.get("armSlideTest");
 
         //Sets spin directions to make writing power easier
-        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
+
 
         // Set all motors to zero power to prevent it from accidentally turning on
-        leftFrontMotor.setPower(0);
-        rightFrontMotor.setPower(0);
-        leftBackMotor.setPower(0);
-        rightBackMotor.setPower(0);
-        arm.setPower(0);
-        armSlide.setPower(0);
+        armSlideTest.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
 
 

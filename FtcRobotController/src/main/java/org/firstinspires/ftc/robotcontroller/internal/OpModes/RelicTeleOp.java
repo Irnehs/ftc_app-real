@@ -35,6 +35,7 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -83,6 +84,12 @@ public class RelicTeleOp extends LinearOpMode {
         boolean leftBumperGp1;
         boolean rightBumperGp1;
         double adjustmentSpeed = 0.5; //^
+        double armLevel = 1;
+        boolean armUp;
+        boolean armDown;
+        int armRevolutions = 1/4;
+        boolean aButtonGp2;
+        boolean bButtonGp2;
 
         robot.init(hardwareMap); //Runs when init button is pressed, sets up robot
 
@@ -109,6 +116,10 @@ public class RelicTeleOp extends LinearOpMode {
             bButtonGp1 = gamepad1.b;        //B
             rightBumperGp1 = gamepad1.right_bumper; //Right bumper
             leftBumperGp1 = gamepad1.left_bumper;   //Left bumper
+            armUp = gamepad2.right_bumper;
+            armDown = gamepad2.left_bumper;
+            aButtonGp2 = gamepad2.a;
+            bButtonGp2 = gamepad2.b;
 
 
             //Joystick control
@@ -166,14 +177,46 @@ public class RelicTeleOp extends LinearOpMode {
             robot.rightBackMotor.setPower(rightBackPower);  //^
 
             //Test Jewel Arm
-            if(rightBumperGp1){robot.jewelMover.setPosition(0.5);} //Go to 90 degrees
-            if(leftBumperGp1) {robot.jewelMover.setPosition(jewelMoverStart);} //Return to start
+            if(rightBumperGp1){
+                robot.jewelMover.setPosition(0.5);
+            } //Go to 90 degrees
+            if(leftBumperGp1) {
+                robot.jewelMover.setPosition(jewelMoverStart);
+            } //Return to start
 
+            //Control the arm
 
+            if(armUp && armLevel <= 4) {
+                robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.arm.setTargetPosition(1680*armRevolutions);
+                armLevel++;
+            }
+
+            if(armDown && armLevel >= 1) {
+                robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.arm.setTargetPosition(1680*-armRevolutions);
+                armLevel--;
+            }
+
+            if(aButtonGp2) {
+                robot.leftPincher.setPosition(0.25);
+                robot.rightPincher.setPosition(0.25);
+            }
+
+            if(bButtonGp2) {
+                robot.leftPincher.setPosition(0.8);
+                robot.rightPincher.setPosition(0.8);
+            }
+
+            telemetry.addData("Arm Level: ", armLevel);
+            telemetry.update();
             telemetry.addData("Status: ", "Updated"); //Checks to make sure it ran correctly
             telemetry.update();
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
             robot.waitForTick(40);
+
         }
         if(!opModeIsActive()){
             telemetry.addData("Status: ", "Stopped"); //Says when program is over
