@@ -34,6 +34,8 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
@@ -54,8 +56,10 @@ public class Test extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-   RelicTestingHardware robot           = new RelicTestingHardware();
+    RelicTestingHardware robot           = new RelicTestingHardware();
     String Version = "0.0.3";
+    int tickPerRevolution = 1120;
+    int pos1 = 180;
 
     // could also use HardwarePushbotMatrix class.
 
@@ -74,13 +78,71 @@ public class Test extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        robot.armSlideTest.setPower(1);
-        sleep(1000);
-        robot.armSlideTest.setPower(-1);
-        sleep(1000);
-        robot.armSlideTest.setPower(0);
+        // Test code for arm using power
+        //robot.testArm.setPower(-0.25);
+        //sleep(750);
+        //robot.testArm.setPower(0);
+        //sleep(1000);
+        //robot.testArm.setPower(0.25);
+        //sleep(750);
+        telemetry.addData("Arm: ", "has run");
+        telemetry.update();
 
-            // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-            robot.waitForTick(40);
+        robot.testArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.testArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Test code for amm using encoder
+       // robot.testArm.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        telemetry.addData("Current Pos:", "%7d", robot.testArm.getCurrentPosition());
+
+        //robot.testArm.setTargetPosition(pos1 + robot.testArm.getCurrentPosition());
+
+        telemetry.addData("Arm: ", "set target");
+        telemetry.update();
+
+
+
+        robot.testArm.setPower(0.25);
+        int timing = 0;
+        while(robot.testArm.getCurrentPosition() >= pos1) {
+            timing += 0;
+            sleep(100);
         }
+
+        //Turn off Motor
+        robot.testArm.setPower(0);
+        robot.testArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
+       /* sleep(500);
+        robot.testArm.setPower(0.5);
+        telemetry.addData("Arm: ", "set power");
+        telemetry.update();
+        sleep(500);
+        while(robot.testArm.getCurrentPosition() != pos1) {
+            telemetry.addData("Java is broken", "please fix...");
+            telemetry.update();
+        }
+        robot.testArm.setPower(0);
+        telemetry.addData("Arm: ", "0 power");
+        telemetry.update();
+        telemetry.addData("Arm: ", "reset/done");
+        telemetry.update();
+        */
+
+
+
+     //   robot.testArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+
+
+
+
+
+        // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
+        robot.waitForTick(40);
     }
+}

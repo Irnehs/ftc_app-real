@@ -27,10 +27,9 @@ public class RelicTestingHardware
 {
     /* Public OpMode members. */
     // Create motor object out of DcMotor class
-
+    public DcMotor testArm = null;
 
     //Create servo object out of Servo class
-    public CRServo armSlideTest = null;
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -39,28 +38,26 @@ public class RelicTestingHardware
     public RelicTestingHardware(){
 
     }
-
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-
+        testArm = hwMap.dcMotor.get("testArm");
 
         //" " " Servos
-        armSlideTest = hwMap.crservo.get("armSlideTest");
 
         //Sets spin directions to make writing power easier
 
 
         // Set all motors to zero power to prevent it from accidentally turning on
-        armSlideTest.setPower(0);
+        testArm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-
-
+        testArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        testArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         // Define and initialize ALL installed servos.
