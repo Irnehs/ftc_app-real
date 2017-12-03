@@ -10,11 +10,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * This is NOT an opmode.
  *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
+ * This class can be used to define all the specific hardware for a single naruto.
+ * In this case that naruto is a Pushbot.
  * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
  *
- * This hardware class assumes the following device names have been configured on the robot:
+ * This hardware class assumes the following device names have been configured on the naruto:
  * Note:  All names are lower case and some have single spaces between words.
  *
  * Motor channel:  Left  drive motor:        "left_drive"

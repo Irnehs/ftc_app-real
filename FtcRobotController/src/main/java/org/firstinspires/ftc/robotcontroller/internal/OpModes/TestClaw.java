@@ -34,16 +34,14 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /**
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the naruto.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
  *
  * This particular OpMode executes a POV Game style Teleop for a PushBot
- * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
+ * In this mode the left stick moves the naruto FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
@@ -51,15 +49,14 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop POV", group="Pushbot")
-public class Test extends LinearOpMode {
+@TeleOp(name="TestClaw", group="TestClaws")
+public class TestClaw extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-    RelicTestingHardware robot           = new RelicTestingHardware();
+    RelicTestingHardware naruto = new RelicTestingHardware();
     String Version = "0.0.3";
-    int tickPerRevolution = 1120;
-    int pos1 = 180;
+
 
     // could also use HardwarePushbotMatrix class.
 
@@ -71,78 +68,26 @@ public class Test extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
 
-        robot.init(hardwareMap);
+        naruto.init(hardwareMap);
 
-        // Send telemetry message to signify robot waiting
+        // Send telemetry message to signify naruto waiting
         //say("Ready", "It is working and you loaded the package.");
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        // Test code for arm using power
-        //robot.testArm.setPower(-0.25);
-        //sleep(750);
-        //robot.testArm.setPower(0);
-        //sleep(1000);
-        //robot.testArm.setPower(0.25);
-        //sleep(750);
-        telemetry.addData("Arm: ", "has run");
-        telemetry.update();
-
-        robot.testArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.testArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Test code for amm using encoder
-       // robot.testArm.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        telemetry.addData("Current Pos:", "%7d", robot.testArm.getCurrentPosition());
-
-        //robot.testArm.setTargetPosition(pos1 + robot.testArm.getCurrentPosition());
-
-        telemetry.addData("Arm: ", "set target");
-        telemetry.update();
 
 
-
-        robot.testArm.setPower(0.25);
-        int timing = 0;
-        while(robot.testArm.getCurrentPosition() >= pos1) {
-            timing += 0;
-            sleep(100);
-        }
-
-        //Turn off Motor
-        robot.testArm.setPower(0);
-        robot.testArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-       /* sleep(500);
-        robot.testArm.setPower(0.5);
-        telemetry.addData("Arm: ", "set power");
-        telemetry.update();
+        naruto.leftClaw.setPosition(0);
+        naruto.rightClaw.setPosition(1);
         sleep(500);
-        while(robot.testArm.getCurrentPosition() != pos1) {
-            telemetry.addData("Java is broken", "please fix...");
-            telemetry.update();
-        }
-        robot.testArm.setPower(0);
-        telemetry.addData("Arm: ", "0 power");
-        telemetry.update();
-        telemetry.addData("Arm: ", "reset/done");
-        telemetry.update();
-        */
-
-
-
-     //   robot.testArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-
-
-
+        naruto.leftClaw.setPosition(0.6);
+        naruto.rightClaw.setPosition(0.4);
+        sleep(3000);
+        naruto.leftClaw.setPosition(0);
+        naruto.rightClaw.setPosition(1);
 
 
         // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-        robot.waitForTick(40);
+        naruto.waitForTick(40);
     }
 }

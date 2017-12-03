@@ -35,17 +35,14 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the naruto.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
  *
  * This particular OpMode executes a POV Game style Teleop for a PushBot
- * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
+ * In this mode the left stick moves the naruto FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
@@ -53,13 +50,13 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop POV", group="Pushbot")
+@TeleOp(name="Auto", group="Pushingbot")
 @Disabled
 public class RelicAuto extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-    RelicRecoveryHardware robot           = new RelicRecoveryHardware();   // Use a Pushbot's hardware
+    RelicRecoveryHardware naruto = new RelicRecoveryHardware();   // Use a Pushbot's hardware
     String Version = "0.0.3";
 
     // could also use HardwarePushbotMatrix class.
@@ -73,13 +70,13 @@ public class RelicAuto extends LinearOpMode {
         telemetry.addData("RelicAuto: ", "Connected"); //Check to make sure program is selected
         telemetry.update();
 
-        robot.init(hardwareMap); //Runs when init button is pressed, sets up robot
+        naruto.init(hardwareMap); //Runs when init button is pressed, sets up naruto
 
-        double jewelMoverStart = robot.jewelMover.getPosition();
+        double jewelMoverStart = naruto.jewelMover.getPosition();
         telemetry.addData("Jewel Mover Start: ", jewelMoverStart);
         telemetry.update();
 
-        // Send telemetry message to signify robot waiting;
+        // Send telemetry message to signify naruto waiting;
         telemetry.addData("Status: ", "It is working and you loaded the package.");  //Check to make sure variable initialized correctly
         telemetry.update();
 
@@ -100,13 +97,13 @@ public class RelicAuto extends LinearOpMode {
         Park on base in front of crytoboxes (10 pts)
          */
 
-        robot.jewelMover.setPosition(0.5);
+        naruto.jewelMover.setPosition(0.5);
         sleep(1000);
-        robot.jewelMover.setPosition(0.0);
+        naruto.jewelMover.setPosition(0.0);
         telemetry.addData("Jewel Mover Start: ", jewelMoverStart);
-        robot.armSlide.setPower(1);
+        naruto.armSlide.setPower(1);
         sleep(1000);
-        robot.armSlide.setPower(0);
+        naruto.armSlide.setPower(0);
 
 
 

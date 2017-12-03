@@ -34,10 +34,12 @@ package org.firstinspires.ftc.robotcontroller.internal;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 import org.firstinspires.ftc.robotcontroller.internal.OpModes.RelicAuto;
 import org.firstinspires.ftc.robotcontroller.internal.OpModes.RelicTeleOp;
-import org.firstinspires.ftc.robotcontroller.internal.OpModes.Test;
+import org.firstinspires.ftc.robotcontroller.internal.OpModes.TestClaw;
+import org.firstinspires.ftc.robotcontroller.internal.OpModes.TestArm;
+import org.firstinspires.ftc.robotcontroller.internal.OpModes.TestLeadScrew;
+import org.firstinspires.ftc.robotcontroller.internal.OpModes.TestEncoders;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
@@ -46,23 +48,23 @@ import org.firstinspires.ftc.robotcontroller.internal.OpModes.Test;
 public class FtcOpModeRegister implements OpModeRegister {
 
     /**
-     * {@link #register(OpModeManager)} is called by the SDK game in order to register
+     * {@link #//register(OpModeManager)} is called by the SDK game in order to register
      * OpMode classes or instances that will participate in an FTC game.
      *
      * There are two mechanisms by which an OpMode may be registered.
      *
      *  1) The preferred method is by means of class annotations in the OpMode itself.
-     *  See, for example the class annotations in {@link ConceptNullOp}.
+     *  See, for example the class annotations in {//@link ConceptNullOp}.
      *
-     *  2) The other, retired,  method is to modify this {@link #register(OpModeManager)}
+     * // 2) The other, retired,  method is to modify this //{//@link #register(OpModeManager)}
      *  method to include explicit calls to OpModeManager.register().
      *  This method of modifying this file directly is discouraged, as it
      *  makes updates to the SDK harder to integrate into your code.
      *
-     * @param manager the object which contains methods for carrying out OpMode registrations
+     * //@param manager the object which contains methods for carrying out OpMode registrations
      *
-     * @see com.qualcomm.robotcore.eventloop.opmode.TeleOp
-     * @see com.qualcomm.robotcore.eventloop.opmode.Autonomous
+     * //@see com.qualcomm.robotcore.eventloop.opmode.TeleOp
+     * //@see com.qualcomm.robotcore.eventloop.opmode.Autonomous
      */
     public void register(OpModeManager manager) {
 
@@ -71,6 +73,10 @@ public class FtcOpModeRegister implements OpModeRegister {
          */
         manager.register("RelicTeleOp", RelicTeleOp.class);
         manager.register("RelicAuto", RelicAuto.class);
-        manager.register("TestingOpMode", Test.class);
+        /*manager.register("TestingOpMode", TestArm.class);
+        manager.register("ClawTests", TestClaw.class);
+        manager.register("TestLeadScrews", TestLeadScrew.class);
+        manager.register("TestEncoder", TestEncoders.class);
+    */
     }
 }

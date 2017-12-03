@@ -32,7 +32,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,75 +51,149 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOp", group="TeleOp")
-@Disabled
-public class RelicTeleOp extends LinearOpMode {
-
+@TeleOp(name="TeravoltzRemoteOpMode", group="MainOpModes")
+public class TeravoltzRemoteOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
-    RelicRecoveryHardware naruto = new RelicRecoveryHardware();   // Use a Pushbot's hardware
+    RelicTestingHardware naruto = new RelicTestingHardware();
     String Version = "0.0.3";
+
 
     // could also use HardwarePushbotMatrix class.
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        telemetry.addData("RelicTeleOp: ", "Connected"); //Check to make sure program is selected
-        telemetry.update();
 
+        naruto.init(hardwareMap);
 
-        boolean forward; //Used for dpad control
-        boolean backward; //^
-        boolean leftward; //^
-        boolean rightward;//^
-        boolean aButtonGp1;//^
-        boolean bButtonGp1;//^
-        boolean leftBumperGp1;
-        boolean rightBumperGp1;
-        double adjustmentSpeed = 0.5; //^
-        double armLevel = 1;
+        //name of buttons
         boolean armUp;
         boolean armDown;
-        int armRevolutions = 1/4;
-        boolean aButtonGp2;
-        boolean bButtonGp2;
+        boolean clawOpen;
+        boolean clawClose;
+        boolean leadScrewOut;
+        boolean leadScrewIn;
+        int rotation = 1120;
+        int halfRotation = rotation / 2;
+        int quarterRotation = halfRotation / 2;
+        boolean forward; //Used for dpad control
+        boolean backward; //^
+        boolean left; //^
+        boolean right;//^
+        boolean aButtonGp1;
+        boolean bButtonGp1;
+        double adjustmentSpeed = 0.5; //^
 
-        naruto.init(hardwareMap); //Runs when init button is pressed, sets up naruto
 
-        double jewelMoverStart = naruto.jewelMover.getPosition();
 
-        // Send telemetry message to signify naruto waiting;
-        telemetry.addData("Status: ", "It is working and you loaded the package.");  //Check to make sure variable initialized correctly
-        telemetry.update();
+        // Send telemetry message to signify naruto waiting
+        //say("Ready", "It is working and you loaded the package.");
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        telemetry.addData("Status: ", "TeleOp Active"); //Checks to make sure Op Mode is running
-        telemetry.update();
+        while (opModeIsActive()) {
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) { //Runs as long as stop is not on screen and play triangle has been clicked
-            //Get controller values for gamepads
-            //GAMEPAD 1
+            armUp = gamepad2.a;
+            armDown = gamepad2.b;
+            clawOpen = gamepad2.right_bumper;
+            clawClose = gamepad2.left_bumper;
+            leadScrewIn = gamepad1.right_bumper;
+            leadScrewOut = gamepad1.left_bumper;
             forward = gamepad1.dpad_up;     //Up dpad
             backward = gamepad1.dpad_down;  //Down dpad
-            leftward = gamepad1.dpad_left;  //Left dpad
-            rightward = gamepad1.dpad_right;//Right dpad
+            left = gamepad1.dpad_left;  //Left dpad
+            right = gamepad1.dpad_right;//Right dpad
             aButtonGp1 = gamepad1.a;        //A
             bButtonGp1 = gamepad1.b;        //B
-            rightBumperGp1 = gamepad1.right_bumper; //Right bumper
-            leftBumperGp1 = gamepad1.left_bumper;   //Left bumper
-            armUp = gamepad2.right_bumper;
-            armDown = gamepad2.left_bumper;
-            aButtonGp2 = gamepad2.a;
-            bButtonGp2 = gamepad2.b;
+            int currentPos = naruto.arm.getCurrentPosition();
 
+            if (armUp) {
+                telemetry.addData("Current Position", naruto.arm.getCurrentPosition());
+                telemetry.update();
 
-            //Joystick control
+                naruto.arm.setTargetPosition(currentPos + halfRotation - 30);
+
+                telemetry.addData("Target:", naruto.arm.getTargetPosition());
+                telemetry.update();
+                sleep(500);
+
+                naruto.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
+            if (armDown) {
+                telemetry.addData("Current Position", naruto.arm.getCurrentPosition());
+                telemetry.update();
+
+                naruto.arm.setTargetPosition(currentPos - halfRotation - 50);
+
+                telemetry.addData("Target:", naruto.arm.getTargetPosition());
+                telemetry.update();
+                sleep(500);
+
+                naruto.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                naruto.arm.setPower(0.45);
+            }
+
+            if (armUp || armDown) {
+                naruto.arm.setPower(0.45);
+                armDown = armUp = false;
+            }
+
+            if (!(naruto.arm.isBusy())) {
+                naruto.arm.setPower(0);
+                naruto.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+
+            if (clawOpen) {
+                naruto.rightClaw.setPosition(.30);
+                naruto.leftClaw.setPosition(.75);
+            }
+
+            else if (clawClose) {
+                naruto.rightClaw.setPosition(.875);
+                naruto.leftClaw.setPosition(0);
+            }
+
+            if (leadScrewIn){
+                telemetry.addData("Current Position", naruto.leadScrew.getCurrentPosition());
+                telemetry.update();
+
+                naruto.leadScrew.setTargetPosition(currentPos + rotation * -16);
+
+                telemetry.addData("Target:", naruto.leadScrew.getTargetPosition());
+                telemetry.update();
+                sleep(500);
+
+                naruto.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
+            else if (leadScrewOut){
+                telemetry.addData("Current Position", naruto.leadScrew.getCurrentPosition());
+                telemetry.update();
+
+                naruto.leadScrew.setTargetPosition(currentPos + rotation * 16);
+
+                telemetry.addData("Target:", naruto.leadScrew.getTargetPosition());
+                telemetry.update();
+                sleep(500);
+
+                naruto.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
+            if (leadScrewIn || leadScrewOut) {
+                naruto.leadScrew.setPower(.45);
+                leadScrewIn = leadScrewOut = false;
+            }
+
+            if (!(naruto.leadScrew.isBusy())) {
+                naruto.leadScrew.setPower(0);
+            }
+
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
             double rightX = gamepad1.right_stick_x;                                                     //^
@@ -155,14 +228,14 @@ public class RelicTeleOp extends LinearOpMode {
                 rightBackPower = adjustmentSpeed; //^
             }
 
-            if(leftward) {            //If dpad left pressed, drive left at adjustment speed
+            if(left) {            //If dpad left pressed, drive left at adjustment speed
                 leftFrontPower = adjustmentSpeed; //Sets new motor power
                 rightFrontPower = -adjustmentSpeed; //^
                 leftBackPower = -adjustmentSpeed;  //^
                 rightBackPower = adjustmentSpeed;  //^
             }
 
-            if(rightward) {          //If dpad right pressed, drive right at adjustment speed
+            if(right) {          //If dpad right pressed, drive right at adjustment speed
                 leftFrontPower = -adjustmentSpeed;  //Sets new motor power
                 rightFrontPower = adjustmentSpeed; //^
                 leftBackPower = adjustmentSpeed;   //^
@@ -173,52 +246,13 @@ public class RelicTeleOp extends LinearOpMode {
             naruto.rightFrontMotor.setPower(rightFrontPower); //^
             naruto.leftBackMotor.setPower(leftBackPower);    //^
             naruto.rightBackMotor.setPower(rightBackPower);  //^
-
-            //Test Jewel Arm
-            if(rightBumperGp1){
-                naruto.jewelMover.setPosition(0.5);
-            } //Go to 90 degrees
-            if(leftBumperGp1) {
-                naruto.jewelMover.setPosition(jewelMoverStart);
-            } //Return to start
-
-            //Control the arm
-
-            if(armUp && armLevel <= 4) {
-                naruto.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                naruto.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                naruto.arm.setTargetPosition(1680*armRevolutions);
-                armLevel++;
-            }
-
-            if(armDown && armLevel >= 1) {
-                naruto.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                naruto.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                naruto.arm.setTargetPosition(1680*-armRevolutions);
-                armLevel--;
-            }
-
-            if(aButtonGp2) {
-                naruto.leftPincher.setPosition(0.25);
-                naruto.rightPincher.setPosition(0.25);
-            }
-
-            if(bButtonGp2) {
-                naruto.leftPincher.setPosition(0.8);
-                naruto.rightPincher.setPosition(0.8);
-            }
-
-            telemetry.addData("Arm Level: ", armLevel);
-            telemetry.update();
-            telemetry.addData("Status: ", "Updated"); //Checks to make sure it ran correctly
-            telemetry.update();
-            // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-            naruto.waitForTick(40);
-
         }
-        if(!opModeIsActive()){
-            telemetry.addData("Status: ", "Stopped"); //Says when program is over
-            telemetry.update();
+
+
+
+            if (!opModeIsActive()) {
+                telemetry.addData("Status: ", "Stopped"); //Says when program is over
+                telemetry.update();
+            }
         }
     }
-}

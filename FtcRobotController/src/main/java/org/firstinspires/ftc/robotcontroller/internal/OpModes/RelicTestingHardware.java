@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,11 +9,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * This is NOT an opmode.
  *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
+ * This class can be used to define all the specific hardware for a single naruto.
+ * In this case that naruto is a Pushbot.
  * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
  *
- * This hardware class assumes the following device names have been configured on the robot:
+ * This hardware class assumes the following device names have been configured on the naruto:
  * Note:  All names are lower case and some have single spaces between words.
  *
  * Motor channel:  Left  drive motor:        "left_drive"
@@ -27,40 +26,66 @@ public class RelicTestingHardware
 {
     /* Public OpMode members. */
     // Create motor object out of DcMotor class
-    public DcMotor testArm = null;
+    //public DcMotor arm = null;
 
     //Create servo object out of Servo class
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
-
+    //Declare Hardware
+    public Servo rightClaw;
+    public Servo leftClaw;
+    public DcMotor arm;
+    public DcMotor leadScrew;
+    public DcMotor leftFrontMotor;
+    public DcMotor rightFrontMotor;
+    public DcMotor leftBackMotor;
+    public DcMotor rightBackMotor;
     /* Constructor */
     public RelicTestingHardware(){
 
     }
+
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        testArm = hwMap.dcMotor.get("testArm");
+        arm = hwMap.dcMotor.get("arm");
+        leadScrew = hwMap.dcMotor.get("leadScrew");
+        leftFrontMotor = hwMap.dcMotor.get("leftFrontMotor");
+        rightFrontMotor = hwMap.dcMotor.get("rightFrontMotor");
+        leftBackMotor = hwMap.dcMotor.get("leftBackMotor");
+        rightBackMotor = hwMap.dcMotor.get("rightBackMotor");
 
         //" " " Servos
 
         //Sets spin directions to make writing power easier
-
-
+        arm.setDirection(DcMotorSimple.Direction.FORWARD);
         // Set all motors to zero power to prevent it from accidentally turning on
-        testArm.setPower(0);
-
+        arm.setPower(0);
+        leadScrew.setPower(0);
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        testArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        testArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leadScrew.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         // Define and initialize ALL installed servos.
+        rightClaw = hwMap.servo.get("rightClaw");
+        leftClaw = hwMap.servo.get("leftClaw");
+
 
         //Define sensors
     }
