@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="TeravoltzRemoteOpMode", group="MainOpModes")
-public class TeravoltzRemoteOpMode extends LinearOpMode {
+public class TeravoltzRemoteOpMode extends BaseOpMode {
 
     /* Declare OpMode members. */
     RelicRecoveryHardware robot = new RelicRecoveryHardware();
@@ -88,6 +88,10 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
         boolean aButtonGp1;
         boolean bButtonGp1;
         double adjustmentSpeed = 0.5; //^
+        double leftFrontPower;
+        double leftBackPower;
+        double rightFrontPower;
+        double rightBackPower;
 
 
 
@@ -152,14 +156,12 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             if (clawOpen) {
                 robot.rightClaw.setPosition(.30);
                 robot.leftClaw.setPosition(.75);
-            }
-
-            else if (clawClose) {
+            } else if (clawClose) {
                 robot.rightClaw.setPosition(.875);
                 robot.leftClaw.setPosition(0);
             }
 
-            if (leadScrewIn){
+            if (leadScrewIn) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
@@ -170,9 +172,7 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 sleep(500);
 
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-
-            else if (leadScrewOut){
+            } else if (leadScrewOut) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
@@ -194,7 +194,8 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 robot.leadScrew.setPower(0);
             }
 
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
+
+            /*double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
             double rightX = gamepad1.right_stick_x;                                                     //^
 
@@ -207,6 +208,11 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             Range.clip(rightFrontPower, -1, 1); //^
             Range.clip(leftBackPower, -1, 1);   //^
             Range.clip(rightBackPower, -1, 1); //^
+*/
+            double speed = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
+            double direction = Math.atan2(gamepad1.right_stick_y, -gamepad1.right_stick_x) - Math.PI / 4;
+
+            MecanumDrive(speed, direction);
 
             //WARNING: DPAD CONTROL OVERRIDES JOYSTICK CONTROL
 
