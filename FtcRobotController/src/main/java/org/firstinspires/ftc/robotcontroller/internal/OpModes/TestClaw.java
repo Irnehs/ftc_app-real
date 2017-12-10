@@ -36,12 +36,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
- * This OpMode uses the common Pushbot hardware class to define the devices on the naruto.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
  *
  * This particular OpMode executes a POV Game style Teleop for a PushBot
- * In this mode the left stick moves the naruto FWD and back, the Right stick turns left and right.
+ * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
@@ -54,7 +54,7 @@ public class TestClaw extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-    RelicTestingHardware naruto = new RelicTestingHardware();
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();
     String Version = "0.0.3";
 
 
@@ -68,26 +68,26 @@ public class TestClaw extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
 
-        naruto.init(hardwareMap);
+        robot.init(hardwareMap);
 
-        // Send telemetry message to signify naruto waiting
+        // Send telemetry message to signify robot waiting
         //say("Ready", "It is working and you loaded the package.");
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
 
-        naruto.leftClaw.setPosition(0);
-        naruto.rightClaw.setPosition(1);
+        robot.leftClaw.setPosition(0);
+        robot.rightClaw.setPosition(1);
         sleep(500);
-        naruto.leftClaw.setPosition(0.6);
-        naruto.rightClaw.setPosition(0.4);
+        robot.leftClaw.setPosition(0.6);
+        robot.rightClaw.setPosition(0.4);
         sleep(3000);
-        naruto.leftClaw.setPosition(0);
-        naruto.rightClaw.setPosition(1);
+        robot.leftClaw.setPosition(0);
+        robot.rightClaw.setPosition(1);
 
 
         // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-        naruto.waitForTick(40);
+        robot.waitForTick(40);
     }
 }

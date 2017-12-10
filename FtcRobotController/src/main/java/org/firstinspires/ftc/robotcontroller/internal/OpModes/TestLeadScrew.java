@@ -10,7 +10,7 @@ public class TestLeadScrew extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-    RelicTestingHardware Marvin = new RelicTestingHardware();
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();
     String Version = "0.0.3";
 
     //104/60=1.733333
@@ -28,7 +28,7 @@ public class TestLeadScrew extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-        Marvin.init(hardwareMap);
+        robot.init(hardwareMap);
 
 
         waitForStart();
@@ -36,63 +36,63 @@ public class TestLeadScrew extends LinearOpMode {
         //104 RPM at one power
 
 
-        Marvin.leadScrew.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leadScrew.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        telemetry.addData("Current Position", Marvin.leadScrew.getCurrentPosition());
+        telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
         telemetry.update();
 
-        Marvin.leadScrew.setTargetPosition(singleRotation * -16);
+        robot.leadScrew.setTargetPosition(singleRotation * -16);
 
-        telemetry.addData("Target:", Marvin.leadScrew.getTargetPosition());
+        telemetry.addData("Target:", robot.leadScrew.getTargetPosition());
         telemetry.update();
         sleep(500);
 
-        Marvin.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        Marvin.leadScrew.setPower(1);
+        robot.leadScrew.setPower(1);
 
-        while(Marvin.leadScrew.isBusy()) {
+        while(robot.leadScrew.isBusy()) {
             //Motor is moving
-            telemetry.addData("position", Marvin.leadScrew.getCurrentPosition());
+            telemetry.addData("position", robot.leadScrew.getCurrentPosition());
             telemetry.update();
         }
 
-        Marvin.leadScrew.setPower(0);
-        telemetry.addData("Position", Marvin.leadScrew.getCurrentPosition());
+        robot.leadScrew.setPower(0);
+        telemetry.addData("Position", robot.leadScrew.getCurrentPosition());
         telemetry.update();
-        Marvin.leadScrew.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leadScrew.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        Marvin.leadScrew.setTargetPosition(singleRotation * 0);
+        robot.leadScrew.setTargetPosition(singleRotation * 0);
 
-        telemetry.addData("Target:", Marvin.leadScrew.getTargetPosition());
+        telemetry.addData("Target:", robot.leadScrew.getTargetPosition());
         telemetry.update();
         sleep(500);
 
-        Marvin.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        Marvin.leadScrew.setPower(1);
+        robot.leadScrew.setPower(1);
 
-        while(Marvin.leadScrew.isBusy()) {
+        while(robot.leadScrew.isBusy()) {
             //Motor is moving
-            telemetry.addData("position", Marvin.leadScrew.getCurrentPosition());
+            telemetry.addData("position", robot.leadScrew.getCurrentPosition());
             telemetry.update();
         }
 
-        Marvin.leadScrew.setPower(0);
-        telemetry.addData("Position", Marvin.leadScrew.getCurrentPosition());
+        robot.leadScrew.setPower(0);
+        telemetry.addData("Position", robot.leadScrew.getCurrentPosition());
         telemetry.update();
-        Marvin.leadScrew.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leadScrew.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
 
-        /*naruto.leadScrew.setPower(0.5);
+        /*robot.leadScrew.setPower(0.5);
         sleep(4000);
-        naruto.leadScrew.setPower(0);
+        robot.leadScrew.setPower(0);
         sleep(500);
-        naruto.leadScrew.setPower(-0.5);
+        robot.leadScrew.setPower(-0.5);
         sleep(4000);
-        naruto.leadScrew.setPower(0);
+        robot.leadScrew.setPower(0);
         sleep(100);
         */
     }

@@ -38,12 +38,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
- * This OpMode uses the common Pushbot hardware class to define the devices on the naruto.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
  *
  * This particular OpMode executes a POV Game style Teleop for a PushBot
- * In this mode the left stick moves the naruto FWD and back, the Right stick turns left and right.
+ * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
@@ -55,7 +55,7 @@ import com.qualcomm.robotcore.util.Range;
 public class TeravoltzRemoteOpMode extends LinearOpMode {
 
     /* Declare OpMode members. */
-    RelicTestingHardware naruto = new RelicTestingHardware();
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();
     String Version = "0.0.3";
 
 
@@ -69,7 +69,7 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
 
-        naruto.init(hardwareMap);
+        robot.init(hardwareMap);
 
         //name of buttons
         boolean armUp;
@@ -91,7 +91,7 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
 
 
 
-        // Send telemetry message to signify naruto waiting
+        // Send telemetry message to signify robot waiting
         //say("Ready", "It is working and you loaded the package.");
 
         // Wait for the game to start (driver presses PLAY)
@@ -110,88 +110,88 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             right = gamepad1.dpad_right;//Right dpad
             aButtonGp1 = gamepad1.a;        //A
             bButtonGp1 = gamepad1.b;        //B
-            int currentPos = naruto.arm.getCurrentPosition();
+            int currentPos = robot.arm.getCurrentPosition();
 
             if (armUp) {
-                telemetry.addData("Current Position", naruto.arm.getCurrentPosition());
+                telemetry.addData("Current Position", robot.arm.getCurrentPosition());
                 telemetry.update();
 
-                naruto.arm.setTargetPosition(currentPos + halfRotation - 30);
+                robot.arm.setTargetPosition(currentPos + halfRotation - 30);
 
-                telemetry.addData("Target:", naruto.arm.getTargetPosition());
+                telemetry.addData("Target:", robot.arm.getTargetPosition());
                 telemetry.update();
                 sleep(500);
 
-                naruto.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
             if (armDown) {
-                telemetry.addData("Current Position", naruto.arm.getCurrentPosition());
+                telemetry.addData("Current Position", robot.arm.getCurrentPosition());
                 telemetry.update();
 
-                naruto.arm.setTargetPosition(currentPos - halfRotation - 50);
+                robot.arm.setTargetPosition(currentPos - halfRotation - 50);
 
-                telemetry.addData("Target:", naruto.arm.getTargetPosition());
+                telemetry.addData("Target:", robot.arm.getTargetPosition());
                 telemetry.update();
                 sleep(500);
 
-                naruto.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                naruto.arm.setPower(0.45);
+                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.arm.setPower(0.45);
             }
 
             if (armUp || armDown) {
-                naruto.arm.setPower(0.45);
+                robot.arm.setPower(0.45);
                 armDown = armUp = false;
             }
 
-            if (!(naruto.arm.isBusy())) {
-                naruto.arm.setPower(0);
-                naruto.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if (!(robot.arm.isBusy())) {
+                robot.arm.setPower(0);
+                robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             if (clawOpen) {
-                naruto.rightClaw.setPosition(.30);
-                naruto.leftClaw.setPosition(.75);
+                robot.rightClaw.setPosition(.30);
+                robot.leftClaw.setPosition(.75);
             }
 
             else if (clawClose) {
-                naruto.rightClaw.setPosition(.875);
-                naruto.leftClaw.setPosition(0);
+                robot.rightClaw.setPosition(.875);
+                robot.leftClaw.setPosition(0);
             }
 
             if (leadScrewIn){
-                telemetry.addData("Current Position", naruto.leadScrew.getCurrentPosition());
+                telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
-                naruto.leadScrew.setTargetPosition(currentPos + rotation * -16);
+                robot.leadScrew.setTargetPosition(currentPos + rotation * -16);
 
-                telemetry.addData("Target:", naruto.leadScrew.getTargetPosition());
+                telemetry.addData("Target:", robot.leadScrew.getTargetPosition());
                 telemetry.update();
                 sleep(500);
 
-                naruto.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
             else if (leadScrewOut){
-                telemetry.addData("Current Position", naruto.leadScrew.getCurrentPosition());
+                telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
-                naruto.leadScrew.setTargetPosition(currentPos + rotation * 16);
+                robot.leadScrew.setTargetPosition(currentPos + rotation * 16);
 
-                telemetry.addData("Target:", naruto.leadScrew.getTargetPosition());
+                telemetry.addData("Target:", robot.leadScrew.getTargetPosition());
                 telemetry.update();
                 sleep(500);
 
-                naruto.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
             if (leadScrewIn || leadScrewOut) {
-                naruto.leadScrew.setPower(.45);
+                robot.leadScrew.setPower(.45);
                 leadScrewIn = leadScrewOut = false;
             }
 
-            if (!(naruto.leadScrew.isBusy())) {
-                naruto.leadScrew.setPower(0);
+            if (!(robot.leadScrew.isBusy())) {
+                robot.leadScrew.setPower(0);
             }
 
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
@@ -216,15 +216,15 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
 
             if(forward) {              //If dpad up pressed, drive forwards at adjustment speed
                 leftFrontPower = -adjustmentSpeed;  //Sets new motor power
-                rightFrontPower = -adjustmentSpeed;  //^
-                leftBackPower = -adjustmentSpeed;    //^
+                rightFrontPower = adjustmentSpeed;  //^
+                leftBackPower = adjustmentSpeed;    //^
                 rightBackPower = -adjustmentSpeed;  //^
             }
 
             if(backward) {             //If dpad down pressed, drive backwards at adjustment speed
                 leftFrontPower = adjustmentSpeed; //Sets new motor power
-                rightFrontPower = adjustmentSpeed; //^
-                leftBackPower = adjustmentSpeed;   //^
+                rightFrontPower = -adjustmentSpeed; //^
+                leftBackPower = -adjustmentSpeed;   //^
                 rightBackPower = adjustmentSpeed; //^
             }
 
@@ -242,10 +242,10 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 rightBackPower = -adjustmentSpeed; //^
             }
 
-            naruto.leftFrontMotor.setPower(leftFrontPower);  //Sets power
-            naruto.rightFrontMotor.setPower(rightFrontPower); //^
-            naruto.leftBackMotor.setPower(leftBackPower);    //^
-            naruto.rightBackMotor.setPower(rightBackPower);  //^
+            robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
+            robot.rightFrontMotor.setPower(rightFrontPower); //^
+            robot.leftBackMotor.setPower(leftBackPower);    //^
+            robot.rightBackMotor.setPower(rightBackPower);  //^
         }
 
 

@@ -39,12 +39,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
- * This OpMode uses the common Pushbot hardware class to define the devices on the naruto.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
  *
  * This particular OpMode executes a POV Game style Teleop for a PushBot
- * In this mode the left stick moves the naruto FWD and back, the Right stick turns left and right.
+ * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
@@ -58,7 +58,7 @@ public class RelicTeleOp extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-    RelicRecoveryHardware naruto = new RelicRecoveryHardware();   // Use a Pushbot's hardware
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();   // Use a Pushbot's hardware
     String Version = "0.0.3";
 
     // could also use HardwarePushbotMatrix class.
@@ -89,11 +89,11 @@ public class RelicTeleOp extends LinearOpMode {
         boolean aButtonGp2;
         boolean bButtonGp2;
 
-        naruto.init(hardwareMap); //Runs when init button is pressed, sets up naruto
+        robot.init(hardwareMap); //Runs when init button is pressed, sets up robot
 
-        double jewelMoverStart = naruto.jewelMover.getPosition();
+        //double jewelMoverStart = robot.jewelArm.getPosition();
 
-        // Send telemetry message to signify naruto waiting;
+        // Send telemetry message to signify robot waiting;
         telemetry.addData("Status: ", "It is working and you loaded the package.");  //Check to make sure variable initialized correctly
         telemetry.update();
 
@@ -169,43 +169,43 @@ public class RelicTeleOp extends LinearOpMode {
                 rightBackPower = -adjustmentSpeed; //^
             }
 
-            naruto.leftFrontMotor.setPower(leftFrontPower);  //Sets power
-            naruto.rightFrontMotor.setPower(rightFrontPower); //^
-            naruto.leftBackMotor.setPower(leftBackPower);    //^
-            naruto.rightBackMotor.setPower(rightBackPower);  //^
-
+            robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
+            robot.rightFrontMotor.setPower(rightFrontPower); //^
+            robot.leftBackMotor.setPower(leftBackPower);    //^
+            robot.rightBackMotor.setPower(rightBackPower);  //^
+/*
             //Test Jewel Arm
             if(rightBumperGp1){
-                naruto.jewelMover.setPosition(0.5);
+                robot.jewelMover.setPosition(0.5);
             } //Go to 90 degrees
             if(leftBumperGp1) {
-                naruto.jewelMover.setPosition(jewelMoverStart);
+                robot.jewelMover.setPosition(jewelMoverStart);
             } //Return to start
-
+*/
             //Control the arm
 
             if(armUp && armLevel <= 4) {
-                naruto.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                naruto.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                naruto.arm.setTargetPosition(1680*armRevolutions);
+                robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.arm.setTargetPosition(1680*armRevolutions);
                 armLevel++;
             }
 
             if(armDown && armLevel >= 1) {
-                naruto.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                naruto.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                naruto.arm.setTargetPosition(1680*-armRevolutions);
+                robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.arm.setTargetPosition(1680*-armRevolutions);
                 armLevel--;
             }
 
             if(aButtonGp2) {
-                naruto.leftPincher.setPosition(0.25);
-                naruto.rightPincher.setPosition(0.25);
+                robot.leftClaw.setPosition(0.25);
+                robot.rightClaw.setPosition(0.25);
             }
 
             if(bButtonGp2) {
-                naruto.leftPincher.setPosition(0.8);
-                naruto.rightPincher.setPosition(0.8);
+                robot.leftClaw.setPosition(0.8);
+                robot.rightClaw.setPosition(0.8);
             }
 
             telemetry.addData("Arm Level: ", armLevel);
@@ -213,7 +213,7 @@ public class RelicTeleOp extends LinearOpMode {
             telemetry.addData("Status: ", "Updated"); //Checks to make sure it ran correctly
             telemetry.update();
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-            naruto.waitForTick(40);
+            robot.waitForTick(40);
 
         }
         if(!opModeIsActive()){

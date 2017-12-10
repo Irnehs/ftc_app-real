@@ -41,7 +41,7 @@ public class TestArm extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-    RelicTestingHardware naruto = new RelicTestingHardware();
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();
     String Version = "0.0.3";
 
     public int ticksPerRev = 1120;
@@ -54,7 +54,7 @@ public class TestArm extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-        naruto.init(hardwareMap);
+        robot.init(hardwareMap);
 
 
 
@@ -68,31 +68,31 @@ public class TestArm extends LinearOpMode {
         //Encoders
 
         /*
-        naruto.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        telemetry.addData("Current Position", naruto.arm.getCurrentPosition());
+        telemetry.addData("Current Position", robot.arm.getCurrentPosition());
         telemetry.update();
 
-        naruto.arm.setTargetPosition(ticksPerRev);
+        robot.arm.setTargetPosition(ticksPerRev);
 
-        telemetry.addData("Target:", naruto.arm.getTargetPosition());
+        telemetry.addData("Target:", robot.arm.getTargetPosition());
         telemetry.update();
         sleep(500);
 
-        naruto.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        naruto.arm.setPower(0.2);
+        robot.arm.setPower(0.2);
 
-        while(naruto.arm.isBusy()) {
+        while(robot.arm.isBusy()) {
         //Motor is moving
-            telemetry.addData("position", naruto.arm.getCurrentPosition());
+            telemetry.addData("position", robot.arm.getCurrentPosition());
             telemetry.update();
         }
 
-        naruto.arm.setPower(0);
-        telemetry.addData("Position", naruto.arm.getCurrentPosition());
+        robot.arm.setPower(0);
+        telemetry.addData("Position", robot.arm.getCurrentPosition());
         telemetry.update();
-        naruto.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
@@ -102,18 +102,18 @@ public class TestArm extends LinearOpMode {
 
         */
         //Manual reverse
-        //naruto.leadScrew.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //naruto.leadScrew.setPower(0.2);
+        //robot.leadScrew.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //robot.leadScrew.setPower(0.2);
         //sleep(10000);
 
 
-        naruto.arm.setPower(0.3);
+        robot.arm.setPower(0.3);
         sleep(500);
-        naruto.arm.setPower(0);
+        robot.arm.setPower(0);
         sleep(1000);
-        naruto.arm.setPower(-0.3);
+        robot.arm.setPower(-0.3);
         sleep(500);
-        naruto.waitForTick(40);
+        robot.waitForTick(40);
 
     }
 }

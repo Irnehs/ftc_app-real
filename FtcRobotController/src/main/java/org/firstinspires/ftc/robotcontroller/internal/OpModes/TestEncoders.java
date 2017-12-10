@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name="TestEncoders", group="TestEncoder")
 public class TestEncoders extends LinearOpMode {
 
-    RelicTestingHardware Marvin = new RelicTestingHardware();
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();
     String Version = "0.0.3";
 
     @Override
     public void runOpMode() throws InterruptedException {
 
 
-        Marvin.init(hardwareMap);
+        robot.init(hardwareMap);
 
 
         waitForStart();

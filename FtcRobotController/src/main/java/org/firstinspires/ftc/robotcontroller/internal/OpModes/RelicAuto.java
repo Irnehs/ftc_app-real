@@ -37,12 +37,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
- * This OpMode uses the common Pushbot hardware class to define the devices on the naruto.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
  *
  * This particular OpMode executes a POV Game style Teleop for a PushBot
- * In this mode the left stick moves the naruto FWD and back, the Right stick turns left and right.
+ * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
@@ -52,11 +52,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Auto", group="Pushingbot")
 @Disabled
-public class RelicAuto extends LinearOpMode {
+public class RelicAuto extends RelicBaseAuto {
 
 
     /* Declare OpMode members. */
-    RelicRecoveryHardware naruto = new RelicRecoveryHardware();   // Use a Pushbot's hardware
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();   // Use a Pushbot's hardware
     String Version = "0.0.3";
 
     // could also use HardwarePushbotMatrix class.
@@ -70,13 +70,9 @@ public class RelicAuto extends LinearOpMode {
         telemetry.addData("RelicAuto: ", "Connected"); //Check to make sure program is selected
         telemetry.update();
 
-        naruto.init(hardwareMap); //Runs when init button is pressed, sets up naruto
+        robot.init(hardwareMap); //Runs when init button is pressed, sets up robot
 
-        double jewelMoverStart = naruto.jewelMover.getPosition();
-        telemetry.addData("Jewel Mover Start: ", jewelMoverStart);
-        telemetry.update();
-
-        // Send telemetry message to signify naruto waiting;
+        // Send telemetry message to signify robot waiting;
         telemetry.addData("Status: ", "It is working and you loaded the package.");  //Check to make sure variable initialized correctly
         telemetry.update();
 
@@ -85,7 +81,22 @@ public class RelicAuto extends LinearOpMode {
         telemetry.addData("Status: ", "Auto Active"); //Checks to make sure Op Mode is running
         telemetry.update();
 
-        /* Steps of autonomous
+
+
+
+
+
+
+        telemetry.addData("Status: ", "Stopped"); //Says when program is over
+    telemetry.update();
+
+    }
+}
+
+
+
+/* Steps of autonomous
+
         Pick up block
         Knocking off the ball (30 pts)
             * Sense the ball's color
@@ -96,19 +107,3 @@ public class RelicAuto extends LinearOpMode {
         Insert block into correct column (45 pts)
         Park on base in front of crytoboxes (10 pts)
          */
-
-        naruto.jewelMover.setPosition(0.5);
-        sleep(1000);
-        naruto.jewelMover.setPosition(0.0);
-        telemetry.addData("Jewel Mover Start: ", jewelMoverStart);
-        naruto.armSlide.setPower(1);
-        sleep(1000);
-        naruto.armSlide.setPower(0);
-
-
-
-        telemetry.addData("Status: ", "Stopped"); //Says when program is over
-    telemetry.update();
-
-    }
-}
