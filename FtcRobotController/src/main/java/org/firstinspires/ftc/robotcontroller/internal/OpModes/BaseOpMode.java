@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 abstract class BaseOpMode extends LinearOpMode{
 
     /* Declare OpMode members. */
-    RelicRecoveryHardware robot = new RelicRecoveryHardware();   // Use a Pushbot's hardware
+    //RelicRecoveryHardware robot = new RelicRecoveryHardware();   // Use a Pushbot's hardware
     String Version = "0.0.3";
 
-    public void MecanumDrive(double speed, double direction, double rotation) {
+    public void MecanumDrive(double speed, double direction, double rotation, RelicRecoveryHardware robot) {
         final double v1 = speed * Math.cos(direction) + rotation;
         final double v2 = speed * Math.sin(direction) - rotation;
         final double v3 = speed * Math.sin(direction) + rotation;

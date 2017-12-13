@@ -87,11 +87,8 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         boolean right;//^
         boolean aButtonGp1;
         boolean bButtonGp1;
-        double adjustmentSpeed = 0.5; //^
-        double leftFrontPower;
-        double leftBackPower;
-        double rightFrontPower;
-        double rightBackPower;
+        double adjustmentSpeed = 0;
+
 
 
 
@@ -209,10 +206,19 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             Range.clip(leftBackPower, -1, 1);   //^
             Range.clip(rightBackPower, -1, 1); //^
 */
-            double speed = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
-            double direction = Math.atan2(gamepad1.right_stick_y, -gamepad1.right_stick_x) - Math.PI / 4;
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
+            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
+            double rightX = gamepad1.right_stick_x;                                                     //^
 
-            MecanumDrive(speed, direction);
+            double leftFrontPower = r * Math.cos(robotAngle) + rightX; //Calculates power
+            double rightFrontPower = r * Math.sin(robotAngle) - rightX; //^
+            double leftBackPower = r * Math.sin(robotAngle) + rightX;   //^
+            double rightBackPower = r * Math.cos(robotAngle) - rightX; //^
+
+            Range.clip(leftFrontPower,-1, 1);  //Limits values to acceptable motor inputs
+            Range.clip(rightFrontPower, -1, 1); //^
+            Range.clip(leftBackPower, -1, 1);   //^
+            Range.clip(rightBackPower, -1, 1); //^
 
             //WARNING: DPAD CONTROL OVERRIDES JOYSTICK CONTROL
 
@@ -221,37 +227,42 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             if(bButtonGp1) {adjustmentSpeed--;} //B on gamepad 2 decreases adjustment speed
 
             if(forward) {              //If dpad up pressed, drive forwards at adjustment speed
-                leftFrontPower = -adjustmentSpeed;  //Sets new motor power
-                rightFrontPower = adjustmentSpeed;  //^
-                leftBackPower = adjustmentSpeed;    //^
-                rightBackPower = -adjustmentSpeed;  //^
+                //^
+                robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
+                robot.rightFrontMotor.setPower(rightFrontPower); //^
+                robot.leftBackMotor.setPower(leftBackPower);    //^
+                robot.rightBackMotor.setPower(rightBackPower);  //^
             }
 
             if(backward) {             //If dpad down pressed, drive backwards at adjustment speed
-                leftFrontPower = adjustmentSpeed; //Sets new motor power
-                rightFrontPower = -adjustmentSpeed; //^
-                leftBackPower = -adjustmentSpeed;   //^
-                rightBackPower = adjustmentSpeed; //^
+                //^
+                robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
+                robot.rightFrontMotor.setPower(rightFrontPower); //^
+                robot.leftBackMotor.setPower(leftBackPower);    //^
+                robot.rightBackMotor.setPower(rightBackPower);  //^
             }
 
-            if(left) {            //If dpad left pressed, drive left at adjustment speed
-                leftFrontPower = adjustmentSpeed; //Sets new motor power
-                rightFrontPower = -adjustmentSpeed; //^
-                leftBackPower = -adjustmentSpeed;  //^
-                rightBackPower = adjustmentSpeed;  //^
+            if(left) {            //If dpad left pressed, drive left at adjustment speed;  //^
+                robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
+                robot.rightFrontMotor.setPower(rightFrontPower); //^
+                robot.leftBackMotor.setPower(leftBackPower);    //^
+                robot.rightBackMotor.setPower(rightBackPower);  //^
             }
 
             if(right) {          //If dpad right pressed, drive right at adjustment speed
-                leftFrontPower = -adjustmentSpeed;  //Sets new motor power
-                rightFrontPower = adjustmentSpeed; //^
-                leftBackPower = adjustmentSpeed;   //^
-                rightBackPower = -adjustmentSpeed; //^
+                ; //^
+                robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
+                robot.rightFrontMotor.setPower(rightFrontPower); //^
+                robot.leftBackMotor.setPower(leftBackPower);    //^
+                robot.rightBackMotor.setPower(rightBackPower);
+                  //^
             }
-
             robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
             robot.rightFrontMotor.setPower(rightFrontPower); //^
             robot.leftBackMotor.setPower(leftBackPower);    //^
-            robot.rightBackMotor.setPower(rightBackPower);  //^
+            robot.rightBackMotor.setPower(rightBackPower);
+
+
         }
 
 
