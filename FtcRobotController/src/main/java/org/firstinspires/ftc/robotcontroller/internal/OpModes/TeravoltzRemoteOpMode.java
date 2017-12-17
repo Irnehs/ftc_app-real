@@ -32,10 +32,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+
+
 
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
@@ -51,8 +54,10 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeravoltzRemoteOpMode", group="MainOpModes")
-public class TeravoltzRemoteOpMode extends BaseOpMode {
+@TeleOp(name="RemoteOpMode", group="TeleOp")
+public class TeravoltzRemoteOpMode extends LinearOpMode {
+
+
 
     /* Declare OpMode members. */
     RelicRecoveryHardware robot = new RelicRecoveryHardware();
@@ -87,6 +92,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         boolean right;//^
         boolean aButtonGp1;
         boolean bButtonGp1;
+        double armPosition = 1;
         double adjustmentSpeed = 0;
 
 
@@ -113,7 +119,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             bButtonGp1 = gamepad1.b;        //B
             int currentPos = robot.arm.getCurrentPosition();
 
-            if (armUp) {
+            if (armUp && armPosition < 5) {
                 telemetry.addData("Current Position", robot.arm.getCurrentPosition());
                 telemetry.update();
 
@@ -124,9 +130,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 sleep(500);
 
                 robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armPosition = armPosition + 1;
             }
 
-            if (armDown) {
+            if (armDown && armPosition > 1) {
                 telemetry.addData("Current Position", robot.arm.getCurrentPosition());
                 telemetry.update();
 
@@ -137,8 +144,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 sleep(500);
 
                 robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.arm.setPower(0.45);
+                armPosition = armPosition - 1;
             }
+
+
 
             if (armUp || armDown) {
                 robot.arm.setPower(0.45);
@@ -158,7 +167,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 robot.leftClaw.setPosition(0);
             }
 
-            if (leadScrewIn) {
+            /*if (leadScrewIn) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
@@ -166,10 +175,9 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
                 telemetry.addData("Target:", robot.leadScrew.getTargetPosition());
                 telemetry.update();
-                sleep(500);
 
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            } else if (leadScrewOut) {
+            } if (leadScrewOut) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
@@ -177,7 +185,6 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
                 telemetry.addData("Target:", robot.leadScrew.getTargetPosition());
                 telemetry.update();
-                sleep(500);
 
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
@@ -186,6 +193,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 robot.leadScrew.setPower(.45);
                 leadScrewIn = leadScrewOut = false;
             }
+            */
 
             if (!(robot.leadScrew.isBusy())) {
                 robot.leadScrew.setPower(0);
@@ -207,13 +215,13 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             Range.clip(rightBackPower, -1, 1); //^
 */
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
-            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
+            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
             double rightX = gamepad1.right_stick_x;                                                     //^
 
-            double leftFrontPower = r * Math.cos(robotAngle) + rightX; //Calculates power
-            double rightFrontPower = r * Math.sin(robotAngle) - rightX; //^
-            double leftBackPower = r * Math.sin(robotAngle) + rightX;   //^
-            double rightBackPower = r * Math.cos(robotAngle) - rightX; //^
+            double leftFrontPower = r * Math.cos(robotAngle) - rightX; //Calculates power
+            double rightFrontPower = r * Math.sin(robotAngle) + rightX; //^
+            double leftBackPower = r * Math.sin(robotAngle) - rightX;   //^
+            double rightBackPower = r * Math.cos(robotAngle) + rightX; //^
 
             Range.clip(leftFrontPower,-1, 1);  //Limits values to acceptable motor inputs
             Range.clip(rightFrontPower, -1, 1); //^
@@ -261,6 +269,8 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             robot.rightFrontMotor.setPower(rightFrontPower); //^
             robot.leftBackMotor.setPower(leftBackPower);    //^
             robot.rightBackMotor.setPower(rightBackPower);
+
+
 
 
         }
