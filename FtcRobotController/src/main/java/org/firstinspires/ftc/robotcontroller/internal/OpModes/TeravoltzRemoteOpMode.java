@@ -66,59 +66,100 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
 
     // could also use HardwarePushbotMatrix class.
 
+    /*CREATES THE METHOD FOR SETTING THE WHEEL'S POWER*/
+
+    /*Variables for the wheels power*/
+    double rightFrontPower;
+    double rightBackPower;
+    double leftFrontPower;
+    double leftBackPower;
+
+    /*Actual method*/
+    public void wheelPower(double frontRight, double frontLeft, double backRight, double backLeft) {
+        rightFrontPower = frontRight;
+        leftFrontPower = frontLeft;
+        rightBackPower = backRight;
+        leftBackPower = backLeft;
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
 
-
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
-
+        /* Initialize the hardware variables*/
         robot.init(hardwareMap);
 
-        //name of buttons
-        boolean armUp;
-        boolean armDown;
-        boolean clawOpen;
-        boolean clawClose;
-        boolean leadScrewOut;
-        boolean leadScrewIn;
+        /*INITIALIZATION OF ALL VARIABLES*/
+
+        /*Glyph Arm Variables*/
+
         int rotation = 1120;
         int halfRotation = rotation / 2;
         int quarterRotation = halfRotation / 2;
-        boolean forward; //Used for dpad control
-        boolean backward; //^
-        boolean left; //^
-        boolean right;//^
-        boolean aButtonGp1;
-        boolean bButtonGp1;
         double armPosition = 1;
-        double adjustmentSpeed = 0;
 
+        /*Drivetrain Variables*/
 
+        //Dpad
+        double unidirectionalSpeed = 0;
 
+        /*Gamepad 1*/
 
-        // Send telemetry message to signify robot waiting
-        //say("Ready", "It is working and you loaded the package.");
+        boolean forward = gamepad1.dpad_up;     //Up dpad
+        boolean backward = gamepad1.dpad_down;  //Down dpad
+        boolean left = gamepad1.dpad_left;      //Left dpad
+        boolean right = gamepad1.dpad_right;    //Right dpad
+        boolean aButtonGp1 = gamepad1.a;        //A
+        boolean bButtonGp1 = gamepad1.b;        //B
+        boolean leadScrewIn = gamepad1.right_bumper; //Right bumper
+        boolean leadScrewOut = gamepad1.left_bumper; //Left bumper
 
-        // Wait for the game to start (driver presses PLAY)
+        /*Gamepad 2*/
+
+        boolean armUp = gamepad2.a;                    //A
+        boolean armDown = gamepad2.b;                  //B
+        boolean clawOpen = gamepad2.right_bumper;      //Right bumper
+        boolean clawClose = gamepad2.left_bumper;      //Left bumper
+
+        /*END OF SETUP*/
+
+        /* Send telemetry message to signify robot waiting*/
+        telemetry.addData("Ready: ", "It is working and you loaded the package.");
+        telemetry.update();
+
+        /* Wait for the game to start, which is when the driver presses PLAY*/
         waitForStart();
+
+        /*START OF LOOP THAT RUNS REPEATEDLY*/
         while (opModeIsActive()) {
 
-            armUp = gamepad2.a;
-            armDown = gamepad2.b;
-            clawOpen = gamepad2.right_bumper;
-            clawClose = gamepad2.left_bumper;
-            leadScrewIn = gamepad1.right_bumper;
-            leadScrewOut = gamepad1.left_bumper;
+            /*GET CONTROLLER AND ROBOT VALUES*/
+
+            /*Gamepad 1*/
+
             forward = gamepad1.dpad_up;     //Up dpad
             backward = gamepad1.dpad_down;  //Down dpad
-            left = gamepad1.dpad_left;  //Left dpad
-            right = gamepad1.dpad_right;//Right dpad
+            left = gamepad1.dpad_left;      //Left dpad
+            right = gamepad1.dpad_right;    //Right dpad
             aButtonGp1 = gamepad1.a;        //A
             bButtonGp1 = gamepad1.b;        //B
-            int currentPos = robot.arm.getCurrentPosition();
+            leadScrewIn = gamepad1.right_bumper; //Right bumper
+            leadScrewOut = gamepad1.left_bumper; //Left bumper
 
+            /*Gamepad 2*/
+
+            armUp = gamepad2.a;                    //A
+            armDown = gamepad2.b;                  //B
+            clawOpen = gamepad2.right_bumper;      //Right bumper
+            clawClose = gamepad2.left_bumper;      //Left bumper
+
+            /*Robot*/
+
+            int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
+
+
+            /*GLYPH ARM CONTROL*/
+
+            /*Sets position for raising of the glyph arm*/
             if (armUp && armPosition < 5) {
                 telemetry.addData("Current Position", robot.arm.getCurrentPosition());
                 telemetry.update();
@@ -133,6 +174,7 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 armPosition = armPosition + 1;
             }
 
+            /*Sets position for lowering of the glyph arm*/
             if (armDown && armPosition > 1) {
                 telemetry.addData("Current Position", robot.arm.getCurrentPosition());
                 telemetry.update();
@@ -147,27 +189,36 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 armPosition = armPosition - 1;
             }
 
-
-
+            /*Sets arm power and actually makes it run*/
             if (armUp || armDown) {
                 robot.arm.setPower(0.45);
                 armDown = armUp = false;
             }
 
+            /*Turns glyph arm off after it reaches target*/
             if (!(robot.arm.isBusy())) {
                 robot.arm.setPower(0);
                 robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
+            /*CLAW CONTROL*/
+
+            /*Opens the claw*/
             if (clawOpen) {
                 robot.rightClaw.setPosition(.30);
                 robot.leftClaw.setPosition(.75);
-            } else if (clawClose) {
+            }
+
+            /*Closes the claw*/
+            else if (clawClose) {
                 robot.rightClaw.setPosition(.875);
                 robot.leftClaw.setPosition(0);
             }
 
-            /*if (leadScrewIn) {
+            /*LEAD SCREW CONTROL*/
+
+            /*Sets position for retraction of lead screw*/
+            if (leadScrewIn) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
@@ -177,7 +228,10 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 telemetry.update();
 
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            } if (leadScrewOut) {
+            }
+
+            /*Sets position for extension of lead screw*/
+            else if (leadScrewOut) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
@@ -189,97 +243,92 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
+            /*Sets lead screw power and actually makes it run*/
             if (leadScrewIn || leadScrewOut) {
                 robot.leadScrew.setPower(.45);
                 leadScrewIn = leadScrewOut = false;
             }
-            */
 
+            /*Turns lead screw off when target reached*/
             if (!(robot.leadScrew.isBusy())) {
                 robot.leadScrew.setPower(0);
             }
 
 
-            /*double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
-            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
-            double rightX = gamepad1.right_stick_x;                                                     //^
+            /*JOYSTICK CONTROL*/
 
-            double leftFrontPower = r * Math.cos(robotAngle) + rightX; //Calculates power
-            double rightFrontPower = r * Math.sin(robotAngle) - rightX; //^
-            double leftBackPower = r * Math.sin(robotAngle) + rightX;   //^
-            double rightBackPower = r * Math.cos(robotAngle) - rightX; //^
+            /*Converts joystick output into variables used to calculate power for the wheels*/
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            double rightX = gamepad1.right_stick_x;
 
-            Range.clip(leftFrontPower,-1, 1);  //Limits values to acceptable motor inputs
-            Range.clip(rightFrontPower, -1, 1); //^
-            Range.clip(leftBackPower, -1, 1);   //^
-            Range.clip(rightBackPower, -1, 1); //^
-*/
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
-            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
-            double rightX = gamepad1.right_stick_x;                                                     //^
+            /*Uses created variables to calculate power for the wheels*/
+            leftFrontPower = r * Math.cos(robotAngle) - rightX;
+            rightFrontPower = r * Math.sin(robotAngle) + rightX;
+            leftBackPower = r * Math.sin(robotAngle) - rightX;
+            rightBackPower = r * Math.cos(robotAngle) + rightX;
 
-            double leftFrontPower = r * Math.cos(robotAngle) - rightX; //Calculates power
-            double rightFrontPower = r * Math.sin(robotAngle) + rightX; //^
-            double leftBackPower = r * Math.sin(robotAngle) - rightX;   //^
-            double rightBackPower = r * Math.cos(robotAngle) + rightX; //^
+            /*Limits values to acceptable motor inputs*/
+            Range.clip(leftFrontPower,-1, 1);
+            Range.clip(rightFrontPower, -1, 1);
+            Range.clip(leftBackPower, -1, 1);
+            Range.clip(rightBackPower, -1, 1);
 
-            Range.clip(leftFrontPower,-1, 1);  //Limits values to acceptable motor inputs
-            Range.clip(rightFrontPower, -1, 1); //^
-            Range.clip(leftBackPower, -1, 1);   //^
-            Range.clip(rightBackPower, -1, 1); //^
+            /*Adds aall values to*/
+            telemetry.addData("Left Front Power: ", leftFrontPower);
+            telemetry.addData("Right Front Power: ", rightFrontPower);
+            telemetry.addData("Left Back Power: ", leftBackPower);
+            telemetry.addData("Right Back Power: ", rightBackPower);
 
-            //WARNING: DPAD CONTROL OVERRIDES JOYSTICK CONTROL
+            /*DPAD CONTROL: WARNING: OVERRIDES JOYSTICK CONTROL*/
 
-            //Dpad control
-            if(aButtonGp1) {adjustmentSpeed++;} //A on gamepad 1 increases adjustment speed
-            if(bButtonGp1) {adjustmentSpeed--;} //B on gamepad 2 decreases adjustment speed
+            /*Adjusting the speed for dpad control*/
+            if(aButtonGp1) {unidirectionalSpeed+=0.05;} //A on gamepad 1 increases adjustment speed
+            if(bButtonGp1) {unidirectionalSpeed-=0.05;} //B on gamepad 1 decreases adjustment speed
+            telemetry.addData("Adjustment Speed: ", unidirectionalSpeed); //displays current adjustment speed
+            telemetry.update();
 
-            if(forward) {              //If dpad up pressed, drive forwards at adjustment speed
-                //^
-                robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
-                robot.rightFrontMotor.setPower(rightFrontPower); //^
-                robot.leftBackMotor.setPower(leftBackPower);    //^
-                robot.rightBackMotor.setPower(rightBackPower);  //^
+            /*While dpad up pressed, drive forwards at adjustment speed*/
+            while(forward) {
+                wheelPower(unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed);
             }
 
-            if(backward) {             //If dpad down pressed, drive backwards at adjustment speed
-                //^
-                robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
-                robot.rightFrontMotor.setPower(rightFrontPower); //^
-                robot.leftBackMotor.setPower(leftBackPower);    //^
-                robot.rightBackMotor.setPower(rightBackPower);  //^
+            /*If dpad down pressed, drive backwards at adjustment speed*/
+            while(backward) {
+                wheelPower(-unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed);
             }
 
-            if(left) {            //If dpad left pressed, drive left at adjustment speed;  //^
-                robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
-                robot.rightFrontMotor.setPower(rightFrontPower); //^
-                robot.leftBackMotor.setPower(leftBackPower);    //^
-                robot.rightBackMotor.setPower(rightBackPower);  //^
+            /*While dpad left pressed, drive left at adjustment speed*/
+            while(left) {            //If dpad left pressed, drive left at adjustment speed
+                wheelPower(unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed, unidirectionalSpeed);
             }
 
-            if(right) {          //If dpad right pressed, drive right at adjustment speed
-                ; //^
-                robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
-                robot.rightFrontMotor.setPower(rightFrontPower); //^
-                robot.leftBackMotor.setPower(leftBackPower);    //^
-                robot.rightBackMotor.setPower(rightBackPower);
-                  //^
+            /*While dpad right pressed, drive right at adjustment speed*/
+            while(right) {
+                wheelPower(-unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed, -unidirectionalSpeed);
             }
-            robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
-            robot.rightFrontMotor.setPower(rightFrontPower); //^
-            robot.leftBackMotor.setPower(leftBackPower);    //^
+
+            /*TURNS WHEELS ON*/
+            robot.leftFrontMotor.setPower(leftFrontPower);
+            robot.rightFrontMotor.setPower(rightFrontPower);
+            robot.leftBackMotor.setPower(leftBackPower);
             robot.rightBackMotor.setPower(rightBackPower);
-
-
-
 
         }
 
-
+        /* CODE FOR THE END OF THE PROGRAM*/
 
             if (!opModeIsActive()) {
-                telemetry.addData("Status: ", "Stopped"); //Says when program is over
+
+                /*Turns all motors off*/
+                wheelPower(0, 0, 0, 0);
+                robot.arm.setPower(0);
+                robot.leadScrew.setPower(0);
+
+                /*Declares end of program in telemetry*/
+                telemetry.addData("Status: ", "Stopped");
                 telemetry.update();
             }
+
         }
     }

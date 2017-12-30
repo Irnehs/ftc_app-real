@@ -36,6 +36,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
@@ -67,19 +73,34 @@ public class RelicAuto extends RelicBaseAuto {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        telemetry.addData("RelicAuto: ", "Connected"); //Check to make sure program is selected
-        telemetry.update();
+
+        //Check to make sure program is selected
+        sayAndPause("RelicAuto: ", "Connected", 0);
 
         robot.init(hardwareMap); //Runs when init button is pressed, sets up robot
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status: ", "It is working and you loaded the package.");  //Check to make sure variable initialized correctly
-        telemetry.update();
+        // Send telemetry message to signify robot waiting after initialization
+        sayAndPause("Status: ", "It is working and you loaded the package.", 0);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         telemetry.addData("Status: ", "Auto Active"); //Checks to make sure Op Mode is running
         telemetry.update();
+        sayAndPause("Status: ", "Auto Active", 0);
+
+        //Vuforia
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+
+        RelicRecoveryVuMark.from(relicTemplate);
 
 
 
@@ -88,7 +109,7 @@ public class RelicAuto extends RelicBaseAuto {
 
 
         telemetry.addData("Status: ", "Stopped"); //Says when program is over
-    telemetry.update();
+        telemetry.update();
 
     }
 }

@@ -38,6 +38,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+
+
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
@@ -63,6 +65,22 @@ public class RelicTeleOp extends LinearOpMode {
 
     // could also use HardwarePushbotMatrix class.
 
+    /*Create the method for setting the wheels' power*/
+
+    //Variables for the wheels power
+    double rightFrontPower;
+    double rightBackPower;
+    double leftFrontPower;
+    double leftBackPower;
+
+    //Actual method
+    public void wheelPower(double frontRight, double frontLeft, double backRight, double backLeft) {
+        rightFrontPower = frontRight;
+        leftFrontPower = frontLeft;
+        rightBackPower = backRight;
+        leftBackPower = backLeft;
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -72,22 +90,36 @@ public class RelicTeleOp extends LinearOpMode {
         telemetry.addData("RelicTeleOp: ", "Connected"); //Check to make sure program is selected
         telemetry.update();
 
+        /*INITIALIZATION OF ALL VARIABLES*/
 
-        boolean forward; //Used for dpad control
-        boolean backward; //^
-        boolean leftward; //^
-        boolean rightward;//^
-        boolean aButtonGp1;//^
-        boolean bButtonGp1;//^
+        /*Gamepad 1*/
+
+        //Dpad control of drivetrain
+        boolean forward;
+        boolean backward;
+        boolean leftward;
+        boolean rightward;
+        boolean aButtonGp1;
+        boolean bButtonGp1;
+        double adjustmentSpeed = 0.5;
+
+        //Bumpers for Gamepad 1
         boolean leftBumperGp1;
         boolean rightBumperGp1;
-        double adjustmentSpeed = 0.5; //^
+
+        /*Gamepad 2*/
+
+        //Glyph arm
         double armLevel = 1;
         boolean armUp;
         boolean armDown;
         int armRevolutions = 1/4;
         boolean aButtonGp2;
         boolean bButtonGp2;
+        boolean xButtonGp1;
+
+
+
 
         robot.init(hardwareMap); //Runs when init button is pressed, sets up robot
 
@@ -104,8 +136,11 @@ public class RelicTeleOp extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) { //Runs as long as stop is not on screen and play triangle has been clicked
-            //Get controller values for gamepads
-            //GAMEPAD 1
+
+            /*GET CONTROLLER VALUES*/
+
+            /*Gamepad 1*/
+
             forward = gamepad1.dpad_up;     //Up dpad
             backward = gamepad1.dpad_down;  //Down dpad
             leftward = gamepad1.dpad_left;  //Left dpad
@@ -114,65 +149,64 @@ public class RelicTeleOp extends LinearOpMode {
             bButtonGp1 = gamepad1.b;        //B
             rightBumperGp1 = gamepad1.right_bumper; //Right bumper
             leftBumperGp1 = gamepad1.left_bumper;   //Left bumper
-            armUp = gamepad2.right_bumper;
-            armDown = gamepad2.left_bumper;
-            aButtonGp2 = gamepad2.a;
-            bButtonGp2 = gamepad2.b;
+
+            /*Gamepad 2*/
+
+            armUp = gamepad2.right_bumper;  //Right bumper
+            armDown = gamepad2.left_bumper; //Left bumper
+            aButtonGp2 = gamepad2.a;        //A
+            bButtonGp2 = gamepad2.b;        //B
+            xButtonGp1 = gamepad1.x;        //X
 
 
-            //Joystick control
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);                        //Converts joystick to usable data,
-            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //^
-            double rightX = gamepad1.right_stick_x;                                                     //^
+            /*Joystick Control*/
 
-            double leftFrontPower = r * Math.cos(robotAngle) + rightX; //Calculates power
-            double rightFrontPower = r * Math.sin(robotAngle) - rightX; //^
-            double leftBackPower = r * Math.sin(robotAngle) + rightX;   //^
-            double rightBackPower = r * Math.cos(robotAngle) - rightX; //^
+            //Converts joystick output into variables used to calculate power for the wheels
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            double rightX = gamepad1.right_stick_x;
 
-            Range.clip(leftFrontPower,-1, 1);  //Limits values to acceptable motor inputs
-            Range.clip(rightFrontPower, -1, 1); //^
-            Range.clip(leftBackPower, -1, 1);   //^
-            Range.clip(rightBackPower, -1, 1); //^
+            //Uses created variables to calculate power for the wheels
+            leftFrontPower = r * Math.cos(robotAngle) + rightX;
+            rightFrontPower = r * Math.sin(robotAngle) - rightX;
+            leftBackPower = r * Math.sin(robotAngle) + rightX;
+            rightBackPower = r * Math.cos(robotAngle) - rightX;
 
-            //WARNING: DPAD CONTROL OVERRIDES JOYSTICK CONTROL
+            //Limits the wheel power to acceptable inputs
+            Range.clip(leftFrontPower,-1, 1);
+            Range.clip(rightFrontPower, -1, 1);
+            Range.clip(leftBackPower, -1, 1);
+            Range.clip(rightBackPower, -1, 1);
 
-            //Dpad control
-            if(aButtonGp1) {adjustmentSpeed++;} //A on gamepad 1 increases adjustment speed
-            if(bButtonGp1) {adjustmentSpeed--;} //B on gamepad 2 decreases adjustment speed
+            /*Dpad control: WARNING: OVERRIDES JOYSTICK CONTROL*/
 
-            if(forward) {              //If dpad up pressed, drive forwards at adjustment speed
-                leftFrontPower = -adjustmentSpeed;  //Sets new motor power
-                rightFrontPower = -adjustmentSpeed;  //^
-                leftBackPower = -adjustmentSpeed;    //^
-                rightBackPower = -adjustmentSpeed;  //^
+            //Adjusting the speed for dpad control
+            if(aButtonGp1) {adjustmentSpeed+=0.1;} //A on gamepad 1 increases adjustment speed
+            if(bButtonGp1) {adjustmentSpeed-=0.1;} //B on gamepad 2 decreases adjustment speed
+            telemetry.addData("Adjustment Speed: ", adjustmentSpeed);
+            telemetry.update();
+
+            /*If dpad up pressed, drive forwards at adjustment speed*/
+            while(forward) {
+                wheelPower(adjustmentSpeed, adjustmentSpeed, adjustmentSpeed, adjustmentSpeed); //Sets new wheel power
+            }
+            while(backward) {//If dpad down pressed, drive backwards at adjustment speed
+                wheelPower(-adjustmentSpeed, -adjustmentSpeed, -adjustmentSpeed, -adjustmentSpeed);// Sets new wheel power
             }
 
-            if(backward) {             //If dpad down pressed, drive backwards at adjustment speed
-                leftFrontPower = adjustmentSpeed; //Sets new motor power
-                rightFrontPower = adjustmentSpeed; //^
-                leftBackPower = adjustmentSpeed;   //^
-                rightBackPower = adjustmentSpeed; //^
+            while(leftward) {            //If dpad left pressed, drive left at adjustment speed
+                wheelPower(adjustmentSpeed, -adjustmentSpeed, -adjustmentSpeed, adjustmentSpeed); //Sets new wheel power
             }
 
-            if(leftward) {            //If dpad left pressed, drive left at adjustment speed
-                leftFrontPower = adjustmentSpeed; //Sets new motor power
-                rightFrontPower = -adjustmentSpeed; //^
-                leftBackPower = -adjustmentSpeed;  //^
-                rightBackPower = adjustmentSpeed;  //^
+            while(rightward) {          //If dpad right pressed, drive right at adjustment speed
+                wheelPower(-adjustmentSpeed, adjustmentSpeed, adjustmentSpeed, -adjustmentSpeed); //Sets new wheel Power
             }
 
-            if(rightward) {          //If dpad right pressed, drive right at adjustment speed
-                leftFrontPower = -adjustmentSpeed;  //Sets new motor power
-                rightFrontPower = adjustmentSpeed; //^
-                leftBackPower = adjustmentSpeed;   //^
-                rightBackPower = -adjustmentSpeed; //^
-            }
-
-            robot.leftFrontMotor.setPower(leftFrontPower);  //Sets power
-            robot.rightFrontMotor.setPower(rightFrontPower); //^
-            robot.leftBackMotor.setPower(leftBackPower);    //^
-            robot.rightBackMotor.setPower(rightBackPower);  //^
+            //TURNS WHEELS ON
+            robot.leftFrontMotor.setPower(leftFrontPower);
+            robot.rightFrontMotor.setPower(rightFrontPower);
+            robot.leftBackMotor.setPower(leftBackPower);
+            robot.rightBackMotor.setPower(rightBackPower);
 /*
             //Test Jewel Arm
             if(rightBumperGp1){
@@ -182,8 +216,9 @@ public class RelicTeleOp extends LinearOpMode {
                 robot.jewelMover.setPosition(jewelMoverStart);
             } //Return to start
 */
-            //Control the arm
+            /*Glyph Arm*/
 
+            //Sets the increasing levels
             if(armUp && armLevel <= 4) {
                 robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -191,6 +226,7 @@ public class RelicTeleOp extends LinearOpMode {
                 armLevel++;
             }
 
+            //Sets the decreasing levels
             if(armDown && armLevel >= 1) {
                 robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -198,15 +234,20 @@ public class RelicTeleOp extends LinearOpMode {
                 armLevel--;
             }
 
+            /*Claw*/
+
+            //Closes claws
             if(aButtonGp2) {
                 robot.leftClaw.setPosition(0.25);
                 robot.rightClaw.setPosition(0.25);
             }
 
+            //Opens claws
             if(bButtonGp2) {
                 robot.leftClaw.setPosition(0.8);
                 robot.rightClaw.setPosition(0.8);
             }
+
 
             telemetry.addData("Arm Level: ", armLevel);
             telemetry.update();
@@ -216,6 +257,8 @@ public class RelicTeleOp extends LinearOpMode {
             robot.waitForTick(40);
 
         }
+
+        /*Code for the end of the program*/
         if(!opModeIsActive()){
             telemetry.addData("Status: ", "Stopped"); //Says when program is over
             telemetry.update();

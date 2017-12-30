@@ -3,82 +3,75 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 /**
  * Created by Feklaar on 12/9/2017.
  */
-@Disabled
+/*CLASS FULL OF USEFUL METHODS THAT ARE COMMONLY REQUIRED*/
 abstract class RelicBaseAuto extends LinearOpMode {
     /* Declare OpMode members. */
-    RelicRecoveryHardware robot = new RelicRecoveryHardware();   // Use a Pushbot's hardware
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();
     String Version = "0.0.3";
+    VuforiaLocalizer vuforia;
 
-    public void driveForward(double power, long time) {
+    /*Driving*/
+
+    //Turning drive train off with time input
+    public void noDrive(long time) {
+        driveForward(0, 0, time);
+    }
+
+    //Driving forward with power and time inputs
+    public void driveForward(double power, long time, long pause) {
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
         robot.leftFrontMotor.setPower(power);
         robot.leftBackMotor.setPower(power);
         sleep(time);
+        noDrive(pause);
     }
-    public void driveBackward(double power, long time) {
-        driveForward(-power, time);
-    }
-    public void driveLeft(double power, long time) {
+
+    //Driving backward with power and time inputs
+    public void driveBackward(double power, long time, long pause) {driveForward(-power, time, pause);}
+
+    //Driving left with power and time inputs
+    public void driveLeft(double power, long time, long pause) {
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(-power);
         robot.leftFrontMotor.setPower(-power);
         robot.leftBackMotor.setPower(power);
         sleep(time);
+        noDrive(pause);
     }
 
-    public void driveRight(double power, long time) {
-        driveLeft(-power, time);
+    //Driving right with power and time inputs
+    public void driveRight(double power, long time, long pause) {
+        driveLeft(-power, time, pause);
     }
 
-    public void noDrive() {
-        driveForward(0,0);
+    //Turning clockwise with power and time inputs
+    public void turnClockwise(double power, long time, long pause) {
+        robot.rightFrontMotor.setPower(power);
+        robot.rightBackMotor.setPower(power);
+        robot.leftFrontMotor.setPower(-power);
+        robot.leftBackMotor.setPower(-power);
+        sleep(time);
+        noDrive(pause);
     }
 
-    public void firstSteps(boolean isBlue) {
-        long horizontalTime = 1000;
-        long verticalTime = 250;
-        //Close claws
+    //Turning counter clockwise with power and time inputs
+    public void turnCounterClockwise(double power, long time, long pause) {
+        turnClockwise(-power, time, pause);
+    }
 
-        //lift arm 1 step, extend arm
-
-        //drive left
-        driveLeft(1,horizontalTime);
-
-        //Scan color, jewel arm down
-        /*double ballRed = robot.colorSensor.red();
-        double ballBlue = robot.colorSensor.blue();
-        boolean ballIsBlue;
-
-        //Drive forward/Backwards (color dependent)
-        if (ballRed > 0 || ballBlue > 0) {
-            if (ballRed > ballBlue)
-                ballIsBlue = false;
-            else
-                ballIsBlue = true;
-
-            if (ballIsBlue == isBlue) {
-                driveBackward(1, verticalTime);
-                //armup()
-                driveForward(1, verticalTime);
-            }
-            else {
-                driveForward(1, verticalTime);
-                //armup()
-                driveBackward(1, verticalTime);
-            }
-
-        }
-        */
-        //scan Vuforia (might need to adjust phone or robot position)
-
-        //Drive right
-
-        /*Start of Non-generic code*/
-
-        //blue high
+    public void sayAndPause(String title, String caption, long pause) {
+        telemetry.addData(title, caption);
+        telemetry.update();
+        sleep(pause);
     }
 }
