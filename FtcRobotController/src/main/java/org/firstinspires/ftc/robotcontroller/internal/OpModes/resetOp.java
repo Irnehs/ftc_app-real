@@ -37,6 +37,7 @@ public class resetOp extends BaseOpMode {
             robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.leadScrew.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+            //Arm control
             if(armUp)
                 robot.arm.setPower(1);
             else if(armDown)
@@ -44,7 +45,7 @@ public class resetOp extends BaseOpMode {
             else
                 robot.arm.setPower(0);
 
-
+            //Lead screw control
             if(leadScrewIn)
                 robot.leadScrew.setPower(-0.1);
             else if(leadScrewOut)
