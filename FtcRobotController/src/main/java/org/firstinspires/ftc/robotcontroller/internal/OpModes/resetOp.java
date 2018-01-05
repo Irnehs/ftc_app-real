@@ -39,7 +39,7 @@ public class resetOp extends BaseOpMode {
 
             //Arm control
             if(armUp)
-                robot.arm.setPower(1);
+                robot.arm.setPower(0.1);
             else if(armDown)
                 robot.arm.setPower(-0.1);
             else
@@ -52,6 +52,7 @@ public class resetOp extends BaseOpMode {
                 robot.leadScrew.setPower(0.1);
             else
                 robot.leadScrew.setPower(0);
+            sleep(50);
         }
 
 
