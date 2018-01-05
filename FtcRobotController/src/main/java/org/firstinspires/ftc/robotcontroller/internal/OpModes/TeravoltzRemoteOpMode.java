@@ -94,9 +94,12 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
 
         int rotation = 1120;
         int halfRotation = rotation / 2;
-        int quarterRotation = halfRotation / 2;
         double armPosition = 1;
         double armSpeed = 0.2;
+
+        //For stepless arm usage
+        final int armMinPosition = robot.arm.getCurrentPosition();
+        final int armMaxPosition = armMinPosition + (5 * halfRotation);
 
         /*Drivetrain Variables*/
 
@@ -139,7 +142,19 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
 
-            //TODO: Change arm from steps to continuous operation
+            /*TODO: Change arm from steps to continuous operation
+            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+
+            //Arm control
+            if(armUp)
+                robot.arm.setPower(0.25);
+            else if(armDown)
+                robot.arm.setPower(-0.25);
+            else
+                robot.arm.setPower(0);
+
+
+             */
 
             if (update_cycles_left == 0) {
                 update_cycles_left = wait_for_cycles; // assuming we are updating something
