@@ -30,6 +30,8 @@ public class resetOp extends BaseOpMode {
 
         waitForStart();
         while(opModeIsActive()) {
+
+            //Define and init button variables
             boolean armUp = gamepad1.a;
             boolean armDown = gamepad1.b;
             boolean leadScrewIn = gamepad2.a;
