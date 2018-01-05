@@ -139,6 +139,8 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
 
+            //TODO: Change arm from steps to continuous operation
+
             if (update_cycles_left == 0) {
                 update_cycles_left = wait_for_cycles; // assuming we are updating something
 
