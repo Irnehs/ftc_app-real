@@ -82,7 +82,7 @@ public class BottomBlueAutonomous extends RelicBaseAuto {
         /*VARIABLE SETUP*/
 
         /*Driving*/
-        long time2 = 500;
+        long time2 = 1000;
         double power2 = 0.5;
         long time1 = 1000;
         double power1 = 1;
@@ -94,7 +94,7 @@ public class BottomBlueAutonomous extends RelicBaseAuto {
 
 
         /*Telemetry Pause*/
-        long telemetryPause = 250;
+        long telemetryPause = 50;
 
 
          /*Vuforia*/
@@ -150,7 +150,7 @@ public class BottomBlueAutonomous extends RelicBaseAuto {
         long clockStart = System.currentTimeMillis();
 
         //Scans for image until one is found
-        while(vuMark == RelicRecoveryVuMark.UNKNOWN && System.currentTimeMillis() - clockStart < 5000){
+        while (vuMark == RelicRecoveryVuMark.UNKNOWN && System.currentTimeMillis() - clockStart < 500) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Detecting: ", vuMark);
             telemetry.update();
@@ -165,13 +165,13 @@ public class BottomBlueAutonomous extends RelicBaseAuto {
         /*Different first moves for different images*/
 
         //Goes one box short of middle if left is correct column
-        if(vuMark == RelicRecoveryVuMark.LEFT) {
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
             sayAndPause("Driving to: ", "Left", telemetryPause);
             driveRight(power1, time1 - boxTime, drivingPause);
         }
 
         //Goes one box past middle if right is correct column
-        if(vuMark == RelicRecoveryVuMark.RIGHT){
+        if (vuMark == RelicRecoveryVuMark.RIGHT) {
             sayAndPause("Driving to: ", "Right", telemetryPause);
             driveRight(power1, time1 + boxTime, drivingPause);
         }
@@ -205,6 +205,19 @@ public class BottomBlueAutonomous extends RelicBaseAuto {
 
         /*Signify end with telemetry*/
         sayAndPause("Good Job, ", "All Done", telemetryPause);
+
+        if (!opModeIsActive()) {
+
+            /*Turns all motors off*/
+            noDrive(0);
+            robot.arm.setPower(0);
+            robot.leadScrew.setPower(0);
+
+            /*Declares end of program in telemetry*/
+            telemetry.addData("Status: ", "Stopped");
+            telemetry.update();
+            stop();
+        }
 
     }
 }

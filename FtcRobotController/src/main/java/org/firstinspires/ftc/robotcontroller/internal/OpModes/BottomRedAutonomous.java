@@ -41,7 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
-@Autonomous(name="Bottom Blue Auto", group="Relic Recovery")
+@Autonomous(name="Bottom Red Auto", group="Relic Recovery")
 
 public class BottomRedAutonomous extends RelicBaseAuto {
 
@@ -134,7 +134,7 @@ public class BottomRedAutonomous extends RelicBaseAuto {
         long clockStart = System.currentTimeMillis();
 
         //Scans for image until one is found
-        while(vuMark == RelicRecoveryVuMark.UNKNOWN && System.currentTimeMillis() - clockStart < 5000){
+        while (vuMark == RelicRecoveryVuMark.UNKNOWN && System.currentTimeMillis() - clockStart < 5000) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Detecting: ", vuMark);
             telemetry.update();
@@ -149,13 +149,13 @@ public class BottomRedAutonomous extends RelicBaseAuto {
         /*Different first moves for different images*/
 
         //Goes one box short of middle if left is correct column
-        if(vuMark == RelicRecoveryVuMark.LEFT) {
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
             sayAndPause("Driving to: ", "Left", telemetryPause);
             driveLeft(power1, time1 + boxTime, drivingPause);
         }
 
         //Goes one box past middle if right is correct column
-        if(vuMark == RelicRecoveryVuMark.RIGHT){
+        if (vuMark == RelicRecoveryVuMark.RIGHT) {
             sayAndPause("Driving to: ", "Right", telemetryPause);
             driveLeft(power1, time1 - boxTime, drivingPause);
         }
@@ -190,5 +190,17 @@ public class BottomRedAutonomous extends RelicBaseAuto {
         /*Signify end with telemetry*/
         sayAndPause("Good Job, ", "All Done", telemetryPause);
 
+        if (!opModeIsActive()) {
+
+            /*Turns all motors off*/
+            noDrive(0);
+            robot.arm.setPower(0);
+            robot.leadScrew.setPower(0);
+
+            /*Declares end of program in telemetry*/
+            telemetry.addData("Status: ", "Stopped");
+            telemetry.update();
+
+        }
     }
 }

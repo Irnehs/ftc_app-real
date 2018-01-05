@@ -96,103 +96,94 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
         int halfRotation = rotation / 2;
         int quarterRotation = halfRotation / 2;
         double armPosition = 1;
+        double armSpeed = 0.2;
 
         /*Drivetrain Variables*/
 
         //Dpad
-        double unidirectionalSpeed = 0;
+        double unidirectionalSpeed = 0.5;
 
-        /*Gamepad 1*/
 
-        boolean forward = gamepad1.dpad_up;     //Up dpad
-        boolean backward = gamepad1.dpad_down;  //Down dpad
-        boolean left = gamepad1.dpad_left;      //Left dpad
-        boolean right = gamepad1.dpad_right;    //Right dpad
-        boolean aButtonGp1 = gamepad1.a;        //A
-        boolean bButtonGp1 = gamepad1.b;        //B
-        boolean leadScrewIn = gamepad1.right_bumper; //Right bumper
-        boolean leadScrewOut = gamepad1.left_bumper; //Left bumper
-
-        /*Gamepad 2*/
-
-        boolean armUp = gamepad2.a;                    //A
-        boolean armDown = gamepad2.b;                  //B
-        boolean clawOpen = gamepad2.right_bumper;      //Right bumper
-        boolean clawClose = gamepad2.left_bumper;      //Left bumper
 
         /*END OF SETUP*/
 
         /* Send telemetry message to signify robot waiting*/
-        telemetry.addData("Ready: ", "It is working and you loaded the package.");
+        telemetry.addData("Ready: ", "It is working and you loaded the package. 4");
         telemetry.update();
 
         /* Wait for the game to start, which is when the driver presses PLAY*/
         waitForStart();
 
+        int update_cycles_left = 0;
+        int wait_for_cycles = 5;
+
         /*START OF LOOP THAT RUNS REPEATEDLY*/
         while (opModeIsActive()) {
-
-            /*GET CONTROLLER AND ROBOT VALUES*/
-
             /*Gamepad 1*/
-
-            forward = gamepad1.dpad_up;     //Up dpad
-            backward = gamepad1.dpad_down;  //Down dpad
-            left = gamepad1.dpad_left;      //Left dpad
-            right = gamepad1.dpad_right;    //Right dpad
-            aButtonGp1 = gamepad1.a;        //A
-            bButtonGp1 = gamepad1.b;        //B
-            leadScrewIn = gamepad1.right_bumper; //Right bumper
-            leadScrewOut = gamepad1.left_bumper; //Left bumper
+            boolean forward = gamepad1.dpad_up;     //Up dpad
+            boolean backward = gamepad1.dpad_down;  //Down dpad
+            boolean left = gamepad1.dpad_left;      //Left dpad
+            boolean right = gamepad1.dpad_right;    //Right dpad
+            boolean aButtonGp1 = gamepad1.a;        //A
+            boolean bButtonGp1 = gamepad1.b;        //B
+            boolean leadScrewIn = gamepad1.right_bumper; //Right bumper
+            boolean leadScrewOut = gamepad1.left_bumper; //Left bumper
 
             /*Gamepad 2*/
-
-            armUp = gamepad2.a;                    //A
-            armDown = gamepad2.b;                  //B
-            clawOpen = gamepad2.right_bumper;      //Right bumper
-            clawClose = gamepad2.left_bumper;      //Left bumper
-
-            /*Robot*/
+            boolean armUp = gamepad2.a;                    //A
+            boolean armDown = gamepad2.b;                  //B
+            boolean clawOpen = gamepad2.right_bumper;      //Right bumper
+            boolean clawClose = gamepad2.left_bumper;      //Left bumper
+            boolean armPositionUp = gamepad2.x;            //X
+            boolean armPositionDown = gamepad2.y;          //Y
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
 
+            if (update_cycles_left == 0) {
+                update_cycles_left = wait_for_cycles; // assuming we are updating something
 
-            /*GLYPH ARM CONTROL*/
+                if (armPositionUp && armPosition < 5) {
+                    armPosition++;
+                } else if (armPositionDown && armPosition > 1) {
+                    armPosition--;
+                } else if (armUp && armPosition < 5) {
+                    /*Sets position for raising of the glyph arm*/
+                    robot.arm.setTargetPosition(currentPos + halfRotation);
+                    robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.arm.setPower(armSpeed);
+                    armPosition = armPosition + 1;
+                } else if (armDown && armPosition > 1) {
+                    /*Sets position for lowering of the glyph arm*/
+                    robot.arm.setTargetPosition(currentPos - halfRotation);
+                    robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.arm.setPower(armSpeed);
+                    armPosition = armPosition - 1;
+                } else if (clawOpen) {
+                    /*Opens the claw*/
+                    robot.rightClaw.setPosition(.375);
+                    robot.leftClaw.setPosition(.125);
+                }
+                else if (clawClose) {
+                    /*Closes the claw*/
+                    robot.rightClaw.setPosition(.8);
+                    robot.leftClaw.setPosition(0.075);
+                }
+                /*LEAD SCREW CONTROL*/
+                else if (leadScrewIn) {
+                    telemetry.addData("Moving leadScrew In", "");
+                    robot.leadScrew.setPower(-0.1);
+                } else if (leadScrewOut) {
+                    telemetry.addData("Moving leadScrew Out", "");
+                    robot.leadScrew.setPower(0.1);
+                } else {
+                    // nothing pushed
+                    robot.leadScrew.setPower(0);
 
-            /*Sets position for raising of the glyph arm*/
-            if (armUp && armPosition < 5) {
-                telemetry.addData("Current Position", robot.arm.getCurrentPosition());
-                telemetry.update();
+                }
 
-                robot.arm.setTargetPosition(currentPos + halfRotation - 30);
-
-                telemetry.addData("Target:", robot.arm.getTargetPosition());
-                telemetry.update();
-                sleep(500);
-
-                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armPosition = armPosition + 1;
-            }
-
-            /*Sets position for lowering of the glyph arm*/
-            if (armDown && armPosition > 1) {
-                telemetry.addData("Current Position", robot.arm.getCurrentPosition());
-                telemetry.update();
-
-                robot.arm.setTargetPosition(currentPos - halfRotation - 50);
-
-                telemetry.addData("Target:", robot.arm.getTargetPosition());
-                telemetry.update();
-                sleep(500);
-
-                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armPosition = armPosition - 1;
-            }
-
-            /*Sets arm power and actually makes it run*/
-            if (armUp || armDown) {
-                robot.arm.setPower(0.45);
-                armDown = armUp = false;
+            } else {
+                // button already pushed.
+                update_cycles_left --;
             }
 
             /*Turns glyph arm off after it reaches target*/
@@ -201,24 +192,8 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            /*CLAW CONTROL*/
-
-            /*Opens the claw*/
-            if (clawOpen) {
-                robot.rightClaw.setPosition(.30);
-                robot.leftClaw.setPosition(.75);
-            }
-
-            /*Closes the claw*/
-            else if (clawClose) {
-                robot.rightClaw.setPosition(.875);
-                robot.leftClaw.setPosition(0);
-            }
-
-            /*LEAD SCREW CONTROL*/
-
-            /*Sets position for retraction of lead screw*/
-            if (leadScrewIn) {
+            //Sets position for retraction of lead screw
+            /*if (leadScrewIn) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
 
@@ -230,7 +205,7 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
-            /*Sets position for extension of lead screw*/
+            //Sets position for extension of lead screw
             else if (leadScrewOut) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
@@ -243,16 +218,18 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
-            /*Sets lead screw power and actually makes it run*/
+            //Sets lead screw power and actually makes it run
             if (leadScrewIn || leadScrewOut) {
                 robot.leadScrew.setPower(.45);
                 leadScrewIn = leadScrewOut = false;
             }
 
-            /*Turns lead screw off when target reached*/
+
+            //Turns lead screw off when target reached
             if (!(robot.leadScrew.isBusy())) {
                 robot.leadScrew.setPower(0);
             }
+            */
 
 
             /*JOYSTICK CONTROL*/
@@ -274,19 +251,11 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             Range.clip(leftBackPower, -1, 1);
             Range.clip(rightBackPower, -1, 1);
 
-            /*Adds aall values to*/
-            telemetry.addData("Left Front Power: ", leftFrontPower);
-            telemetry.addData("Right Front Power: ", rightFrontPower);
-            telemetry.addData("Left Back Power: ", leftBackPower);
-            telemetry.addData("Right Back Power: ", rightBackPower);
-
             /*DPAD CONTROL: WARNING: OVERRIDES JOYSTICK CONTROL*/
 
             /*Adjusting the speed for dpad control*/
             if(aButtonGp1) {unidirectionalSpeed+=0.05;} //A on gamepad 1 increases adjustment speed
             if(bButtonGp1) {unidirectionalSpeed-=0.05;} //B on gamepad 1 decreases adjustment speed
-            telemetry.addData("Adjustment Speed: ", unidirectionalSpeed); //displays current adjustment speed
-            telemetry.update();
 
             /*While dpad up pressed, drive forwards at adjustment speed*/
             while(forward) {
@@ -314,21 +283,35 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             robot.leftBackMotor.setPower(leftBackPower);
             robot.rightBackMotor.setPower(rightBackPower);
 
+            /*Adds all values to*/
+            telemetry.addData("rightClaw position:", robot.rightClaw.getPosition());
+            telemetry.addData("leftClaw position:", robot.leftClaw.getPosition());
+            telemetry.addData("Arm CurrentPosition:", robot.arm.getCurrentPosition());
+            telemetry.addData("Arm Target:", robot.arm.getTargetPosition());
+            telemetry.addData("Left Front Power: ", leftFrontPower);
+            telemetry.addData("Right Front Power: ", rightFrontPower);
+            telemetry.addData("Left Back Power: ", leftBackPower);
+            telemetry.addData("Right Back Power: ", rightBackPower);
+            telemetry.addData("Arm Position", armPosition);
+            telemetry.addData("Adjustment Speed: ", unidirectionalSpeed); //displays current adjustment speed
+            telemetry.update();
+
+            robot.waitForTick(40);
         }
 
         /* CODE FOR THE END OF THE PROGRAM*/
 
             if (!opModeIsActive()) {
 
-                /*Turns all motors off*/
-                wheelPower(0, 0, 0, 0);
-                robot.arm.setPower(0);
-                robot.leadScrew.setPower(0);
+            /*Turns all motors off*/
+            wheelPower(0, 0, 0, 0);
+            robot.arm.setPower(0);
+            robot.leadScrew.setPower(0);
 
-                /*Declares end of program in telemetry*/
-                telemetry.addData("Status: ", "Stopped");
-                telemetry.update();
-            }
-
+            /*Declares end of program in telemetry*/
+            telemetry.addData("Status: ", "Stopped");
+            telemetry.update();
         }
+
     }
+}
