@@ -49,9 +49,9 @@ public class resetOp extends BaseOpMode {
             if(leadScrewIn)
                 robot.leadScrew.setPower(-0.1);
             else if(leadScrewOut)
-                robot.arm.setPower(0.1);
+                robot.leadScrew.setPower(0.1);
             else
-                robot.arm.setPower(0);
+                robot.leadScrew.setPower(0);
         }
 
 
