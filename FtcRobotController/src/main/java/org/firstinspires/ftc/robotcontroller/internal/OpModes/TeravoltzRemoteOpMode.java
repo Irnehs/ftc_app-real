@@ -58,7 +58,6 @@ import com.qualcomm.robotcore.util.Range;
 public class TeravoltzRemoteOpMode extends LinearOpMode {
 
 
-
     /* Declare OpMode members. */
     RelicRecoveryHardware robot = new RelicRecoveryHardware();
     String Version = "0.0.3";
@@ -141,50 +140,58 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             boolean armPositionDown = gamepad2.y;          //Y
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
+            boolean max = currentPos <= armMaxPosition;
+            boolean min = currentPos >= armMinPosition;
+
 
             /*TODO: Change arm from steps to continuous operation
             robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
 
             //Arm control
-            if(armUp)
+            if(armUp && max && min)
                 robot.arm.setPower(0.25);
-            else if(armDown)
+            else if(armDown && max && min)
                 robot.arm.setPower(-0.25);
             else
                 robot.arm.setPower(0);
+                */
 
 
-             */
+
 
             if (update_cycles_left == 0) {
                 update_cycles_left = wait_for_cycles; // assuming we are updating something
+
+
 
                 if (armPositionUp && armPosition < 5) {
                     armPosition++;
                 } else if (armPositionDown && armPosition > 1) {
                     armPosition--;
                 } else if (armUp && armPosition < 5) {
-                    /*Sets position for raising of the glyph arm*/
+                    //Sets position for raising of the glyph arm
                     robot.arm.setTargetPosition(currentPos + halfRotation);
                     robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.arm.setPower(armSpeed);
                     armPosition = armPosition + 1;
                 } else if (armDown && armPosition > 1) {
-                    /*Sets position for lowering of the glyph arm*/
+                    //Sets position for lowering of the glyph arm
                     robot.arm.setTargetPosition(currentPos - halfRotation);
                     robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.arm.setPower(armSpeed);
                     armPosition = armPosition - 1;
-                } else if (clawOpen) {
+                }
+
+                if (clawOpen) {
                     /*Opens the claw*/
                     robot.rightClaw.setPosition(.375);
                     robot.leftClaw.setPosition(.125);
-                }
-                else if (clawClose) {
+                } else if (clawClose) {
                     /*Closes the claw*/
                     robot.rightClaw.setPosition(.8);
                     robot.leftClaw.setPosition(0.075);
                 }
+
                 /*LEAD SCREW CONTROL*/
                 else if (leadScrewIn) {
                     telemetry.addData("Moving leadScrew In", "");
@@ -197,17 +204,17 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
                     robot.leadScrew.setPower(0);
 
                 }
-
             } else {
                 // button already pushed.
                 update_cycles_left --;
             }
 
             /*Turns glyph arm off after it reaches target*/
-            if (!(robot.arm.isBusy())) {
+/*            if (!(robot.arm.isBusy())) {
                 robot.arm.setPower(0);
                 robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
+
 
             //Sets position for retraction of lead screw
             /*if (leadScrewIn) {
@@ -263,7 +270,7 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             rightBackPower = r * Math.cos(robotAngle) + rightX;
 
             /*Limits values to acceptable motor inputs*/
-            Range.clip(leftFrontPower,-1, 1);
+            Range.clip(leftFrontPower, -1, 1);
             Range.clip(rightFrontPower, -1, 1);
             Range.clip(leftBackPower, -1, 1);
             Range.clip(rightBackPower, -1, 1);
@@ -271,26 +278,30 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             /*DPAD CONTROL: WARNING: OVERRIDES JOYSTICK CONTROL*/
 
             /*Adjusting the speed for dpad control*/
-            if(aButtonGp1) {unidirectionalSpeed+=0.05;} //A on gamepad 1 increases adjustment speed
-            if(bButtonGp1) {unidirectionalSpeed-=0.05;} //B on gamepad 1 decreases adjustment speed
+            if (aButtonGp1) {
+                unidirectionalSpeed += 0.05;
+            } //A on gamepad 1 increases adjustment speed
+            if (bButtonGp1) {
+                unidirectionalSpeed -= 0.05;
+            } //B on gamepad 1 decreases adjustment speed
 
             /*While dpad up pressed, drive forwards at adjustment speed*/
-            while(forward) {
+            if (forward) {
                 wheelPower(unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed);
             }
 
             /*If dpad down pressed, drive backwards at adjustment speed*/
-            while(backward) {
+            if (backward) {
                 wheelPower(-unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed);
             }
 
             /*While dpad left pressed, drive left at adjustment speed*/
-            while(left) {            //If dpad left pressed, drive left at adjustment speed
+            if (left) {            //If dpad left pressed, drive left at adjustment speed
                 wheelPower(unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed, unidirectionalSpeed);
             }
 
             /*While dpad right pressed, drive right at adjustment speed*/
-            while(right) {
+            if (right) {
                 wheelPower(-unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed, -unidirectionalSpeed);
             }
 
@@ -314,18 +325,17 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
             telemetry.update();
 
             robot.waitForTick(40);
-        }
-
+         }  // end of while
         /* CODE FOR THE END OF THE PROGRAM*/
 
-            if (!opModeIsActive()) {
+        if (!opModeIsActive()) {
 
-            /*Turns all motors off*/
+        /*Turns all motors off*/
             wheelPower(0, 0, 0, 0);
             robot.arm.setPower(0);
             robot.leadScrew.setPower(0);
 
-            /*Declares end of program in telemetry*/
+        /*Declares end of program in telemetry*/
             telemetry.addData("Status: ", "Stopped");
             telemetry.update();
         }
