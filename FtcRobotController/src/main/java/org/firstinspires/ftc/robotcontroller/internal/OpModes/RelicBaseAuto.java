@@ -2,6 +2,7 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Feklaar on 12/9/2017.
  */
 /*CLASS FULL OF USEFUL METHODS THAT ARE COMMONLY REQUIRED*/
-abstract class RelicBaseAuto extends LinearOpMode {
+abstract class RelicBaseAuto extends BaseOpMode {
     /* Declare OpMode members. */
     RelicRecoveryHardware robot = new RelicRecoveryHardware();
     String Version = "0.0.3";
@@ -73,5 +74,30 @@ abstract class RelicBaseAuto extends LinearOpMode {
         telemetry.addData(title, caption);
         telemetry.update();
         sleep(pause);
+    }
+
+    public void extendLeadScrew(RelicRecoveryHardware robot) {
+        robot.leadScrew.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
+        telemetry.update();
+        robot.leadScrew.setTargetPosition((1120/2) * -30);
+        robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leadScrew.setPower(1);
+    }
+
+    public void raiseArm(RelicRecoveryHardware robot){
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + 1120);
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setPower(1);
+    }
+
+    public void lowerArm(RelicRecoveryHardware robot) {
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - 1120);
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setPower(1);
+
     }
 }

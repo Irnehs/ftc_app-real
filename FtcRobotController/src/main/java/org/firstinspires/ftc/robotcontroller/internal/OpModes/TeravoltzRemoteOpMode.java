@@ -55,7 +55,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="RemoteOpMode", group="TeleOp")
-public class TeravoltzRemoteOpMode extends LinearOpMode {
+public class TeravoltzRemoteOpMode extends BaseOpMode {
 
 
     /* Declare OpMode members. */
@@ -184,12 +184,10 @@ public class TeravoltzRemoteOpMode extends LinearOpMode {
 
                 if (clawOpen) {
                     /*Opens the claw*/
-                    robot.rightClaw.setPosition(.375);
-                    robot.leftClaw.setPosition(.125);
+                    openingClaw(robot);
                 } else if (clawClose) {
                     /*Closes the claw*/
-                    robot.rightClaw.setPosition(.8);
-                    robot.leftClaw.setPosition(0.075);
+                    closingClaw(robot);
                 }
 
                 /*LEAD SCREW CONTROL*/

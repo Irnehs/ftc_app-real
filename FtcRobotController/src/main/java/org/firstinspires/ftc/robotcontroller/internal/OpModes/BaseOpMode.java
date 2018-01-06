@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 abstract class BaseOpMode extends LinearOpMode{
 
     /* Declare OpMode members. */
-    //RelicRecoveryHardware robot = new RelicRecoveryHardware();   // Use a Pushbot's hardware
+    RelicRecoveryHardware robot = new RelicRecoveryHardware();   // Use a Pushbot's hardware
     String Version = "0.0.3";
 
     public void MecanumDrive(double speed, double direction, double rotation, RelicRecoveryHardware robot) {
@@ -23,4 +23,15 @@ abstract class BaseOpMode extends LinearOpMode{
         robot.leftBackMotor.setPower(v3);
         robot.rightBackMotor.setPower(v4);
     }
+
+    public void closingClaw(RelicRecoveryHardware robot){
+        robot.rightClaw.setPosition(0.9);
+        robot.leftClaw.setPosition(0.0);
+    }
+
+    public void openingClaw(RelicRecoveryHardware robot) {
+        robot.rightClaw.setPosition(.45);
+        robot.leftClaw.setPosition(.55);
+    }
+
 }

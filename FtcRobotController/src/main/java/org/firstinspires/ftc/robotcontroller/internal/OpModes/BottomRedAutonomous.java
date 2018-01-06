@@ -118,12 +118,15 @@ public class BottomRedAutonomous extends RelicBaseAuto {
 
         //Close claw
         sayAndPause("Closing Claw", " ", telemetryPause);
+        closingClaw(robot);
 
         //Raise arm
         sayAndPause("Raising Arm", " ", telemetryPause);
+        raiseArm(robot);
 
         //Extend lead screw
         sayAndPause("Extending lead screw", " ", telemetryPause);
+        extendLeadScrew(robot);
 
         /*Vuforia*/
 
@@ -178,12 +181,15 @@ public class BottomRedAutonomous extends RelicBaseAuto {
 
         //Lower arm to correct level
         sayAndPause("Lowering Arm", " ", telemetryPause);
+        lowerArm(robot);
 
         //Release claws
         sayAndPause("Releasing Claws", " ", telemetryPause);
+        openingClaw(robot);
 
         //Lift arm up
         sayAndPause("Lifting Arm Up", " ", telemetryPause);
+        raiseArm(robot);
 
         /*DONE*/
 
