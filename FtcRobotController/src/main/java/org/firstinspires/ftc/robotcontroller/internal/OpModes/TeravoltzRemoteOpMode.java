@@ -144,7 +144,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             boolean min = currentPos >= armMinPosition;
 
 
-            /*TODO: Change arm from steps to continuous operation
+            /*TODO: Change arm from steps to continuous operation*/
             robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
 
             //Arm control
@@ -154,57 +154,27 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 robot.arm.setPower(-0.25);
             else
                 robot.arm.setPower(0);
-                */
 
 
+            if (clawOpen) {
+                //Opens the claw
+                openingClaw(robot);
+            } else if (clawClose) {
+                //Closes the claw
+                closingClaw(robot);
+            }
 
-
-            if (update_cycles_left == 0) {
-                update_cycles_left = wait_for_cycles; // assuming we are updating something
-
-
-
-                if (armPositionUp && armPosition < 5) {
-                    armPosition++;
-                } else if (armPositionDown && armPosition > 1) {
-                    armPosition--;
-                } else if (armUp && armPosition < 5) {
-                    //Sets position for raising of the glyph arm
-                    robot.arm.setTargetPosition(currentPos + halfRotation);
-                    robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.arm.setPower(armSpeed);
-                    armPosition = armPosition + 1;
-                } else if (armDown && armPosition > 1) {
-                    //Sets position for lowering of the glyph arm
-                    robot.arm.setTargetPosition(currentPos - halfRotation);
-                    robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.arm.setPower(armSpeed);
-                    armPosition = armPosition - 1;
-                }
-
-                if (clawOpen) {
-                    /*Opens the claw*/
-                    openingClaw(robot);
-                } else if (clawClose) {
-                    /*Closes the claw*/
-                    closingClaw(robot);
-                }
-
-                /*LEAD SCREW CONTROL*/
-                else if (leadScrewIn) {
-                    telemetry.addData("Moving leadScrew In", "");
-                    robot.leadScrew.setPower(-0.1);
-                } else if (leadScrewOut) {
-                    telemetry.addData("Moving leadScrew Out", "");
-                    robot.leadScrew.setPower(0.1);
-                } else {
-                    // nothing pushed
-                    robot.leadScrew.setPower(0);
-
-                }
+            /*LEAD SCREW CONTROL*/
+            else if (leadScrewIn) {
+                telemetry.addData("Moving leadScrew In", "");
+                robot.leadScrew.setPower(-0.1);
+            } else if (leadScrewOut) {
+                telemetry.addData("Moving leadScrew Out", "");
+                robot.leadScrew.setPower(0.1);
             } else {
-                // button already pushed.
-                update_cycles_left --;
+                // nothing pushed
+                robot.leadScrew.setPower(0);
+
             }
 
             /*Turns glyph arm off after it reaches target*/
