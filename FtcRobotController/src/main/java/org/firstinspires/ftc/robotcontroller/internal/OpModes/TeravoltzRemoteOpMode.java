@@ -136,13 +136,13 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             boolean leadScrewOut = gamepad1.left_bumper; //Left bumper
 
             /*Gamepad 2*/
-            boolean armUp = gamepad2.a;                    //A
-            boolean armDown = gamepad2.b;                  //B
-            boolean armBottom = gamepad2.y;                //Y
-            boolean clawOpen = gamepad2.right_bumper;      //Right bumper
-            boolean clawClose = gamepad2.left_bumper;      //Left bumper
-            //boolean armPositionUp = gamepad2.x;            //X
-            //boolean armPositionDown = gamepad2.y;          //Y
+            boolean armDown = gamepad2.a;                         //A
+            boolean armUp = gamepad2.b;                           //B
+            boolean armBottom = gamepad2.y;                       //Y
+            boolean clawOpen = gamepad2.right_bumper;             //Right bumper
+            boolean clawClose = gamepad2.left_bumper;             //Left bumper
+            //boolean armPositionUp = gamepad2.x;                 //X
+            //boolean armPositionDown = gamepad2.y;               //Y
             boolean clawBigOpen = 0<gamepad2.right_trigger;
             boolean clawBigClose = 0<gamepad2.left_trigger;
 
@@ -180,6 +180,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             }
             else
                 robot.arm.setPower(0);
+                robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             if (clawOpen) {
                 //Opens the claw
@@ -278,6 +279,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             rightFrontPower = r * Math.sin(robotAngle) + rightX;
             leftBackPower = r * Math.sin(robotAngle) - rightX;
             rightBackPower = r * Math.cos(robotAngle) + rightX;
+            rightBackPower *= 0.9;
 
             /*Limits values to acceptable motor inputs*/
             Range.clip(leftFrontPower, -1, 1);
