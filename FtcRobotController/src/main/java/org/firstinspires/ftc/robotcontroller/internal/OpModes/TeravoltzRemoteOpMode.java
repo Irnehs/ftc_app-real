@@ -140,12 +140,25 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             boolean armPositionDown = gamepad2.y;          //Y
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
-            boolean max = currentPos <= armMaxPosition;
-            boolean min = currentPos >= armMinPosition;
+            boolean max = currentPos >= armMaxPosition;
+            boolean min = currentPos <= armMinPosition;
+
+            telemetry.addData("Arm Position: ", currentPos);
+            telemetry.update();
+
+            if(min) {
+                telemetry.addData("Arm: ", "Minimum reached");
+                telemetry.update();
+            }
+            if(max) {
+                telemetry.addData("Arm: ", "Maximum reached");
+                telemetry.update();
+            }
+
 
 
             /*TODO: Change arm from steps to continuous operation*/
-            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //Arm control
             if(armUp && max && min)
