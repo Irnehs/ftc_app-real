@@ -138,10 +138,11 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             /*Gamepad 2*/
             boolean armUp = gamepad2.a;                    //A
             boolean armDown = gamepad2.b;                  //B
+            boolean armBottom = gamepad2.y;                //Y
             boolean clawOpen = gamepad2.right_bumper;      //Right bumper
             boolean clawClose = gamepad2.left_bumper;      //Left bumper
-            boolean armPositionUp = gamepad2.x;            //X
-            boolean armPositionDown = gamepad2.y;          //Y
+            //boolean armPositionUp = gamepad2.x;            //X
+            //boolean armPositionDown = gamepad2.y;          //Y
             boolean clawBigOpen = 0<gamepad2.right_trigger;
             boolean clawBigClose = 0<gamepad2.left_trigger;
 
@@ -172,9 +173,13 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 robot.arm.setPower(0.4);
             else if(armDown && min)
                 robot.arm.setPower(-0.4);
+            else if (armBottom) {
+                robot.arm.setTargetPosition(armMinPosition);
+                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.arm.setPower(.7);
+            }
             else
                 robot.arm.setPower(0);
-
 
             if (clawOpen) {
                 //Opens the claw
