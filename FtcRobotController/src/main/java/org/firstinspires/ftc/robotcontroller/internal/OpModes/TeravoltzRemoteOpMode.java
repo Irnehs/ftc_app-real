@@ -140,8 +140,8 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             boolean armPositionDown = gamepad2.y;          //Y
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
-            boolean max = currentPos >= armMaxPosition;
-            boolean min = currentPos <= armMinPosition;
+            boolean max = currentPos <= armMaxPosition;
+            boolean min = currentPos >= armMinPosition;
 
             telemetry.addData("Arm Position: ", currentPos);
             telemetry.update();
