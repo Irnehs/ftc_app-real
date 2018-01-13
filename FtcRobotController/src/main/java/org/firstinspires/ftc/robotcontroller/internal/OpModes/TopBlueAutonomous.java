@@ -120,7 +120,7 @@ public class TopBlueAutonomous extends RelicBaseAuto {
 
         //Close claw
         sayAndPause("Closing Claw", " ", telemetryPause);
-        openingClaw(robot);
+        closingClaw(robot);
 
         //Raise arm
         sayAndPause("Raising Arm", " ", telemetryPause);
@@ -191,7 +191,7 @@ public class TopBlueAutonomous extends RelicBaseAuto {
 
         //Release claws
         sayAndPause("Releasing Claws", " ", telemetryPause);
-        closingClaw(robot);
+        openingClaw(robot);
 
         //Lift arm up
         sayAndPause("Lifting Arm Up", " ", telemetryPause);
