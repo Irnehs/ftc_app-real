@@ -99,6 +99,8 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         //For stepless arm usage
         final int armMinPosition = robot.arm.getCurrentPosition();
         final int armMaxPosition = armMinPosition + (5 * halfRotation);
+        telemetry.addData("Arm current position: ", armMaxPosition);
+        telemetry.update();
 
         /*Drivetrain Variables*/
 
@@ -116,8 +118,8 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         /* Wait for the game to start, which is when the driver presses PLAY*/
         waitForStart();
 
-        int update_cycles_left = 0;
-        int wait_for_cycles = 5;
+        //int update_cycles_left = 0;
+        //int wait_for_cycles = 5;
 
         /*START OF LOOP THAT RUNS REPEATEDLY*/
         while (opModeIsActive()) {
@@ -140,8 +142,8 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             boolean armPositionDown = gamepad2.y;          //Y
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
-            boolean max = currentPos <= armMaxPosition;
-            boolean min = currentPos >= armMinPosition;
+            boolean max = currentPos < armMaxPosition;
+            boolean min = currentPos > armMinPosition;
 
             telemetry.addData("Arm Position: ", currentPos);
             telemetry.update();
@@ -161,10 +163,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //Arm control
-            if(armUp && max && min)
-                robot.arm.setPower(0.25);
-            else if(armDown && max && min)
-                robot.arm.setPower(-0.25);
+            if(armUp && max)
+                robot.arm.setPower(0.4);
+            else if(armDown && min)
+                robot.arm.setPower(-0.4);
             else
                 robot.arm.setPower(0);
 
@@ -242,7 +244,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             /*Converts joystick output into variables used to calculate power for the wheels*/
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            double rightX = gamepad1.right_stick_x;
+            double rightX = -gamepad1.right_stick_x;
 
             /*Uses created variables to calculate power for the wheels*/
             leftFrontPower = r * Math.cos(robotAngle) - rightX;
