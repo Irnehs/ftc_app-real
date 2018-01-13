@@ -32,8 +32,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
@@ -98,7 +96,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
         //For stepless arm usage
         final int armMinPosition = robot.arm.getCurrentPosition();
-        final int armMaxPosition = armMinPosition + (5 * halfRotation);
+        final int armMaxPosition = armMinPosition + (6 * halfRotation);
         telemetry.addData("Arm current position: ", armMaxPosition);
         telemetry.update();
 
@@ -107,6 +105,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         //Dpad
         double unidirectionalSpeed = 0.5;
 
+        /*Claw variables*/
+        double clawDistance = 0;
+        robot.rightClaw.setPosition(1-clawDistance);
+        robot.leftClaw.setPosition(clawDistance);
 
 
         /*END OF SETUP*/
@@ -140,10 +142,13 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             boolean clawClose = gamepad2.left_bumper;      //Left bumper
             boolean armPositionUp = gamepad2.x;            //X
             boolean armPositionDown = gamepad2.y;          //Y
+            boolean clawBigOpen = 0<gamepad2.right_trigger;
+            boolean clawBigClose = 0<gamepad2.left_trigger;
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
             boolean max = currentPos < armMaxPosition;
             boolean min = currentPos > armMinPosition;
+
 
             telemetry.addData("Arm Position: ", currentPos);
             telemetry.update();
@@ -173,11 +178,28 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
             if (clawOpen) {
                 //Opens the claw
-                openingClaw(robot);
+                clawDistance-=0.03;
+                Range.clip(clawDistance, 0, 1);
+                robot.rightClaw.setPosition(1-clawDistance);
+                robot.leftClaw.setPosition(clawDistance);
             } else if (clawClose) {
                 //Closes the claw
-                closingClaw(robot);
+                clawDistance+=0.03;
+                Range.clip(clawDistance, 0, 1);
+                robot.rightClaw.setPosition(1-clawDistance);
+                robot.leftClaw.setPosition(clawDistance);
             }
+
+            if(clawBigOpen){
+                openingClaw(robot);
+                clawDistance = 0.1;
+            }
+            if(clawBigClose){
+                closingClaw(robot);
+                clawDistance = 0.6;
+            }
+
+
 
             /*LEAD SCREW CONTROL*/
             else if (leadScrewIn) {

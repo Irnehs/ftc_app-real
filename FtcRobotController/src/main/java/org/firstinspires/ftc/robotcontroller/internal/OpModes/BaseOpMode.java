@@ -24,14 +24,19 @@ abstract class BaseOpMode extends LinearOpMode{
         robot.rightBackMotor.setPower(v4);
     }
 
-    public void closingClaw(RelicRecoveryHardware robot){
+    public void openingClaw(RelicRecoveryHardware robot){
         robot.rightClaw.setPosition(0.9);
         robot.leftClaw.setPosition(0.0);
     }
 
-    public void openingClaw(RelicRecoveryHardware robot) {
-        robot.rightClaw.setPosition(.5);
-        robot.leftClaw.setPosition(.5);
+    public void closingClaw(RelicRecoveryHardware robot) {
+        robot.rightClaw.setPosition(.4);
+        robot.leftClaw.setPosition(.6);
+    }
+
+    public void placeBlock(RelicRecoveryHardware robot) {
+        robot.rightClaw.setPosition(.37);
+        robot.leftClaw.setPosition(.63);
     }
 
 }
