@@ -9,13 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  */
 
 @Autonomous(name="Bottom Red Auto", group="Relic Recovery")
-
-
-
-
-
-
-class BottomRedAuto extends RelicBaseAuto {
+public class BottomRedAuto extends RelicBaseAuto {
 
     /* Declare OpMode members. */
 
@@ -50,12 +44,12 @@ class BottomRedAuto extends RelicBaseAuto {
         driveForward(0.2, 1800, 1000);
 
         sayAndPause("Turning: ", "Counter Clockwise", 500);
-        turnCounterClockwise(0.5, 800, 250);
+        turnClockwise(0.5, 800, 250);
 
         sayAndPause("Driving: ", "Right", 500);
         driveForward(0.2, 200, 1000);
 
-        sayAndPause("Arm: ", "Lowering", 500);
+        sayAndPause("Arm: ", "Lowering", 1500);
         lowerArm(robot, 3360);
 
         sayAndPause("Claw: ", "Opening", 500);

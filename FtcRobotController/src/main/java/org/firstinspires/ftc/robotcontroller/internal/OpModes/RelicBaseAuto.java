@@ -61,7 +61,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
     }
 
     //Turning clockwise with power and time inputs
-    public void turnClockwise(double power, long time, long pause) {
+    public void turnCounterClockwise(double power, long time, long pause) {
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
         robot.leftFrontMotor.setPower(-power);
@@ -71,8 +71,8 @@ abstract class RelicBaseAuto extends BaseOpMode {
     }
 
     //Turning counter clockwise with power and time inputs
-    public void turnCounterClockwise(double power, long time, long pause) {
-        turnClockwise(-power, time, pause);
+    public void turnClockwise(double power, long time, long pause) {
+        turnCounterClockwise(-power, time, pause);
     }
 
     public void sayAndPause(String title, String caption, long pause) {

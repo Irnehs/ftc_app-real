@@ -78,12 +78,12 @@ public class BottomBlueAuto extends RelicBaseAuto {
         driveForward(0.2, 1800, 1000);
 
         sayAndPause("Turning: ", "Counter Clockwise", 500);
-        turnClockwise(0.5, 800, 250);
+        turnCounterClockwise(0.5, 800, 250);
 
         sayAndPause("Driving: ", "Right", 500);
         driveForward(0.2, 200, 1000);
 
-        sayAndPause("Arm: ", "Lowering", 500);
+        sayAndPause("Arm: ", "Lowering", 1500);
         lowerArm(robot, 3360);
 
         sayAndPause("Claw: ", "Opening", 500);

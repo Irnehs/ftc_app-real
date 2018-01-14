@@ -79,7 +79,7 @@ public class TopBlueAuto extends RelicBaseAuto {
         extendLeadScrew(robot);
 
         sayAndPause("Driving: ", "Forward", 500);
-        driveForward(0.2, 1000, 1000);
+        driveForward(0.2, 1500, 1000);
 
         sayAndPause("Driving: ", "Right", 500);
         driveRight(0.25, 1300, 1000);
@@ -100,7 +100,7 @@ public class TopBlueAuto extends RelicBaseAuto {
         driveBackward(.2, 700, 500);
 
         sayAndPause("Driving: ", "Forward", 500);
-        driveForward(0.2, 300, 1000);
+        driveForward(0.2, 800, 1000);
 
         /* CODE FOR THE END OF THE PROGRAM*/
 
