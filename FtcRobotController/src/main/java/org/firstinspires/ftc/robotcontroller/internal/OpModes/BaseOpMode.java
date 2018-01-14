@@ -35,8 +35,8 @@ abstract class BaseOpMode extends LinearOpMode{
     }
 
     public void placeBlock(RelicRecoveryHardware robot) {
-        robot.rightClaw.setPosition(.37);
-        robot.leftClaw.setPosition(.63);
+        robot.rightClaw.setPosition(.45);
+        robot.leftClaw.setPosition(.55);
     }
 
 }
