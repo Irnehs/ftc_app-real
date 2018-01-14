@@ -1,12 +1,21 @@
 package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 /**
  * Created by kevinrockwell on 1/14/18.
  */
 
-public class BottomRedAuto extends RelicBaseAuto {
+@Autonomous(name="Bottom Red Auto", group="Relic Recovery")
+
+
+
+
+
+
+class BottomRedAuto extends RelicBaseAuto {
 
     /* Declare OpMode members. */
 
