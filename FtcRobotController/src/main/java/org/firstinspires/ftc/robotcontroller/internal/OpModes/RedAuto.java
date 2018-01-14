@@ -79,23 +79,28 @@ public class RedAuto extends RelicBaseAuto {
         extendLeadScrew(robot);
 
         sayAndPause("Driving: ", "Forward", 500);
-        driveForward(0.5, 1200, 5000);
+        driveForward(0.2, 1700, 1000);
 
         sayAndPause("Driving: ", "Right", 500);
-        driveRight(0.5, 1500, 5000);
+        driveRight(0.25, 1300, 1000);
 
         sayAndPause("Arm: ", "Lowering", 500);
         lowerArm(robot, 3360);
 
         sayAndPause("Claw: ", "Opening", 500);
-        openingClaw(robot);
+        placeBlock(robot);
 
         sayAndPause("Arm: ", "Raising", 500);
         raiseArm(robot, 3360);
 
         sayAndPause("Claw ", "Closing", 500);
-        driveForward(0.5, 500, 250);
+        driveForward(0.2, 500, 250);
 
+        sayAndPause("Driving", "Back", 500);
+        driveBackward(.2, 700, 500);
+
+        sayAndPause("Driving: ", "Forward", 500);
+        driveForward(0.2, 300, 1000);
 
         /* CODE FOR THE END OF THE PROGRAM*/
 
@@ -107,7 +112,7 @@ public class RedAuto extends RelicBaseAuto {
         /*Declares end of program in telemetry*/
             telemetry.addData("Status: ", "Stopped");
             telemetry.update();
-        
+
 
     }
 }

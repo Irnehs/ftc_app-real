@@ -24,7 +24,11 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
     //Turning drive train off with time input
     public void noDrive(long time) {
-        driveForward(0, 0, time);
+        robot.rightFrontMotor.setPower(0);
+        robot.rightBackMotor.setPower(0);
+        robot.leftFrontMotor.setPower(0);
+        robot.leftBackMotor.setPower(0);
+        sleep(time);
     }
 
     //Driving forward with power and time inputs
@@ -52,6 +56,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
     //Driving right with power and time inputs
     public void driveRight(double power, long time, long pause) {
+
         driveLeft(-power, time, pause);
     }
 
