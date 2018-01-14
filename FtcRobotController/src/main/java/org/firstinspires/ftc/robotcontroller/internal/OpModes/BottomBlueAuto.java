@@ -34,19 +34,15 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //1.5
 //1
 //1.5
 
 
-@Autonomous(name="Red Auto", group="Relic Recovery")
+@Autonomous(name="Bottom Blue Auto", group="Relic Recovery")
 
-public class RedAuto extends RelicBaseAuto {
+public class BottomBlueAuto extends RelicBaseAuto {
 
 
     /* Declare OpMode members. */
@@ -79,16 +75,19 @@ public class RedAuto extends RelicBaseAuto {
         extendLeadScrew(robot);
 
         sayAndPause("Driving: ", "Forward", 500);
-        driveForward(0.2, 1700, 1000);
+        driveForward(0.2, 1800, 1000);
+
+        sayAndPause("Turning: ", "Counter Clockwise", 500);
+        turnClockwise(0.5, 800, 250);
 
         sayAndPause("Driving: ", "Right", 500);
-        driveRight(0.25, 1300, 1000);
+        driveForward(0.2, 200, 1000);
 
         sayAndPause("Arm: ", "Lowering", 500);
         lowerArm(robot, 3360);
 
         sayAndPause("Claw: ", "Opening", 500);
-        placeBlock(robot);
+        openingClaw(robot);
 
         sayAndPause("Arm: ", "Raising", 500);
         raiseArm(robot, 3360);
@@ -100,7 +99,7 @@ public class RedAuto extends RelicBaseAuto {
         driveBackward(.2, 700, 500);
 
         sayAndPause("Driving: ", "Forward", 500);
-        driveForward(0.2, 300, 1000);
+        driveForward(0.2, 1000, 1000);
 
         /* CODE FOR THE END OF THE PROGRAM*/
 

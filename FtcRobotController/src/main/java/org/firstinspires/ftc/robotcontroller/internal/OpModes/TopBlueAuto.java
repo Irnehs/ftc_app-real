@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 /**
  * Created by kevinrockwell on 1/13/18.
  */
 
-public class BlueAuto extends RelicBaseAuto {
+@Autonomous(name="Top Blue Auto", group="Relic Recoveru")
+
+public class TopBlueAuto extends RelicBaseAuto {
 
     String Version = "0.0.3";
     VuforiaLocalizer vuforia;
