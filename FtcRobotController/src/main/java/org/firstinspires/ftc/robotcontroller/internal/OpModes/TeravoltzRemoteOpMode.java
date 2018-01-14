@@ -95,8 +95,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         double armSpeed = 0.2;
 
         //For stepless arm usage
-        final int armMinPosition = robot.arm.getCurrentPosition();
-        final int armMaxPosition = armMinPosition + (6 * halfRotation);
+
+        final int armMaxPosition = robot.arm.getCurrentPosition();
+        final int armMinPosition = armMaxPosition - (6*halfRotation);
+
         telemetry.addData("Arm current position: ", armMaxPosition);
         telemetry.update();
 
@@ -145,10 +147,12 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             //boolean armPositionDown = gamepad2.y;               //Y
             boolean clawBigOpen = 0<gamepad2.right_trigger;
             boolean clawBigClose = 0<gamepad2.left_trigger;
+            boolean clawPlace = gamepad2.dpad_right;
 
             int currentPos = robot.arm.getCurrentPosition(); // Stores current arm position
             boolean max = currentPos < armMaxPosition;
             boolean min = currentPos > armMinPosition;
+            boolean toMin = false;
 
 
             telemetry.addData("Arm Position: ", currentPos);
@@ -163,11 +167,6 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 telemetry.update();
             }
 
-
-
-            /*TODO: Change arm from steps to continuous operation*/
-            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
             //Arm control
             if(armUp && max)
                 robot.arm.setPower(0.4);
@@ -176,12 +175,17 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             else if (armBottom) {
                 robot.arm.setTargetPosition(armMinPosition);
                 robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.arm.setPower(.7);
+                toMin = true;
             }
             else
                 robot.arm.setPower(0);
-                robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+            if (toMin) {
+                robot.arm.setPower(0.7);
+            }
+            else {
+                robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
             if (clawOpen) {
                 //Opens the claw
                 clawDistance-=0.03;
@@ -194,6 +198,9 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 Range.clip(clawDistance, 0, 1);
                 robot.rightClaw.setPosition(1-clawDistance);
                 robot.leftClaw.setPosition(clawDistance);
+            } else if (clawPlace) {
+                placeBlock(robot);
+                clawDistance = 0.6;
             }
 
             if(clawBigOpen){
@@ -280,6 +287,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             leftBackPower = r * Math.sin(robotAngle) - rightX;
             rightBackPower = r * Math.cos(robotAngle) + rightX;
             rightBackPower *= 0.9;
+            leftBackPower *= 0.9;
 
             /*Limits values to acceptable motor inputs*/
             Range.clip(leftFrontPower, -1, 1);
@@ -338,6 +346,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
             robot.waitForTick(40);
          }  // end of while
+
         /* CODE FOR THE END OF THE PROGRAM*/
 
         if (!opModeIsActive()) {

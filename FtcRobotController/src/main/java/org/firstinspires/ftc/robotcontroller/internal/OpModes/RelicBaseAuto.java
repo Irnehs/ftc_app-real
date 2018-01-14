@@ -86,18 +86,19 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.leadScrew.setPower(1);
     }
 
-    public void raiseArm(RelicRecoveryHardware robot){
+    public void raiseArm(RelicRecoveryHardware robot, int height){
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + 1120);
+        robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + height);
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(1);
     }
 
-    public void lowerArm(RelicRecoveryHardware robot) {
+    public void lowerArm(RelicRecoveryHardware robot, int height) {
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - 1120);
+        robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - height);
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(1);
 
     }
+
 }
