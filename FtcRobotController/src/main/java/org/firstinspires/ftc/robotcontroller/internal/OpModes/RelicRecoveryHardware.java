@@ -76,7 +76,7 @@ public class RelicRecoveryHardware
         // Define and initialize ALL installed servos.
         rightClaw = hwMap.servo.get("rightClaw");
         leftClaw = hwMap.servo.get("leftClaw");
-        ballLower = hwMap.servo.get("ballLower"); //HAHAHAHAHAHAHAHAHAHAHA
+        ballLower = hwMap.servo.get("ballLower");
         ballSwivel = hwMap.servo.get("ballSwivel");
         //jewelArm = hwMap.servo.get("jewelArm");
 
