@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -46,7 +49,9 @@ public class RelicRecoveryHardware
     public DcMotor leftBackMotor;
     public DcMotor rightBackMotor;
 
-    //public ColorSensor colorSensor;
+    public ColorSensor colorSensor;
+    public GyroSensor gyroSensor;
+
 
     /* Constructor */
     public RelicRecoveryHardware(){
@@ -72,7 +77,8 @@ public class RelicRecoveryHardware
         //jewelArm = hwMap.servo.get("jewelArm");
 
         //define sensors
-        //colorSensor = hwMap.colorSensor.get("colorSensor");
+        colorSensor = hwMap.colorSensor.get("colorSensor");
+        gyroSensor = hwMap.gyroSensor.get("gyroSensor");
 
         //Sets spin directions to make writing power easier
         arm.setDirection(DcMotorSimple.Direction.FORWARD);

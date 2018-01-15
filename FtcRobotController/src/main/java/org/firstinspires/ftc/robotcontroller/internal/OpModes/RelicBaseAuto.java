@@ -3,6 +3,7 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -23,29 +24,27 @@ abstract class RelicBaseAuto extends BaseOpMode {
     /*Driving*/
 
     //Turning drive train off with time input
-    public void noDrive(long time) {
+    public void noDrive() {
         robot.rightFrontMotor.setPower(0);
         robot.rightBackMotor.setPower(0);
         robot.leftFrontMotor.setPower(0);
         robot.leftBackMotor.setPower(0);
-        sleep(time);
     }
 
     //Driving forward with power and time inputs
-    public void driveForward(double power, long time, long pause) {
+    public void driveForward(double power, long time) {
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
         robot.leftFrontMotor.setPower(power);
         robot.leftBackMotor.setPower(power);
         sleep(time);
-        noDrive(pause);
     }
 
     //Driving backward with power and time inputs
-    public void driveBackward(double power, long time, long pause) {driveForward(-power, time, pause);}
+    public void driveBackward(double power, long time) {driveForward(-power, time);}
 
     //Driving left with power and time inputs
-    public void driveLeft(double power, long time, long pause) {
+   /* public void driveLeft(double power, long time, long pause) {
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(-power);
         robot.leftFrontMotor.setPower(-power);
@@ -58,22 +57,41 @@ abstract class RelicBaseAuto extends BaseOpMode {
     public void driveRight(double power, long time, long pause) {
 
         driveLeft(-power, time, pause);
-    }
+    }*/
 
     //Turning clockwise with power and time inputs
-    public void turnCounterClockwise(double power, long time, long pause) {
-        robot.rightFrontMotor.setPower(power);
-        robot.rightBackMotor.setPower(power);
-        robot.leftFrontMotor.setPower(-power);
-        robot.leftBackMotor.setPower(-power);
-        sleep(time);
-        noDrive(pause);
+    public void turnClockwise(double power, int degrees) {
+        robot.gyroSensor.calibrate();
+        boolean notEqual;
+        double wheelPower;
+
+
+        if(degrees<0) {
+            notEqual = robot.gyroSensor.getHeading() < degrees;
+        }
+        else {
+            notEqual = robot.gyroSensor.getHeading() > degrees;
+        }
+
+
+        while(notEqual) {
+            wheelPower = (degrees - robot.gyroSensor.getHeading())/(degrees/4);
+            Range.clip(wheelPower,-1, 1);
+
+            if(wheelPower < 0.1 && wheelPower > -0.1) {
+                wheelPower = (wheelPower/Math.abs(wheelPower) * 0.1);
+            }
+
+            robot.rightFrontMotor.setPower(-wheelPower);
+            robot.rightBackMotor.setPower(-wheelPower);
+            robot.leftFrontMotor.setPower(wheelPower);
+            robot.leftBackMotor.setPower(wheelPower);
+        }
+
+        noDrive();
     }
 
-    //Turning counter clockwise with power and time inputs
-    public void turnClockwise(double power, long time, long pause) {
-        turnCounterClockwise(-power, time, pause);
-    }
+
 
     public void sayAndPause(String title, String caption, long pause) {
         telemetry.addData(title, caption);

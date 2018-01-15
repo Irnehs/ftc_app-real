@@ -24,6 +24,8 @@ public class TopRedAuto extends RelicBaseAuto {
         /* Initialize the hardware variables with init button*/
         robot.init(hardwareMap);
 
+
+
         waitForStart();
 
         //Starts at 1300(start + 1000) needed - 2240 +120 = 2360
@@ -31,17 +33,18 @@ public class TopRedAuto extends RelicBaseAuto {
         sayAndPause("Claw: ", "Closing", 500);
         closingClaw(robot);
 
-
         sayAndPause("Arm: ", "Raising", 500);
         raiseArm(robot, 2360);
 
         extendLeadScrew(robot);
 
+
+
         sayAndPause("Driving: ", "Forward", 500);
         driveForward(0.2, 1500, 1000);
 
         sayAndPause("Driving: ", "Left", 500);
-        driveLeft(0.25, 1300, 1000);
+        turnCounterClockwise(0.5, 100, 1000);
 
         sayAndPause("Arm: ", "Lowering", 500);
         lowerArm(robot, 3360);
