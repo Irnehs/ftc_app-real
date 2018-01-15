@@ -40,6 +40,8 @@ public class RelicRecoveryHardware
     //Declare Hardware
     public Servo rightClaw;
     public Servo leftClaw;
+    public Servo ballLower;
+    public Servo ballSwivel;
     //public Servo jewelArm;
 
     public DcMotor arm;
@@ -74,6 +76,8 @@ public class RelicRecoveryHardware
         // Define and initialize ALL installed servos.
         rightClaw = hwMap.servo.get("rightClaw");
         leftClaw = hwMap.servo.get("leftClaw");
+        ballLower = hwMap.servo.get("ballLower"); //HAHAHAHAHAHAHAHAHAHAHA
+        ballSwivel = hwMap.servo.get("ballSwivel");
         //jewelArm = hwMap.servo.get("jewelArm");
 
         //define sensors

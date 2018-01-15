@@ -91,6 +91,10 @@ abstract class RelicBaseAuto extends BaseOpMode {
         noDrive();
     }
 
+    public void blueBallKnock() {
+
+    }
+
 
 
     public void sayAndPause(String title, String caption, long pause) {
