@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -57,7 +58,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
     public void driveRight(double power, long time, long pause) {
 
         driveLeft(-power, time, pause);
-    }*/
+    }
 
     //Turning clockwise with power and time inputs
     public void turnClockwise(double power, int degrees) {
@@ -89,6 +90,20 @@ abstract class RelicBaseAuto extends BaseOpMode {
         }
 
         noDrive();
+    }*/
+
+    public void turnCounterClockwise(double power, long time, long pause) {
+        robot.rightFrontMotor.setPower(power);
+        robot.rightBackMotor.setPower(power);
+        robot.leftFrontMotor.setPower(-power);
+        robot.leftBackMotor.setPower(-power);
+        sleep(time);
+        noDrive(pause);
+    }
+
+    //Turning counter clockwise with power and time inputs
+    public void turnClockwise(double power, long time, long pause) {
+        turnCounterClockwise(-power, time, pause);
     }
 
     public void sayAndPause(String title, String caption, long pause) {
@@ -146,61 +161,16 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.ballLower.setPosition(0.5);
     }
 
-    public void blueVuforia() {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
-        relicTrackables.activate();
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
-        double vuforiaStart = getRuntime();
-
-        while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if(getRuntime() - vuforiaStart >= 2000) {
-                vuMark = RelicRecoveryVuMark.CENTER;
-            }
-        }
-
-        driveForward(1, 0);
-        int row = 0;
-
-        while(row==0) {
-            robot.colorSensor.
-
-
-        }
-
-        while (row==1) {
-
-        }
-
-        while (row==2) {
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }
-
+    public void waitForColumn(int columns) {
+        for(int currentColumn = 0; currentColumn < columns; currentColumn++)
     }
+
+
+
+
+
+
+
 
 
 
