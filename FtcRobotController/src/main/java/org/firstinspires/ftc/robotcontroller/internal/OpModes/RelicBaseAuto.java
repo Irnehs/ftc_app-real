@@ -91,17 +91,13 @@ abstract class RelicBaseAuto extends BaseOpMode {
         noDrive();
     }
 
-    public void blueBallKnock() {
-
-    }
-
-
-
     public void sayAndPause(String title, String caption, long pause) {
         telemetry.addData(title, caption);
         telemetry.update();
         sleep(pause);
     }
+
+
 
     public void extendLeadScrew(RelicRecoveryHardware robot) {
         robot.leadScrew.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -119,6 +115,94 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(1);
     }
+
+    public void blueBallKnock() {
+        robot.ballLower.setPosition(0);
+        sleep(250);
+        if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
+            robot.ballSwivel.setPosition(0.8);
+        }
+        if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
+            robot.ballSwivel.setPosition(0.2);
+        }
+        sleep(250);
+        robot.ballSwivel.setPosition(0.5);
+        sleep(250);
+        robot.ballLower.setPosition(0.5);
+    }
+
+    public void redBallKnock() {
+        robot.ballLower.setPosition(0);
+        sleep(250);
+        if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
+            robot.ballSwivel.setPosition(0.2);
+        }
+        if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
+            robot.ballSwivel.setPosition(0.8);
+        }
+        sleep(250);
+        robot.ballSwivel.setPosition(0.5);
+        sleep(250);
+        robot.ballLower.setPosition(0.5);
+    }
+
+    public void blueVuforia() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        relicTrackables.activate();
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        double vuforiaStart = getRuntime();
+
+        while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if(getRuntime() - vuforiaStart >= 2000) {
+                vuMark = RelicRecoveryVuMark.CENTER;
+            }
+        }
+
+        driveForward(1, 0);
+        int row = 0;
+
+        while(row==0) {
+            robot.colorSensor.
+
+
+        }
+
+        while (row==1) {
+
+        }
+
+        while (row==2) {
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+    }
+
+
 
     public void lowerArm(RelicRecoveryHardware robot, int height) {
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

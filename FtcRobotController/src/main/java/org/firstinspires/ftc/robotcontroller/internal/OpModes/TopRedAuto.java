@@ -2,7 +2,10 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by kevinrockwell on 1/13/18.
@@ -24,8 +27,6 @@ public class TopRedAuto extends RelicBaseAuto {
         /* Initialize the hardware variables with init button*/
         robot.init(hardwareMap);
 
-
-
         waitForStart();
 
         //Starts at 1300(start + 1000) needed - 2240 +120 = 2360
@@ -38,13 +39,11 @@ public class TopRedAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
-
-
         sayAndPause("Driving: ", "Forward", 500);
         driveForward(0.2, 1500, 1000);
 
         sayAndPause("Driving: ", "Left", 500);
-        turnCounterClockwise(0.5, 100, 1000);
+        turnClockwise(1, -90);
 
         sayAndPause("Arm: ", "Lowering", 500);
         lowerArm(robot, 3360);
