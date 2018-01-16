@@ -98,7 +98,8 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.leftFrontMotor.setPower(-power);
         robot.leftBackMotor.setPower(-power);
         sleep(time);
-        noDrive(pause);
+        noDrive();
+        sleep(pause);
     }
 
     //Turning counter clockwise with power and time inputs
@@ -160,19 +161,6 @@ abstract class RelicBaseAuto extends BaseOpMode {
         sleep(250);
         robot.ballLower.setPosition(0.5);
     }
-
-    public void waitForColumn(int columns) {
-        for(int currentColumn = 0; currentColumn < columns; currentColumn++)
-    }
-
-
-
-
-
-
-
-
-
 
     public void lowerArm(RelicRecoveryHardware robot, int height) {
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
