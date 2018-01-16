@@ -100,6 +100,8 @@ public class TopBlueAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
+        blueBallKnock();
+
         //Start of vuforia
         relicTrackables.activate();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);

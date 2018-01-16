@@ -133,12 +133,15 @@ abstract class RelicBaseAuto extends BaseOpMode {
     }
 
     public void blueBallKnock() {
+        sayAndPause("Ball Knock Starting", "", 250);
         robot.ballLower.setPosition(0);
         sleep(250);
         if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
+            sayAndPause("Ball Color: ", "Red", 250);
             robot.ballSwivel.setPosition(0.8);
         }
-        if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
+        else if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
+            sayAndPause("Ball Color: ", "Blue", 250);
             robot.ballSwivel.setPosition(0.2);
         }
         sleep(250);
@@ -148,12 +151,15 @@ abstract class RelicBaseAuto extends BaseOpMode {
     }
 
     public void redBallKnock() {
+        sayAndPause("Ball Knock Starting", "", 250);
         robot.ballLower.setPosition(0);
         sleep(250);
         if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
+            sayAndPause("Ball Color: ", "Red", 250);
             robot.ballSwivel.setPosition(0.2);
         }
         if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
+            sayAndPause("Ball Color: ", "Blue", 250);
             robot.ballSwivel.setPosition(0.8);
         }
         sleep(250);

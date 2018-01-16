@@ -66,6 +66,8 @@ public class BottomRedAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
+        redBallKnock();
+
         //Start of vuforia
         relicTrackables.activate();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
