@@ -2,6 +2,7 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -46,8 +47,8 @@ public class RelicRecoveryHardware
     public Servo rightClaw;
     public Servo leftClaw;
     public Servo ballLower;
-    public Servo ballSwivel;
-    //public Servo jewelArm;
+    public CRServo ballSwivel;
+   // public Servo jewelArm;
 
     public DcMotor arm;
     public DcMotor leadScrew;
@@ -56,9 +57,9 @@ public class RelicRecoveryHardware
     public DcMotor leftBackMotor;
     public DcMotor rightBackMotor;
 
-    public GyroSensor gyroSensor;
-    public ColorSensor colorSensor;
-    public DistanceSensor distanceSensor;
+    //public GyroSensor gyroSensor;
+    //public ColorSensor colorSensor;
+   // public DistanceSensor distanceSensor;
 
     /* Constructor */
     public RelicRecoveryHardware(){
@@ -82,13 +83,13 @@ public class RelicRecoveryHardware
         rightClaw = hwMap.servo.get("rightClaw");
         leftClaw = hwMap.servo.get("leftClaw");
         ballLower = hwMap.servo.get("ballLower");
-        ballSwivel = hwMap.servo.get("ballSwivel");
-        //jewelArm = hwMap.servo.get("jewelArm");
+        ballSwivel = hwMap.crservo.get("ballSwivel");
+       // jewelArm = hwMap.servo.get("jewelArm");
 
         //define sensors
-        colorSensor = hwMap.get(ColorSensor.class, "colorDistanceSensor");
-        distanceSensor = hwMap.get(DistanceSensor.class, "colorDistanceSensor");
-        gyroSensor = hwMap.gyroSensor.get("gyroSensor");
+    //   colorSensor = hwMap.get(ColorSensor.class, "colorDistanceSensor");
+      //  distanceSensor = hwMap.get(DistanceSensor.class, "colorDistanceSensor");
+      //  gyroSensor = hwMap.gyroSensor.get("gyroSensor");
 
         //Sets spin directions to make writing power easier
         arm.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -106,10 +107,10 @@ public class RelicRecoveryHardware
         // Set all motors' run modes.
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leadScrew.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /***

@@ -93,6 +93,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         int halfRotation = rotation / 2;
         double armPosition = 1;
         double armSpeed = 0.2;
+        boolean tank_drive = true;
+        boolean double_drive = false;
+        boolean dpad_up_pushed = false; // Used to ensure not swapping back and forth.
+
 
         //For stepless arm usage
 
@@ -125,19 +129,89 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         //int update_cycles_left = 0;
         //int wait_for_cycles = 5;
 
+        // turning off motor encoders in manual mode
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         /*START OF LOOP THAT RUNS REPEATEDLY*/
         while (opModeIsActive()) {
             /*Gamepad 1*/
-            boolean forward = gamepad1.dpad_up;     //Up dpad
-            boolean backward = gamepad1.dpad_down;  //Down dpad
-            boolean left = gamepad1.dpad_left;      //Left dpad
-            boolean right = gamepad1.dpad_right;    //Right dpad
-            boolean aButtonGp1 = gamepad1.a;        //A
-            boolean bButtonGp1 = gamepad1.b;        //B
+            //Code for methanoid wheels:
+            //double forward = gamepad1.left_stick_y;
+            //double backward = -gamepad1.left_stick_y;
+            //double right = gamepad1.right_stick_x;
+            //double left = -gamepad1.right_stick_x;
+
+            double left;
+            double right;
+
+            robot.ballLower.setPosition(.5);
+            robot.ballSwivel.setPower(0);
+
+            //////////////////////////
+            //Code for straight wheels
+            if (gamepad1.dpad_up) {
+                tank_drive = true;
+                double_drive = false;
+                telemetry.addData("Tank Drive", true);
+            }
+            if (gamepad1.dpad_down) {
+                tank_drive = false;
+                double_drive = false;
+                telemetry.addData("Single Drive", true);
+            }
+            if (gamepad1.dpad_left) {
+                tank_drive = false;
+                double_drive = true;
+                telemetry.addData("Double Drive", true);
+            }
+
+            if (tank_drive) {
+                left = -gamepad1.left_stick_y;
+                right = -gamepad1.right_stick_y;
+            } else {
+                double drive = -gamepad1.left_stick_y;
+                double turn = gamepad1.left_stick_x;
+
+                if (double_drive) {
+                    turn = gamepad1.right_stick_x;
+                }
+
+                // Combine drive and turn for blended motion.
+                left = drive + turn;
+                right = drive - turn;
+
+                // Normalize the values so neither exceed +/- 1.0
+                double maxPower = Math.max(Math.abs(left), Math.abs(right));
+                if (maxPower > 1.0) {
+                    left /= maxPower;
+                    right /= maxPower;
+                }
+            }
+
+            telemetry.addData("Left power: ", left);
+            telemetry.addData("Right power: ", right);
+            telemetry.addData("left_stick_y: ", gamepad1.left_stick_y);
+            telemetry.addData("right_stick_x: ", gamepad1.right_stick_x);
+
+            robot.leftBackMotor.setPower(-left);
+            robot.rightBackMotor.setPower(-right);
+            robot.leftFrontMotor.setPower(left);
+            robot.rightFrontMotor.setPower(right);
+            // End code for straight wheels
+            ///////////////////////////////
+
+
             boolean leadScrewIn = gamepad1.right_bumper; //Right bumper
             boolean leadScrewOut = gamepad1.left_bumper; //Left bumper
 
             /*Gamepad 2*/
+            boolean ballLower = gamepad1.a;
+            boolean ballRaise = gamepad1.y;
+            boolean ballSwivelRight = gamepad1.b;
+            boolean ballSwivelLeft = gamepad1.x;
             boolean armDown = gamepad2.a;                         //A
             boolean armUp = gamepad2.b;                           //B
             boolean armBottom = gamepad2.y;                       //Y
@@ -154,17 +228,13 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             boolean min = currentPos > armMinPosition;
             boolean toMin = false;
 
-
             telemetry.addData("Arm Position: ", currentPos);
-            telemetry.update();
 
             if(min) {
                 telemetry.addData("Arm: ", "Minimum reached");
-                telemetry.update();
             }
             if(max) {
                 telemetry.addData("Arm: ", "Maximum reached");
-                telemetry.update();
             }
 
             //Arm control
@@ -224,8 +294,27 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             } else {
                 // nothing pushed
                 robot.leadScrew.setPower(0);
-
             }
+
+
+            if(ballLower){
+                robot.ballLower.setPosition(0);
+            }
+            if (ballRaise){
+                robot.ballLower.setPosition(.5);
+            }
+            if(ballSwivelLeft){
+                robot.ballSwivel.setPower(1);
+                sleep(200);
+                robot.ballSwivel.setPower(0);
+            }
+            if (ballSwivelRight){
+                robot.ballSwivel.setPower(-1);
+                sleep(200);
+                robot.ballSwivel.setPower(0);
+            }
+
+
 
             /*Turns glyph arm off after it reaches target*/
 /*            if (!(robot.arm.isBusy())) {
@@ -277,35 +366,33 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             /*JOYSTICK CONTROL*/
 
             /*Converts joystick output into variables used to calculate power for the wheels*/
-            double leftPower = gamepad1.left_stick_y;
+           /* double leftPower = gamepad1.left_stick_y;
             double rightPower = gamepad1.right_stick_y;
 
-            /*Limits values to acceptable motor inputs*/
+            /*Limits values to acceptable motor inputs
             Range.clip(leftPower, -1, 1);
             Range.clip(rightPower, -1, 1);
 
-            /*DPAD CONTROL: WARNING: OVERRIDES JOYSTICK CONTROL*/
+            /*DPAD CONTROL: WARNING: OVERRIDES JOYSTICK CONTROL
 
             /*Adjusting the speed for dpad cont
 
-            /*TURNS WHEELS ON*/
+            /*TURNS WHEELS ON
             robot.leftFrontMotor.setPower(leftPower);
             robot.leftBackMotor.setPower(leftPower);
             robot.rightFrontMotor.setPower(rightPower);
             robot.rightBackMotor.setPower(rightPower);
-
+*/
             /*Adds all values to*/
             telemetry.addData("rightClaw position:", robot.rightClaw.getPosition());
             telemetry.addData("leftClaw position:", robot.leftClaw.getPosition());
             telemetry.addData("Arm CurrentPosition:", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Target:", robot.arm.getTargetPosition());
-            telemetry.addData("Left Power: ", leftPower);
-            telemetry.addData("Right Power: ", rightPower);
             telemetry.addData("Arm Position", armPosition);
             telemetry.addData("Adjustment Speed: ", unidirectionalSpeed); //displays current adjustment speed
             telemetry.update();
 
-            robot.waitForTick(40);
+            robot.waitForTick(10);
          }  // end of while
 
         /* CODE FOR THE END OF THE PROGRAM*/

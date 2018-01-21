@@ -131,7 +131,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(1);
     }
-
+/*
     public void blueBallKnock() {
         sayAndPause("Ball Knock Starting", "", 250);
         robot.ballLower.setPosition(0);
@@ -167,7 +167,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
         sleep(250);
         robot.ballLower.setPosition(0.5);
     }
-
+*/
     public void lowerArm(RelicRecoveryHardware robot, int height) {
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - height);
