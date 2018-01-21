@@ -30,6 +30,7 @@ public class TopRedAuto extends RelicBaseAuto {
         long middleColumnTime = 1200;
         long rightColumnTime = 1400;
         long turnTime = 800;
+        long time1 = 500;
         double turnSpeed = 0.5;
         double straightSpeed = 0.2;
 
@@ -81,34 +82,33 @@ public class TopRedAuto extends RelicBaseAuto {
         }
 
         sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(straightSpeed, 500);
+        driveForward(straightSpeed, time1);
 
-        sayAndPause("Turning: ", "Counter Clockwise", breakTime);
-        turnCounterClockwise(turnSpeed, turnTime,500 );
+        sayAndPause("Turning: ", "Clockwise", 500);
+        turnClockwise(turnSpeed, turnTime, 250);
 
         if(vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, leftColumnTime);
+            driveBackward(straightSpeed, leftColumnTime);
             noDrive();
         }
         else if(vuMark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, middleColumnTime);
+            driveBackward(straightSpeed, middleColumnTime);
             noDrive();
         }
         else if(vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, rightColumnTime);
+            driveBackward(straightSpeed, rightColumnTime);
             noDrive();
         }
 
-        sayAndPause("Turning: ", "Counter Clockwise", 500);
+        sayAndPause("Turning: ", "Clockwise", 500);
         turnClockwise(turnSpeed, turnTime, 250);
 
-        sayAndPause("Driving: ", "Forward", breakTime);
         driveForward(0.2, 200);
 
         sayAndPause("Arm: ", "Lowering", breakTime);

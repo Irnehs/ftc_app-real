@@ -86,19 +86,19 @@ public class BottomRedAuto extends RelicBaseAuto {
         if(vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, leftColumnTime);
+            driveBackward(straightSpeed, leftColumnTime);
             noDrive();
         }
         if(vuMark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, middleColumnTime);
+            driveBackward(straightSpeed, middleColumnTime);
             noDrive();
         }
         if(vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, rightColumnTime);
+            driveBackward(straightSpeed, rightColumnTime);
             noDrive();
         }
 

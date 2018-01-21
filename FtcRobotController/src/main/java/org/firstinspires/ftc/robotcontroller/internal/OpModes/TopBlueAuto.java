@@ -67,6 +67,7 @@ public class TopBlueAuto extends RelicBaseAuto {
         long middleColumnTime = 1200;
         long rightColumnTime = 1400;
         long turnTime = 800;
+        long time1 = 500;
         double turnSpeed = 0.5;
         double straightSpeed = 0.2;
 
@@ -118,7 +119,7 @@ public class TopBlueAuto extends RelicBaseAuto {
         }
 
         sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(straightSpeed, 500);
+        driveForward(straightSpeed, time1);
 
         sayAndPause("Turning: ", "Clockwise", breakTime);
         turnClockwise(turnSpeed, turnTime,500 );
