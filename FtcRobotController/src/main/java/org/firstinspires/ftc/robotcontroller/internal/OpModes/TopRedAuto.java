@@ -26,9 +26,9 @@ public class TopRedAuto extends RelicBaseAuto {
         sayAndPause("RelicAuto: ", "Connected", 0);
 
         /*Drive variables*/
-        int leftColumn = 28;
-        int middleColumn = 36;
-        int rightColumn = 44;
+        int leftColumn = 4;
+        int middleColumn = 12;
+        int rightColumn = 20;
         int distanceToTurn = 24;
         long turnTime = 800;
         double turnSpeed = 0.5;

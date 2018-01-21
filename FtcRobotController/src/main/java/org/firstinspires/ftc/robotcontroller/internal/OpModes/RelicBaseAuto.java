@@ -51,6 +51,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.leftFrontMotor.setPower(power);
         robot.leftBackMotor.setPower(power);
         while(robot.rightFrontMotor.isBusy()) {/*Do nothing*/}
+        noDrive();
     }
 
     /*Driving forward with power and time inputs

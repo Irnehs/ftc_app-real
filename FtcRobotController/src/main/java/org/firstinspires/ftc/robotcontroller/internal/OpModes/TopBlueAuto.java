@@ -63,9 +63,9 @@ public class TopBlueAuto extends RelicBaseAuto {
         sayAndPause("RelicAuto: ", "Connected", 0);
 
         /*Drive variables*/
-        int leftColumn = 44;
-        int middleColumn = 36;
-        int rightColumn = 28;
+        int leftColumn = 20;
+        int middleColumn = 12;
+        int rightColumn = 4;
         int distanceToTurn = 24;
         long turnTime = 800;
         double turnSpeed = 0.5;
