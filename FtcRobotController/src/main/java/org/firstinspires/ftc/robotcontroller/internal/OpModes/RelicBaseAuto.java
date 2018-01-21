@@ -32,7 +32,28 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.leftBackMotor.setPower(0);
     }
 
-    //Driving forward with power and time inputs
+    public void driveForward(double power, int inches) {
+        int ticks = inches * (1120 / 4 * (int)Math.PI);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightFrontMotor.setTargetPosition(ticks);
+        robot.rightBackMotor.setTargetPosition(ticks);
+        robot.leftFrontMotor.setTargetPosition(ticks);
+        robot.leftBackMotor.setTargetPosition(ticks);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightFrontMotor.setPower(power);
+        robot.rightBackMotor.setPower(power);
+        robot.leftFrontMotor.setPower(power);
+        robot.leftBackMotor.setPower(power);
+        while(robot.rightFrontMotor.isBusy()) {/*Do nothing*/}
+    }
+
+    /*Driving forward with power and time inputs
     public void driveForward(double power, long time) {
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
@@ -40,9 +61,10 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.leftBackMotor.setPower(power);
         sleep(time);
     }
+    */
 
     //Driving backward with power and time inputs
-    public void driveBackward(double power, long time) {driveForward(-power, time);}
+    public void driveBackward(double power, int inches) {driveForward(power, -inches);}
 
     //Driving left with power and time inputs
    /* public void driveLeft(double power, long time, long pause) {

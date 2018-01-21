@@ -63,11 +63,11 @@ public class TopBlueAuto extends RelicBaseAuto {
         sayAndPause("RelicAuto: ", "Connected", 0);
 
         /*Drive variables*/
-        long leftColumnTime = 1000;
-        long middleColumnTime = 1200;
-        long rightColumnTime = 1400;
+        int leftColumn = 44;
+        int middleColumn = 36;
+        int rightColumn = 28;
+        int distanceToTurn = 24;
         long turnTime = 800;
-        long time1 = 500;
         double turnSpeed = 0.5;
         double straightSpeed = 0.2;
 
@@ -119,7 +119,7 @@ public class TopBlueAuto extends RelicBaseAuto {
         }
 
         sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(straightSpeed, time1);
+        driveForward(straightSpeed, distanceToTurn);
 
         sayAndPause("Turning: ", "Clockwise", breakTime);
         turnClockwise(turnSpeed, turnTime,500 );
@@ -127,19 +127,19 @@ public class TopBlueAuto extends RelicBaseAuto {
         if(vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, leftColumnTime);
+            driveForward(straightSpeed, leftColumn);
             noDrive();
         }
         if(vuMark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, middleColumnTime);
+            driveForward(straightSpeed, middleColumn);
             noDrive();
         }
         if(vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveForward(straightSpeed, rightColumnTime);
+            driveForward(straightSpeed, rightColumn);
             noDrive();
         }
 

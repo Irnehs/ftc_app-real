@@ -29,9 +29,9 @@ public class BottomRedAuto extends RelicBaseAuto {
         sayAndPause("RelicAuto: ", "Connected", 0);
 
         /*Drive variables*/
-        long leftColumnTime = 1400;
-        long middleColumnTime = 1200;
-        long rightColumnTime = 1000;
+        int leftColumn = 28;
+        int middleColumn = 36;
+        int rightColumn = 44;
         long turnTime = 800;
         double turnSpeed = 0.5;
         double straightSpeed = 0.2;
@@ -86,19 +86,19 @@ public class BottomRedAuto extends RelicBaseAuto {
         if(vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveBackward(straightSpeed, leftColumnTime);
+            driveBackward(straightSpeed, leftColumn);
             noDrive();
         }
         if(vuMark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveBackward(straightSpeed, middleColumnTime);
+            driveBackward(straightSpeed, middleColumn);
             noDrive();
         }
         if(vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveBackward(straightSpeed, rightColumnTime);
+            driveBackward(straightSpeed, rightColumn);
             noDrive();
         }
 
