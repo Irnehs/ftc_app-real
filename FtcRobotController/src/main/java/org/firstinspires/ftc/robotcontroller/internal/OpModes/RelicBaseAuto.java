@@ -34,9 +34,9 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
     public void driveForward(double power, int inches) {
         int ticks = inches * (1120 / 4 * (int)Math.PI);
-        robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("Inches: ", inches);
+        telemetry.addData("Ticks: ", ticks);
+        telemetry.update();
         robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightFrontMotor.setTargetPosition(ticks);
         robot.rightBackMotor.setTargetPosition(ticks);
@@ -46,11 +46,16 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        telemetry.addData("Drivetrain: ", "Activating");
+        telemetry.addData("Power: ", power);
+        telemetry.update();
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
         robot.leftFrontMotor.setPower(power);
         robot.leftBackMotor.setPower(power);
         while(robot.rightFrontMotor.isBusy()) {/*Do nothing*/}
+        telemetry.addData("Drivetrain: ", "Done");
+        telemetry.update();
         noDrive();
     }
 
