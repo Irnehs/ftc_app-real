@@ -92,9 +92,6 @@ public class RelicRecoveryHardware
         //gyroSensor = hwMap.gyroSensor.get("gyroSensor");
 
         //Sets spin directions to make writing power easier
-        arm.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set all motors to zero power to prevent it from accidentally turning on
         arm.setPower(0);
