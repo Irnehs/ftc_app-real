@@ -141,16 +141,14 @@ abstract class RelicBaseAuto extends BaseOpMode {
         sleep(pause);
     }
 
-
-
     public void extendLeadScrew(RelicRecoveryHardware robot) {
-        robot.leadScrew.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
+        telemetry.addData("Lead Screw: ", "Moving");
         telemetry.update();
-        robot.leadScrew.setTargetPosition((1120/2) * -30);
-        robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leadScrew.setPower(1);
+        sleep(7000);
+        robot.leadScrew.setPower(0);
+        telemetry.addData("Lead Screw: ", "Stopped");
+        telemetry.update();
     }
 
     public void raiseArm(RelicRecoveryHardware robot, int height){
@@ -166,14 +164,18 @@ abstract class RelicBaseAuto extends BaseOpMode {
         sleep(250);
         if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
             sayAndPause("Ball Color: ", "Red", 250);
-            robot.ballSwivel.setPosition(0.8);
+            robot.ballSwivel.setPower(-1);
+            sleep(200);
+            robot.ballSwivel.setPower(1);
+            sleep(200);
         }
         else if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
             sayAndPause("Ball Color: ", "Blue", 250);
-            robot.ballSwivel.setPosition(0.2);
+            robot.ballSwivel.setPower(1);
+            sleep(200);
+            robot.ballSwivel.setPower(-1);
+            sleep(200);
         }
-        sleep(250);
-        robot.ballSwivel.setPosition(0.5);
         sleep(250);
         robot.ballLower.setPosition(0.5);
     }
@@ -184,14 +186,20 @@ abstract class RelicBaseAuto extends BaseOpMode {
         sleep(250);
         if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
             sayAndPause("Ball Color: ", "Red", 250);
-            robot.ballSwivel.setPosition(0.2);
+            robot.ballSwivel.setPower(1);
+            sleep(200);
+            robot.ballSwivel.setPower(-1);
+            sleep(200);
         }
-        if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
+        else if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
             sayAndPause("Ball Color: ", "Blue", 250);
-            robot.ballSwivel.setPosition(0.8);
+            robot.ballSwivel.setPower(-1);
+            sleep(200);
+            robot.ballSwivel.setPower(1);
+            sleep(200);
         }
         sleep(250);
-        robot.ballSwivel.setPosition(0.5);
+
         sleep(250);
         robot.ballLower.setPosition(0.5);
     }
@@ -202,6 +210,10 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(1);
 
+    }
+
+    public void jewelStart(RelicRecoveryHardware robot) {
+        robot.ballLower.setPosition(0.8);
     }
 
 }
