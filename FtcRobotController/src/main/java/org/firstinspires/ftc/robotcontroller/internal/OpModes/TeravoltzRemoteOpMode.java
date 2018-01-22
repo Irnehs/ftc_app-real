@@ -277,36 +277,75 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             /*JOYSTICK CONTROL*/
 
             /*Converts joystick output into variables used to calculate power for the wheels*/
-            double leftPower = gamepad1.left_stick_y;
-            double rightPower = gamepad1.right_stick_y;
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            double rightX = -gamepad1.right_stick_x;
+
+            /*Uses created variables to calculate power for the wheels*/
+            leftFrontPower = r * Math.cos(robotAngle) - rightX;
+            rightFrontPower = r * Math.sin(robotAngle) + rightX;
+            leftBackPower = r * Math.sin(robotAngle) - rightX;
+            rightBackPower = r * Math.cos(robotAngle) + rightX;
+            rightBackPower *= 0.9;
+            leftBackPower *= 0.9;
 
             /*Limits values to acceptable motor inputs*/
-            Range.clip(leftPower, -1, 1);
-            Range.clip(rightPower, -1, 1);
+            Range.clip(leftFrontPower, -1, 1);
+            Range.clip(rightFrontPower, -1, 1);
+            Range.clip(leftBackPower, -1, 1);
+            Range.clip(rightBackPower, -1, 1);
 
             /*DPAD CONTROL: WARNING: OVERRIDES JOYSTICK CONTROL*/
 
-            /*Adjusting the speed for dpad cont
+            /*Adjusting the speed for dpad control*/
+            if (aButtonGp1) {
+                unidirectionalSpeed += 0.05;
+            } //A on gamepad 1 increases adjustment speed
+            if (bButtonGp1) {
+                unidirectionalSpeed -= 0.05;
+            } //B on gamepad 1 decreases adjustment speed
+
+            /*While dpad up pressed, drive forwards at adjustment speed*/
+            if (forward) {
+                wheelPower(unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed);
+            }
+
+            /*If dpad down pressed, drive backwards at adjustment speed*/
+            if (backward) {
+                wheelPower(-unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed);
+            }
+
+            /*While dpad left pressed, drive left at adjustment speed*/
+            if (left) {            //If dpad left pressed, drive left at adjustment speed
+                wheelPower(unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed, unidirectionalSpeed);
+            }
+
+            /*While dpad right pressed, drive right at adjustment speed*/
+            if (right) {
+                wheelPower(-unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed, -unidirectionalSpeed);
+            }
 
             /*TURNS WHEELS ON*/
-            robot.leftFrontMotor.setPower(leftPower);
-            robot.leftBackMotor.setPower(leftPower);
-            robot.rightFrontMotor.setPower(rightPower);
-            robot.rightBackMotor.setPower(rightPower);
+            robot.leftFrontMotor.setPower(leftFrontPower);
+            robot.rightFrontMotor.setPower(rightFrontPower);
+            robot.leftBackMotor.setPower(leftBackPower);
+            robot.rightBackMotor.setPower(rightBackPower);
 
             /*Adds all values to*/
             telemetry.addData("rightClaw position:", robot.rightClaw.getPosition());
             telemetry.addData("leftClaw position:", robot.leftClaw.getPosition());
             telemetry.addData("Arm CurrentPosition:", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Target:", robot.arm.getTargetPosition());
-            telemetry.addData("Left Power: ", leftPower);
-            telemetry.addData("Right Power: ", rightPower);
+            telemetry.addData("Left Front Power: ", leftFrontPower);
+            telemetry.addData("Right Front Power: ", rightFrontPower);
+            telemetry.addData("Left Back Power: ", leftBackPower);
+            telemetry.addData("Right Back Power: ", rightBackPower);
             telemetry.addData("Arm Position", armPosition);
             telemetry.addData("Adjustment Speed: ", unidirectionalSpeed); //displays current adjustment speed
             telemetry.update();
 
             robot.waitForTick(40);
-         }  // end of while
+        }  // end of while
 
         /* CODE FOR THE END OF THE PROGRAM*/
 
