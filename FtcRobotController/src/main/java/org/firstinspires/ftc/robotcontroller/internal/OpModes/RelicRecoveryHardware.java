@@ -102,6 +102,7 @@ public class RelicRecoveryHardware
         rightFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
+        ballSwivel.setPower(0);
 
         // Set all motors' run modes.
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -84,6 +84,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
         /* Initialize the hardware variables*/
         robot.init(hardwareMap);
+        robot.ballSwivel.setPower(0);
 
         /*INITIALIZATION OF ALL VARIABLES*/
 
