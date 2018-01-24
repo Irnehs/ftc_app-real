@@ -56,7 +56,7 @@ public class TopRedAuto extends RelicBaseAuto {
         waitForStart();
 
         //Game starts
-        sayAndPause("Game starting", "", 250);
+        sayAndPause("Game starting", "", 500);
 
         //Starts at 1300(start + 1000) needed - 2240 +120 = 2360
         sayAndPause("Claw: ", "Closing", 500);
@@ -79,13 +79,13 @@ public class TopRedAuto extends RelicBaseAuto {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Time elapsed: ", getRuntime() - (vuforiaStart));
             telemetry.update();
-            if(getRuntime() - vuforiaStart >= 2000) {
+            if(getRuntime() - vuforiaStart <= 2000) {
                 vuMark = RelicRecoveryVuMark.CENTER;
             }
         }
 
         sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(straightSpeed, distanceToTurn);
+        driveBackward(straightSpeed, distanceToTurn);
 
         sayAndPause("Turning: ", "Clockwise", 500);
         turnClockwise(turnSpeed, turnTime, 250);
@@ -93,26 +93,26 @@ public class TopRedAuto extends RelicBaseAuto {
         if(vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveBackward(straightSpeed, leftColumn);
+            driveForward(straightSpeed, leftColumn);
             noDrive();
         }
         else if(vuMark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveBackward(straightSpeed, middleColumn);
+            driveForward(straightSpeed, middleColumn);
             noDrive();
         }
         else if(vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
-            driveBackward(straightSpeed, rightColumn);
+            driveForward(straightSpeed, rightColumn);
             noDrive();
         }
 
         sayAndPause("Turning: ", "Clockwise", 500);
         turnClockwise(turnSpeed, turnTime, 250);
 
-        driveForward(0.2, 200);
+        driveForward(0.5, 200);
 
         sayAndPause("Arm: ", "Lowering", breakTime);
         lowerArm(robot, 3360);
@@ -127,10 +127,10 @@ public class TopRedAuto extends RelicBaseAuto {
         driveForward(straightSpeed, 500);
 
         sayAndPause("Driving", "Back", breakTime);
-        driveBackward(.2, 700);
+        driveBackward(.5, 700);
 
         sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(0.2, 1000);
+        driveForward(0.5, 1000);
 
         /* CODE FOR THE END OF THE PROGRAM*/
 

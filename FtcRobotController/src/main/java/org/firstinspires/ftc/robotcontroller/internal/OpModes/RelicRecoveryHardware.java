@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.I2cSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -47,8 +48,7 @@ public class RelicRecoveryHardware
     public Servo rightClaw;
     public Servo leftClaw;
     public Servo ballLower;
-    public CRServo ballSwivel;
-    //public Servo jewelArm;
+    public Servo ballSwivel;
 
     public DcMotor arm;
     public DcMotor leadScrew;
@@ -58,7 +58,7 @@ public class RelicRecoveryHardware
     public DcMotor rightBackMotor;
 
     //public GyroSensor gyroSensor;
-    public ColorSensor colorSensor;
+    public NormalizedColorSensor colorSensor;
     //public DistanceSensor distanceSensor;
 
     /* Constructor */
@@ -83,11 +83,10 @@ public class RelicRecoveryHardware
         rightClaw = hwMap.servo.get("rightClaw");
         leftClaw = hwMap.servo.get("leftClaw");
         ballLower = hwMap.servo.get("ballLower");
-        ballSwivel = hwMap.crservo.get("ballSwivel");
-        //jewelArm = hwMap.servo.get("jewelArm");
+        ballSwivel = hwMap.servo.get("ballSwivel");
 
         //define sensors
-        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
+        colorSensor = hwMap.get(NormalizedColorSensor.class, "colorSensor");
         //distanceSensor = hwMap.get(DistanceSensor.class, "colorDistanceSensor");
         //gyroSensor = hwMap.gyroSensor.get("gyroSensor");
 
@@ -102,7 +101,6 @@ public class RelicRecoveryHardware
         rightFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
-        ballSwivel.setPower(0);
 
         // Set all motors' run modes.
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

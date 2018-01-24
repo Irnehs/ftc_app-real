@@ -115,7 +115,7 @@ public class BottomBlueAuto extends RelicBaseAuto {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Time elapsed: ", getRuntime() - (vuforiaStart));
             telemetry.update();
-            if(getRuntime() - vuforiaStart >= 2000) {
+            if(getRuntime() - vuforiaStart <= 2000) {
                 vuMark = RelicRecoveryVuMark.CENTER;
             }
         }

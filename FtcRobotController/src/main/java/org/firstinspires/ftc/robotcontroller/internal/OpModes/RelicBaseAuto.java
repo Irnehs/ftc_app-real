@@ -33,27 +33,33 @@ abstract class RelicBaseAuto extends BaseOpMode {
     }
 
     public void driveForward(double power, int inches) {
-        int ticks = inches * (1120 / 4 * (int)Math.PI);
+        double _ticks = inches * (1120 / 4 * Math.PI);
+        int ticks = (int)_ticks;
         telemetry.addData("Inches: ", inches);
         telemetry.addData("Ticks: ", ticks);
         telemetry.update();
         robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         robot.rightFrontMotor.setTargetPosition(ticks);
         robot.rightBackMotor.setTargetPosition(ticks);
         robot.leftFrontMotor.setTargetPosition(ticks);
         robot.leftBackMotor.setTargetPosition(ticks);
+
         robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         telemetry.addData("Drivetrain: ", "Activating");
         telemetry.addData("Power: ", power);
         telemetry.update();
+
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
         robot.leftFrontMotor.setPower(power);
         robot.leftBackMotor.setPower(power);
-        while(robot.rightFrontMotor.isBusy()) {/*Do nothing*/}
+
+        while(robot.leftFrontMotor.isBusy()) {/*Do nothing*/}
         telemetry.addData("Drivetrain: ", "Done");
         telemetry.update();
         noDrive();
@@ -70,55 +76,9 @@ abstract class RelicBaseAuto extends BaseOpMode {
     */
 
     //Driving backward with power and time inputs
-    public void driveBackward(double power, int inches) {driveForward(power, -inches);}
-
-    //Driving left with power and time inputs
-   /* public void driveLeft(double power, long time, long pause) {
-        robot.rightFrontMotor.setPower(power);
-        robot.rightBackMotor.setPower(-power);
-        robot.leftFrontMotor.setPower(-power);
-        robot.leftBackMotor.setPower(power);
-        sleep(time);
-        noDrive(pause);
+    public void driveBackward(double power, int inches) {
+        driveForward(power, -inches);
     }
-
-    //Driving right with power and time inputs
-    public void driveRight(double power, long time, long pause) {
-
-        driveLeft(-power, time, pause);
-    }
-
-    //Turning clockwise with power and time inputs
-    public void turnClockwise(double power, int degrees) {
-        robot.gyroSensor.calibrate();
-        boolean notEqual;
-        double wheelPower;
-
-
-        if(degrees<0) {
-            notEqual = robot.gyroSensor.getHeading() < degrees;
-        }
-        else {
-            notEqual = robot.gyroSensor.getHeading() > degrees;
-        }
-
-
-        while(notEqual) {
-            wheelPower = (degrees - robot.gyroSensor.getHeading())/(degrees/4);
-            Range.clip(wheelPower,-1, 1);
-
-            if(wheelPower < 0.1 && wheelPower > -0.1) {
-                wheelPower = (wheelPower/Math.abs(wheelPower) * 0.1);
-            }
-
-            robot.rightFrontMotor.setPower(-wheelPower);
-            robot.rightBackMotor.setPower(-wheelPower);
-            robot.leftFrontMotor.setPower(wheelPower);
-            robot.leftBackMotor.setPower(wheelPower);
-        }
-
-        noDrive();
-    }*/
 
     public void turnCounterClockwise(double power, long time, long pause) {
         robot.rightFrontMotor.setPower(power);
@@ -144,8 +104,8 @@ abstract class RelicBaseAuto extends BaseOpMode {
     public void extendLeadScrew(RelicRecoveryHardware robot) {
         telemetry.addData("Lead Screw: ", "Moving");
         telemetry.update();
-        robot.leadScrew.setPower(1);
-        sleep(7000);
+        robot.leadScrew.setPower(-1);
+        sleep(5000);
         robot.leadScrew.setPower(0);
         telemetry.addData("Lead Screw: ", "Stopped");
         telemetry.update();
@@ -160,48 +120,44 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
     public void blueBallKnock() {
         sayAndPause("Ball Knock Starting", "", 250);
-        robot.ballLower.setPosition(0);
+        robot.ballLower.setPosition(0.4);
+        robot.colorSensor.enableLed(true);
         sleep(250);
         if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
             sayAndPause("Ball Color: ", "Red", 250);
-            robot.ballSwivel.setPower(-1);
-            sleep(200);
-            robot.ballSwivel.setPower(1);
-            sleep(200);
+            robot.ballSwivel.setPosition(0.8);
         }
         else if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
             sayAndPause("Ball Color: ", "Blue", 250);
-            robot.ballSwivel.setPower(1);
-            sleep(200);
-            robot.ballSwivel.setPower(-1);
-            sleep(200);
+            robot.ballSwivel.setPosition(0.2);
         }
         sleep(250);
+        robot.ballSwivel.setPosition(0.3);
+        sleep(250);
         robot.ballLower.setPosition(0.5);
+        robot.colorSensor.enableLed(false);
     }
 
     public void redBallKnock() {
         sayAndPause("Ball Knock Starting", "", 250);
         robot.ballLower.setPosition(0);
-        sleep(250);
+        robot.colorSensor.enableLed(true);
         if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
             sayAndPause("Ball Color: ", "Red", 250);
-            robot.ballSwivel.setPower(1);
-            sleep(200);
-            robot.ballSwivel.setPower(-1);
-            sleep(200);
-        }
-        else if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
+            robot.ballSwivel.setPosition(0.2);
+        } else
+        if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
             sayAndPause("Ball Color: ", "Blue", 250);
-            robot.ballSwivel.setPower(-1);
-            sleep(200);
-            robot.ballSwivel.setPower(1);
-            sleep(200);
+            robot.ballSwivel.setPosition(0.8);
+        } else {
+            sayAndPause("Red: " + robot.colorSensor.red() + "   ", "Blue: " + robot.colorSensor.blue(), 2000);
+
         }
         sleep(250);
-
+        robot.ballSwivel.setPosition(0.5);
         sleep(250);
         robot.ballLower.setPosition(0.5);
+        robot.colorSensor.enableLed(false);
     }
 
     public void lowerArm(RelicRecoveryHardware robot, int height) {

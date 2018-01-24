@@ -1,23 +1,17 @@
 /*
 Copyright (c) 2016 Robert Atkinson
-
 All rights reserved.
-
 Redistribution and use in source and binary forms, with or without modification,
 are permitted (subject to the limitations in the disclaimer below) provided that
 the following conditions are met:
-
 Redistributions of source code must retain the above copyright notice, this list
 of conditions and the following disclaimer.
-
 Redistributions in binary form must reproduce the above copyright notice, this
 list of conditions and the following disclaimer in the documentation and/or
 other materials provided with the distribution.
-
 Neither the name of Robert Atkinson nor the names of his contributors may be used to
 endorse or promote products derived from this software without specific prior
 written permission.
-
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -84,7 +78,6 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
         /* Initialize the hardware variables*/
         robot.init(hardwareMap);
-        robot.ballSwivel.setPower(0);
 
         /*INITIALIZATION OF ALL VARIABLES*/
 
@@ -94,6 +87,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         int halfRotation = rotation / 2;
         double armPosition = 1;
         double armSpeed = 0.2;
+        boolean tank_drive = true;
+        boolean double_drive = false;
+        boolean dpad_up_pushed = false; // Used to ensure not swapping back and forth.
+
 
         //For stepless arm usage
 
@@ -126,15 +123,80 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         //int update_cycles_left = 0;
         //int wait_for_cycles = 5;
 
+        // turning off motor encoders in manual mode
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         /*START OF LOOP THAT RUNS REPEATEDLY*/
         while (opModeIsActive()) {
             /*Gamepad 1*/
-            boolean forward = gamepad1.dpad_up;     //Up dpad
-            boolean backward = gamepad1.dpad_down;  //Down dpad
-            boolean left = gamepad1.dpad_left;      //Left dpad
-            boolean right = gamepad1.dpad_right;    //Right dpad
-            boolean aButtonGp1 = gamepad1.a;        //A
-            boolean bButtonGp1 = gamepad1.b;        //B
+            //Code for methanoid wheels:
+            //double forward = gamepad1.left_stick_y;
+            //double backward = -gamepad1.left_stick_y;
+            //double right = gamepad1.right_stick_x;
+            //double left = -gamepad1.right_stick_x;
+
+            double left;
+            double right;
+
+            robot.ballLower.setPosition(.5);
+
+            //////////////////////////
+            //Code for straight wheels
+            if (gamepad1.dpad_up) {
+                tank_drive = true;
+                double_drive = false;
+                telemetry.addData("Tank Drive", true);
+            }
+            if (gamepad1.dpad_down) {
+                tank_drive = false;
+                double_drive = false;
+                telemetry.addData("Single Drive", true);
+            }
+            if (gamepad1.dpad_left) {
+                tank_drive = false;
+                double_drive = true;
+                telemetry.addData("Double Drive", true);
+            }
+
+            if (tank_drive) {
+                left = -gamepad1.left_stick_y;
+                right = -gamepad1.right_stick_y;
+            } else {
+                double drive = -gamepad1.left_stick_y;
+                double turn = gamepad1.left_stick_x;
+
+                if (double_drive) {
+                    turn = gamepad1.right_stick_x;
+                }
+
+                // Combine drive and turn for blended motion.
+                left = drive + turn;
+                right = drive - turn;
+
+                // Normalize the values so neither exceed +/- 1.0
+                double maxPower = Math.max(Math.abs(left), Math.abs(right));
+                if (maxPower > 1.0) {
+                    left /= maxPower;
+                    right /= maxPower;
+                }
+            }
+
+            telemetry.addData("Left power: ", left);
+            telemetry.addData("Right power: ", right);
+            telemetry.addData("left_stick_y: ", gamepad1.left_stick_y);
+            telemetry.addData("right_stick_x: ", gamepad1.right_stick_x);
+
+            robot.leftBackMotor.setPower(-left);
+            robot.rightBackMotor.setPower(-right);
+            robot.leftFrontMotor.setPower(left);
+            robot.rightFrontMotor.setPower(right);
+            // End code for straight wheels
+            ///////////////////////////////
+
+
             boolean leadScrewIn = gamepad1.right_bumper; //Right bumper
             boolean leadScrewOut = gamepad1.left_bumper; //Left bumper
 
@@ -155,17 +217,13 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             boolean min = currentPos > armMinPosition;
             boolean toMin = false;
 
-
             telemetry.addData("Arm Position: ", currentPos);
-            telemetry.update();
 
             if(min) {
                 telemetry.addData("Arm: ", "Minimum reached");
-                telemetry.update();
             }
             if(max) {
                 telemetry.addData("Arm: ", "Maximum reached");
-                telemetry.update();
             }
 
             //Arm control
@@ -225,7 +283,6 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             } else {
                 // nothing pushed
                 robot.leadScrew.setPower(0);
-
             }
 
             /*Turns glyph arm off after it reaches target*/
@@ -233,41 +290,29 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
                 robot.arm.setPower(0);
                 robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
-
-
             //Sets position for retraction of lead screw
             /*if (leadScrewIn) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
-
                 robot.leadScrew.setTargetPosition(currentPos + rotation * -16);
-
                 telemetry.addData("Target:", robot.leadScrew.getTargetPosition());
                 telemetry.update();
-
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-
             //Sets position for extension of lead screw
             else if (leadScrewOut) {
                 telemetry.addData("Current Position", robot.leadScrew.getCurrentPosition());
                 telemetry.update();
-
                 robot.leadScrew.setTargetPosition(currentPos + rotation * 16);
-
                 telemetry.addData("Target:", robot.leadScrew.getTargetPosition());
                 telemetry.update();
-
                 robot.leadScrew.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-
             //Sets lead screw power and actually makes it run
             if (leadScrewIn || leadScrewOut) {
                 robot.leadScrew.setPower(.45);
                 leadScrewIn = leadScrewOut = false;
             }
-
-
             //Turns lead screw off when target reached
             if (!(robot.leadScrew.isBusy())) {
                 robot.leadScrew.setPower(0);
@@ -278,74 +323,29 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             /*JOYSTICK CONTROL*/
 
             /*Converts joystick output into variables used to calculate power for the wheels*/
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            double rightX = -gamepad1.right_stick_x;
-
-            /*Uses created variables to calculate power for the wheels*/
-            leftFrontPower = r * Math.cos(robotAngle) - rightX;
-            rightFrontPower = r * Math.sin(robotAngle) + rightX;
-            leftBackPower = r * Math.sin(robotAngle) - rightX;
-            rightBackPower = r * Math.cos(robotAngle) + rightX;
-            rightBackPower *= 0.9;
-            leftBackPower *= 0.9;
-
-            /*Limits values to acceptable motor inputs*/
-            Range.clip(leftFrontPower, -1, 1);
-            Range.clip(rightFrontPower, -1, 1);
-            Range.clip(leftBackPower, -1, 1);
-            Range.clip(rightBackPower, -1, 1);
-
-            /*DPAD CONTROL: WARNING: OVERRIDES JOYSTICK CONTROL*/
-
-            /*Adjusting the speed for dpad control*/
-            if (aButtonGp1) {
-                unidirectionalSpeed += 0.05;
-            } //A on gamepad 1 increases adjustment speed
-            if (bButtonGp1) {
-                unidirectionalSpeed -= 0.05;
-            } //B on gamepad 1 decreases adjustment speed
-
-            /*While dpad up pressed, drive forwards at adjustment speed*/
-            if (forward) {
-                wheelPower(unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed);
-            }
-
-            /*If dpad down pressed, drive backwards at adjustment speed*/
-            if (backward) {
-                wheelPower(-unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed);
-            }
-
-            /*While dpad left pressed, drive left at adjustment speed*/
-            if (left) {            //If dpad left pressed, drive left at adjustment speed
-                wheelPower(unidirectionalSpeed, -unidirectionalSpeed, -unidirectionalSpeed, unidirectionalSpeed);
-            }
-
-            /*While dpad right pressed, drive right at adjustment speed*/
-            if (right) {
-                wheelPower(-unidirectionalSpeed, unidirectionalSpeed, unidirectionalSpeed, -unidirectionalSpeed);
-            }
-
-            /*TURNS WHEELS ON*/
-            robot.leftFrontMotor.setPower(leftFrontPower);
-            robot.rightFrontMotor.setPower(rightFrontPower);
-            robot.leftBackMotor.setPower(leftBackPower);
-            robot.rightBackMotor.setPower(rightBackPower);
-
+           /* double leftPower = gamepad1.left_stick_y;
+            double rightPower = gamepad1.right_stick_y;
+            /*Limits values to acceptable motor inputs
+            Range.clip(leftPower, -1, 1);
+            Range.clip(rightPower, -1, 1);
+            /*DPAD CONTROL: WARNING: OVERRIDES JOYSTICK CONTROL
+            /*Adjusting the speed for dpad cont
+            /*TURNS WHEELS ON
+            robot.leftFrontMotor.setPower(leftPower);
+            robot.leftBackMotor.setPower(leftPower);
+            robot.rightFrontMotor.setPower(rightPower);
+            robot.rightBackMotor.setPower(rightPower);
+*/
             /*Adds all values to*/
             telemetry.addData("rightClaw position:", robot.rightClaw.getPosition());
             telemetry.addData("leftClaw position:", robot.leftClaw.getPosition());
             telemetry.addData("Arm CurrentPosition:", robot.arm.getCurrentPosition());
             telemetry.addData("Arm Target:", robot.arm.getTargetPosition());
-            telemetry.addData("Left Front Power: ", leftFrontPower);
-            telemetry.addData("Right Front Power: ", rightFrontPower);
-            telemetry.addData("Left Back Power: ", leftBackPower);
-            telemetry.addData("Right Back Power: ", rightBackPower);
             telemetry.addData("Arm Position", armPosition);
             telemetry.addData("Adjustment Speed: ", unidirectionalSpeed); //displays current adjustment speed
             telemetry.update();
 
-            robot.waitForTick(40);
+            robot.waitForTick(10);
         }  // end of while
 
         /* CODE FOR THE END OF THE PROGRAM*/
