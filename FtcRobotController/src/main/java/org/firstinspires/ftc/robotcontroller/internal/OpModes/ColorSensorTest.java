@@ -29,9 +29,9 @@ public class ColorSensorTest extends RelicBaseAuto {
             waitForStart();
             //robot.colorSensor.
             while (opModeIsActive()) {
-                telemetry.addData("Red ",3 * robot.colorSensor.getNormalizedColors().red);
-                telemetry.addData("Blue ", 3 * robot.colorSensor.getNormalizedColors().blue);
-                telemetry.addData("Green ", 3 * robot.colorSensor.getNormalizedColors().green);
+                telemetry.addData("Red ", robot.colorSensor.getNormalizedColors().red);
+                telemetry.addData("Blue ", robot.colorSensor.getNormalizedColors().blue);
+                telemetry.addData("Green ", robot.colorSensor.getNormalizedColors().green);
                 telemetry.update();
             }
         }
