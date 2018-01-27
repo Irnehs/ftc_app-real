@@ -137,11 +137,11 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             //double backward = -gamepad1.left_stick_y;
             //double right = gamepad1.right_stick_x;
             //double left = -gamepad1.right_stick_x;
+            robot.ballLower.setPosition(0.1);
+            robot.ballSwivel.setPosition(0);
 
             double left;
             double right;
-
-            robot.ballLower.setPosition(.5);
 
             //////////////////////////
             //Code for straight wheels

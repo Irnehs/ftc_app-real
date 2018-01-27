@@ -86,8 +86,6 @@ public class TopBlueAuto extends RelicBaseAuto {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        jewelStart(robot);
-
         //Ready to start
         sayAndPause("Ready to start", "", 0);
         waitForStart();

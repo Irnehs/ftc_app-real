@@ -121,6 +121,8 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
     public void blueBallKnock(RelicRecoveryHardware robot) {
         sayAndPause("Ball Knock Starting", "", 250);
+        robot.ballSwivel.setPosition(1);
+        robot.ballLower.setPosition(0.1);
         robot.ballSwivel.setPosition(0.5);
         sleep(250);
         robot.ballLower.setPosition(0.5);
@@ -136,6 +138,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
         else {
             //Do nothing
         }
+        sleep(250);
         robot.ballLower.setPosition(0.1);
         sleep(250);
         robot.ballSwivel.setPosition(0);
@@ -171,9 +174,4 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.arm.setPower(1);
 
     }
-
-    public void jewelStart(RelicRecoveryHardware robot) {
-        robot.ballLower.setPosition(0.8);
-    }
-
 }

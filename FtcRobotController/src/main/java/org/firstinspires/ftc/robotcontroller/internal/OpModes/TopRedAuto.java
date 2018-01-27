@@ -29,10 +29,10 @@ public class TopRedAuto extends RelicBaseAuto {
         int leftColumn = 4;
         int middleColumn = 12;
         int rightColumn = 20;
-        int distanceToTurn = 24;
-        long turnTime = 800;
-        double turnSpeed = 0.5;
-        double straightSpeed = 0.2;
+        int distanceToTurn = 30;
+        long turnTime = 1000;
+        double turnSpeed = 0.75;
+        double straightSpeed = 0.5;
 
         long breakTime = 250;
 
@@ -49,11 +49,13 @@ public class TopRedAuto extends RelicBaseAuto {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        jewelStart(robot);
 
         //Ready to start
         sayAndPause("Ready to start", "", 0);
         waitForStart();
+
+        robot.ballSwivel.setPosition(1);
+        robot.ballLower.setPosition(0.1);
 
         //Game starts
         sayAndPause("Game starting", "", 500);
@@ -67,7 +69,7 @@ public class TopRedAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
-        redBallKnock(robot);
+        blueBallKnock(robot);
 
         //Start of vuforia
         relicTrackables.activate();
@@ -79,12 +81,12 @@ public class TopRedAuto extends RelicBaseAuto {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Time elapsed: ", getRuntime() - (vuforiaStart));
             telemetry.update();
-            if(getRuntime() - vuforiaStart <= 2000) {
+            if(getRuntime() - vuforiaStart >= 2000) {
                 vuMark = RelicRecoveryVuMark.CENTER;
             }
         }
 
-        sayAndPause("Driving: ", "Forward", breakTime);
+        sayAndPause("Driving: ", "Backward", breakTime);
         driveBackward(straightSpeed, distanceToTurn);
 
         sayAndPause("Turning: ", "Clockwise", 500);
@@ -96,7 +98,7 @@ public class TopRedAuto extends RelicBaseAuto {
             driveForward(straightSpeed, leftColumn);
             noDrive();
         }
-        else if(vuMark == RelicRecoveryVuMark.CENTER) {
+        else if(vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
             driveForward(straightSpeed, middleColumn);
@@ -112,7 +114,7 @@ public class TopRedAuto extends RelicBaseAuto {
         sayAndPause("Turning: ", "Clockwise", 500);
         turnClockwise(turnSpeed, turnTime, 250);
 
-        driveForward(0.5, 200);
+        driveForward(0.5, 20);
 
         sayAndPause("Arm: ", "Lowering", breakTime);
         lowerArm(robot, 3360);

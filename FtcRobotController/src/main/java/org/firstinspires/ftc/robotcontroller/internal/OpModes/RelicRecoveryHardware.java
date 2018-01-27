@@ -102,8 +102,11 @@ public class RelicRecoveryHardware
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
 
+        //set servo positions
         rightClaw.setPosition(0.9);
         leftClaw.setPosition(0);
+        ballSwivel.setPosition(1);
+        ballLower.setPosition(0.1);
 
         // Set all motors' run modes.
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
