@@ -110,6 +110,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
         robot.rightClaw.setPosition(1-clawDistance);
         robot.leftClaw.setPosition(clawDistance);
 
+        // Ball arm
+        robot.ballLower.setPosition(0.0);
+        robot.ballSwivel.setPosition(0.0);
+
 
         /*END OF SETUP*/
 
@@ -137,8 +141,11 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             //double backward = -gamepad1.left_stick_y;
             //double right = gamepad1.right_stick_x;
             //double left = -gamepad1.right_stick_x;
-            robot.ballLower.setPosition(0.1);
-            robot.ballSwivel.setPosition(0);
+            robot.ballLower.setPosition(0.0);
+            robot.ballSwivel.setPosition(0.0);
+
+            telemetry.addData("ballLower position: ", robot.ballLower.getPosition());
+            telemetry.addData("ballSwivel position: ", robot.ballSwivel.getPosition());
 
             double left;
             double right;

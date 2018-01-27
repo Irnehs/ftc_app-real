@@ -139,7 +139,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
             //Do nothing
         }
         sleep(250);
-        robot.ballLower.setPosition(0.1);
+        robot.ballLower.setPosition(0.0);
         sleep(250);
         robot.ballSwivel.setPosition(0);
         sleep(250);

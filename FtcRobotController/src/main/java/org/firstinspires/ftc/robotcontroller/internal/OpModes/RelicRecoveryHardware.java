@@ -91,7 +91,7 @@ public class RelicRecoveryHardware
         //gyroSensor = hwMap.gyroSensor.get("gyroSensor");
 
         //Sets spin directions to make writing power easier
-        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set all motors to zero power to prevent it from accidentally turning on
@@ -106,7 +106,7 @@ public class RelicRecoveryHardware
         rightClaw.setPosition(0.9);
         leftClaw.setPosition(0);
         ballSwivel.setPosition(1);
-        ballLower.setPosition(0.1);
+        ballLower.setPosition(0.0);
 
         // Set all motors' run modes.
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
