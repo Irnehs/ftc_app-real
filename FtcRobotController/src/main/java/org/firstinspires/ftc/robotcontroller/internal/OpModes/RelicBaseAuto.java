@@ -120,7 +120,6 @@ abstract class RelicBaseAuto extends BaseOpMode {
     }
 
     public void blueBallKnock(RelicRecoveryHardware robot) {
-        sayAndPause("Ball Knock Starting", "", 250);
         robot.ballSwivel.setPosition(1);
         robot.ballLower.setPosition(0.1);
         robot.ballSwivel.setPosition(0.5);
@@ -145,27 +144,32 @@ abstract class RelicBaseAuto extends BaseOpMode {
         sleep(250);
     }
 
+    // Same code as blueBallKnock, except knocking ball position reversed.
    public void redBallKnock(RelicRecoveryHardware robot) {
-        /*sayAndPause("Ball Knock Starting", "", 250);
-        robot.ballLower.setPosition(0);
-        robot.colorSensor.enableLed(true);
-        if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
-            sayAndPause("Ball Color: ", "Red", 250);
-            robot.ballSwivel.setPosition(0.2);
-        } else
-        if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
-            sayAndPause("Ball Color: ", "Blue", 250);
-            robot.ballSwivel.setPosition(0.8);
-        } else {
-            sayAndPause("Red: " + robot.colorSensor.red() + "   ", "Blue: " + robot.colorSensor.blue(), 2000);
-
-        }
-        sleep(250);
-        robot.ballSwivel.setPosition(0.5);
-        sleep(250);
-        robot.ballLower.setPosition(0.5);
-        robot.colorSensor.enableLed(false);*/
-    }
+       sayAndPause("Red Ball Knock Starting", "", 250);
+       robot.ballSwivel.setPosition(1);
+       robot.ballLower.setPosition(0.1);
+       robot.ballSwivel.setPosition(0.5);
+       sleep(250);
+       robot.ballLower.setPosition(0.5);
+       sleep(750);
+       if (robot.colorSensor.getNormalizedColors().blue < robot.colorSensor.getNormalizedColors().red) {
+           sayAndPause("Ball Color: ", "Red", 250);
+           robot.ballSwivel.setPosition(0.2);
+       }
+       else if(robot.colorSensor.getNormalizedColors().red<robot.colorSensor.getNormalizedColors().blue) {
+           sayAndPause("Ball Color: ", "Blue", 250);
+           robot.ballSwivel.setPosition(0.8);
+       }
+       else {
+           //Do nothing
+       }
+       sleep(250);
+       robot.ballLower.setPosition(0.0);
+       sleep(250);
+       robot.ballSwivel.setPosition(0);
+       sleep(250);
+   }
 
     public void lowerArm(RelicRecoveryHardware robot, int height) {
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
