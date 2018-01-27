@@ -3,6 +3,7 @@ package org.firstinspires.ftc.robotcontroller.internal.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -33,7 +34,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
     }
 
     public void driveForward(double power, int inches) {
-        double _ticks = inches * (1120 / 4 * Math.PI);
+        double _ticks = inches * (1120 / (4 * Math.PI));
         int ticks = (int)_ticks;
         telemetry.addData("Inches: ", inches);
         telemetry.addData("Ticks: ", ticks);
@@ -118,28 +119,34 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.arm.setPower(1);
     }
 
-    public void blueBallKnock() {
+    public void blueBallKnock(RelicRecoveryHardware robot) {
         sayAndPause("Ball Knock Starting", "", 250);
-        robot.ballLower.setPosition(0.4);
-        robot.colorSensor.enableLed(true);
+        robot.ballSwivel.setPosition(1);
+        robot.ballLower.setPosition(0.1);
+        robot.ballSwivel.setPosition(0.5);
         sleep(250);
-        if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
+        robot.ballLower.setPosition(0.5);
+        sleep(750);
+        if (robot.colorSensor.getNormalizedColors().blue < robot.colorSensor.getNormalizedColors().red) {
             sayAndPause("Ball Color: ", "Red", 250);
             robot.ballSwivel.setPosition(0.8);
         }
-        else if(robot.colorSensor.red()+50<robot.colorSensor.blue()) {
+        else if(robot.colorSensor.getNormalizedColors().red<robot.colorSensor.getNormalizedColors().blue) {
             sayAndPause("Ball Color: ", "Blue", 250);
             robot.ballSwivel.setPosition(0.2);
         }
+        else {
+            //Do nothing
+        }
         sleep(250);
-        robot.ballSwivel.setPosition(0.3);
+        robot.ballLower.setPosition(0.1);
         sleep(250);
-        robot.ballLower.setPosition(0.5);
-        robot.colorSensor.enableLed(false);
+        robot.ballSwivel.setPosition(0);
+        sleep(250);
     }
 
-    public void redBallKnock() {
-        sayAndPause("Ball Knock Starting", "", 250);
+   public void redBallKnock(RelicRecoveryHardware robot) {
+        /*sayAndPause("Ball Knock Starting", "", 250);
         robot.ballLower.setPosition(0);
         robot.colorSensor.enableLed(true);
         if(robot.colorSensor.blue()+50<robot.colorSensor.red()) {
@@ -157,7 +164,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.ballSwivel.setPosition(0.5);
         sleep(250);
         robot.ballLower.setPosition(0.5);
-        robot.colorSensor.enableLed(false);
+        robot.colorSensor.enableLed(false);*/
     }
 
     public void lowerArm(RelicRecoveryHardware robot, int height) {
@@ -167,9 +174,4 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.arm.setPower(1);
 
     }
-
-    public void jewelStart(RelicRecoveryHardware robot) {
-        robot.ballLower.setPosition(0.8);
-    }
-
 }

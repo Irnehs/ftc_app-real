@@ -86,8 +86,6 @@ public class TopBlueAuto extends RelicBaseAuto {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        //jewelStart(robot);
-
         //Ready to start
         sayAndPause("Ready to start", "", 0);
         waitForStart();
@@ -104,7 +102,7 @@ public class TopBlueAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
-        blueBallKnock();
+        blueBallKnock(robot);
 
         //Start of vuforia
         relicTrackables.activate();
@@ -153,7 +151,7 @@ public class TopBlueAuto extends RelicBaseAuto {
         driveForward(0.2, 200);
 
         sayAndPause("Arm: ", "Lowering", breakTime);
-        //lowerArm(robot, 3360);
+        lowerArm(robot, 3360);
 
         sayAndPause("Claw: ", "Opening", 3 * breakTime);
         openingClaw(robot);

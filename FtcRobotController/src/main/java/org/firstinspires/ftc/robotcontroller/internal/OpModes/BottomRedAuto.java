@@ -51,8 +51,6 @@ public class BottomRedAuto extends RelicBaseAuto {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        jewelStart(robot);
-
         //Ready to start
         sayAndPause("Ready to start", "", 0);
         waitForStart();
@@ -69,7 +67,7 @@ public class BottomRedAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
-        redBallKnock();
+        redBallKnock(robot);
 
         //Start of vuforia
         relicTrackables.activate();
