@@ -102,6 +102,9 @@ public class RelicRecoveryHardware
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
 
+        rightClaw.setPosition(0.9);
+        leftClaw.setPosition(0);
+
         // Set all motors' run modes.
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leadScrew.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

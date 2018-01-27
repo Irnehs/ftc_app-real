@@ -104,7 +104,7 @@ public class TopBlueAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
-        blueBallKnock();
+        blueBallKnock(robot);
 
         //Start of vuforia
         relicTrackables.activate();

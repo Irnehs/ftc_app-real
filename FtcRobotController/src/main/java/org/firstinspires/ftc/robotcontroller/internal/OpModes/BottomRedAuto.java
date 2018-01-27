@@ -69,7 +69,7 @@ public class BottomRedAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
-        redBallKnock();
+        redBallKnock(robot);
 
         //Start of vuforia
         relicTrackables.activate();
