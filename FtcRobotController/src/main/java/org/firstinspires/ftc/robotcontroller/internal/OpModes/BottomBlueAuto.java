@@ -123,7 +123,8 @@ public class BottomBlueAuto extends RelicBaseAuto {
         sleep(250);
 
         driveForward(0.5, 42, robot);
-        turnCounterClockwise();
+        //TODO: Turn, add vuforia logic for drive time ^^, forward, place block, TEST!!!
+        //turnCounterClockwise();
 
 
         /* CODE FOR THE END OF THE PROGRAM*/
