@@ -58,7 +58,7 @@ public class BottomRedAuto extends RelicBaseAuto {
         //Game starts
         sayAndPause("Game starting", "", 250);
 
-        //Starts at 1300(start + 1000) needed - 2240 +120 = 2360
+        //Starts at 1300 (start + 1000) needed - 2240 +120 = 2360
         sayAndPause("Claw: ", "Closing", 500);
         closingClaw(robot);
 
@@ -67,7 +67,7 @@ public class BottomRedAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
-        redBallKnock(robot);
+        blueBallKnock(robot);
 
         //Start of vuforia
         relicTrackables.activate();
@@ -83,7 +83,7 @@ public class BottomRedAuto extends RelicBaseAuto {
                 vuMark = RelicRecoveryVuMark.CENTER;
             }
         }
-
+        /*
         if(vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
@@ -126,11 +126,11 @@ public class BottomRedAuto extends RelicBaseAuto {
 
         sayAndPause("Driving: ", "Forward", breakTime);
         driveForward(0.2, 1000);
-
+*/
         /* CODE FOR THE END OF THE PROGRAM*/
 
         /*Turns all motors off*/
-        noDrive();
+        noDrive(robot);
         robot.arm.setPower(0);
         robot.leadScrew.setPower(0);
 

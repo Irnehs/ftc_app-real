@@ -112,7 +112,10 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
         // Ball arm
         robot.ballLower.setPosition(0.0);
-        robot.ballSwivel.setPosition(0.0);
+
+        if (gamepad1.a) {
+            robot.ballSwivel.setPosition(1);
+        }
 
 
         /*END OF SETUP*/
@@ -363,6 +366,7 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             wheelPower(0, 0, 0, 0);
             robot.arm.setPower(0);
             robot.leadScrew.setPower(0);
+            robot.ballSwivel.setPosition(0);
 
         /*Declares end of program in telemetry*/
             telemetry.addData("Status: ", "Stopped");

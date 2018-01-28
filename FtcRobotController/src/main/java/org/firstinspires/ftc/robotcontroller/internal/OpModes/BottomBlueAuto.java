@@ -101,7 +101,7 @@ public class BottomBlueAuto extends RelicBaseAuto {
 
         extendLeadScrew(robot);
 
-        blueBallKnock(robot);
+        redBallKnock(robot);
 
         //Start of vuforia
         relicTrackables.activate();
@@ -117,7 +117,7 @@ public class BottomBlueAuto extends RelicBaseAuto {
                 vuMark = RelicRecoveryVuMark.CENTER;
             }
         }
-
+        /*
         if(vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("Driving to: ", vuMark + " column");
             telemetry.update();
@@ -160,11 +160,11 @@ public class BottomBlueAuto extends RelicBaseAuto {
 
         sayAndPause("Driving: ", "Forward", breakTime);
         driveForward(0.2, 1000);
-
+*/
         /* CODE FOR THE END OF THE PROGRAM*/
 
         /*Turns all motors off*/
-            noDrive();
+            noDrive(robot);
             robot.arm.setPower(0);
             robot.leadScrew.setPower(0);
 

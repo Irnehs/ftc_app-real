@@ -26,25 +26,29 @@ abstract class RelicBaseAuto extends BaseOpMode {
     /*Driving*/
 
     //Turning drive train off with time input
-    public void noDrive() {
+    public void noDrive(RelicRecoveryHardware robot) {
         robot.rightFrontMotor.setPower(0);
         robot.rightBackMotor.setPower(0);
         robot.leftFrontMotor.setPower(0);
         robot.leftBackMotor.setPower(0);
     }
 
-    public void driveForward(double power, int inches) {
+    public void driveForward(double power, int inches, RelicRecoveryHardware robot) {
         double _ticks = inches * (1120 / (4 * Math.PI));
         int ticks = (int)_ticks;
         telemetry.addData("Inches: ", inches);
         telemetry.addData("Ticks: ", ticks);
         telemetry.update();
+
         robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.rightFrontMotor.setTargetPosition(ticks);
-        robot.rightBackMotor.setTargetPosition(ticks);
+        robot.rightBackMotor.setTargetPosition(-ticks);
         robot.leftFrontMotor.setTargetPosition(ticks);
-        robot.leftBackMotor.setTargetPosition(ticks);
+        robot.leftBackMotor.setTargetPosition(-ticks);
 
         robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -56,14 +60,20 @@ abstract class RelicBaseAuto extends BaseOpMode {
         telemetry.update();
 
         robot.rightFrontMotor.setPower(power);
-        robot.rightBackMotor.setPower(power);
+        robot.rightBackMotor.setPower(-power);
         robot.leftFrontMotor.setPower(power);
-        robot.leftBackMotor.setPower(power);
+        robot.leftBackMotor.setPower(-power);
 
-        while(robot.leftFrontMotor.isBusy()) {/*Do nothing*/}
+        while(robot.leftFrontMotor.isBusy()) {
+            telemetry.addData("rightFront position: ", robot.rightFrontMotor.getCurrentPosition());
+            telemetry.addData("leftFront position: ", robot.leftFrontMotor.getCurrentPosition());
+            telemetry.addData("rightBack position: ", robot.rightBackMotor.getCurrentPosition());
+            telemetry.addData("leftBack position: ", robot.leftBackMotor.getCurrentPosition());
+            telemetry.update();
+        }
         telemetry.addData("Drivetrain: ", "Done");
         telemetry.update();
-        noDrive();
+        noDrive(robot);
     }
 
     /*Driving forward with power and time inputs
@@ -77,23 +87,23 @@ abstract class RelicBaseAuto extends BaseOpMode {
     */
 
     //Driving backward with power and time inputs
-    public void driveBackward(double power, int inches) {
-        driveForward(power, -inches);
+    public void driveBackward(double power, int inches, RelicRecoveryHardware robot) {
+        driveForward(power, -inches, robot);
     }
 
-    public void turnCounterClockwise(double power, long time, long pause) {
+    public void turnCounterClockwise(double power, long time, long pause, RelicRecoveryHardware robot) {
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
         robot.leftFrontMotor.setPower(-power);
         robot.leftBackMotor.setPower(-power);
         sleep(time);
-        noDrive();
+        noDrive(robot);
         sleep(pause);
     }
 
     //Turning counter clockwise with power and time inputs
-    public void turnClockwise(double power, long time, long pause) {
-        turnCounterClockwise(-power, time, pause);
+    public void turnClockwise(double power, long time, long pause, RelicRecoveryHardware robot) {
+        turnCounterClockwise(-power, time, pause, robot);
     }
 
     public void sayAndPause(String title, String caption, long pause) {
@@ -124,7 +134,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.ballLower.setPosition(0.1);
         robot.ballSwivel.setPosition(0.5);
         sleep(250);
-        robot.ballLower.setPosition(0.5);
+        robot.ballLower.setPosition(0.6);
         sleep(750);
         if (robot.colorSensor.getNormalizedColors().blue < robot.colorSensor.getNormalizedColors().red) {
             sayAndPause("Ball Color: ", "Red", 250);
@@ -151,7 +161,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
        robot.ballLower.setPosition(0.1);
        robot.ballSwivel.setPosition(0.5);
        sleep(250);
-       robot.ballLower.setPosition(0.5);
+       robot.ballLower.setPosition(0.6);
        sleep(750);
        if (robot.colorSensor.getNormalizedColors().blue < robot.colorSensor.getNormalizedColors().red) {
            sayAndPause("Ball Color: ", "Red", 250);

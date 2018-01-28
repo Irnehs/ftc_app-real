@@ -85,7 +85,7 @@ public class TopRedAuto extends RelicBaseAuto {
                 vuMark = RelicRecoveryVuMark.CENTER;
             }
         }
-
+        /*
         sayAndPause("Driving: ", "Backward", breakTime);
         driveBackward(straightSpeed, distanceToTurn);
 
@@ -133,11 +133,11 @@ public class TopRedAuto extends RelicBaseAuto {
 
         sayAndPause("Driving: ", "Forward", breakTime);
         driveForward(0.5, 1000);
-
+*/
         /* CODE FOR THE END OF THE PROGRAM*/
 
         /*Turns all motors off*/
-        noDrive();
+        noDrive(robot);
         robot.arm.setPower(0);
         robot.leadScrew.setPower(0);
 
