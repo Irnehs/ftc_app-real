@@ -119,55 +119,7 @@ public class TopBlueAuto extends RelicBaseAuto {
             }
         }
 /*
-        sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(straightSpeed, distanceToTurn);
 
-        sayAndPause("Turning: ", "Clockwise", breakTime);
-        turnClockwise(turnSpeed, turnTime,500 );
-
-        if(vuMark == RelicRecoveryVuMark.LEFT) {
-            telemetry.addData("Driving to: ", vuMark + " column");
-            telemetry.update();
-            driveForward(straightSpeed, leftColumn);
-            noDrive();
-        }
-        if(vuMark == RelicRecoveryVuMark.CENTER) {
-            telemetry.addData("Driving to: ", vuMark + " column");
-            telemetry.update();
-            driveForward(straightSpeed, middleColumn);
-            noDrive();
-        }
-        if(vuMark == RelicRecoveryVuMark.RIGHT) {
-            telemetry.addData("Driving to: ", vuMark + " column");
-            telemetry.update();
-            driveForward(straightSpeed, rightColumn);
-            noDrive();
-        }
-
-        sayAndPause("Turning: ", "Counter Clockwise", 500);
-        turnCounterClockwise(turnSpeed, turnTime, 250);
-
-        sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(0.2, 200);
-
-        sayAndPause("Arm: ", "Lowering", breakTime);
-        lowerArm(robot, 3360);
-
-        sayAndPause("Claw: ", "Opening", 3 * breakTime);
-        openingClaw(robot);
-
-        sayAndPause("Arm: ", "Raising", breakTime);
-        raiseArm(robot, 3360);
-
-        sayAndPause("Claw ", "Closing", breakTime);
-        driveForward(straightSpeed, 500);
-
-        sayAndPause("Driving", "Back", breakTime);
-        driveBackward(.2, 700);
-
-        sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(0.2, 1000);
-*/
         /* CODE FOR THE END OF THE PROGRAM*/
 
         /*Turns all motors off*/
