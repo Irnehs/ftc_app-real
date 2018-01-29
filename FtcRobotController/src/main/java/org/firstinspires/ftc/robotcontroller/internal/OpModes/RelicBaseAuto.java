@@ -23,7 +23,9 @@ abstract class RelicBaseAuto extends BaseOpMode {
     String Version = "0.0.3";
     VuforiaLocalizer vuforia;
 
-    /*Driving*/
+    //Driving
+
+    int centerDistance = 42;
 
     //Turning drive train off with time input
     public void noDrive(RelicRecoveryHardware robot) {
@@ -104,6 +106,15 @@ abstract class RelicBaseAuto extends BaseOpMode {
     //Turning counter clockwise with power and time inputs
     public void turnClockwise(double power, long time, long pause, RelicRecoveryHardware robot) {
         turnCounterClockwise(-power, time, pause, robot);
+    }
+
+    //place block (for vuforia)
+    public void placeBlock(RelicRecoveryHardware robot, long breakTime) {
+        sayAndPause("Arm: ", "Lowering", breakTime);
+        lowerArm(robot, 3360);
+        openingClaw(robot);
+        sayAndPause("Arm: ", "Raising", breakTime);
+        raiseArm(robot, 3360);
     }
 
     public void sayAndPause(String title, String caption, long pause) {

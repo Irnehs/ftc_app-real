@@ -97,7 +97,7 @@ public class BottomBlueAuto extends RelicBaseAuto {
         closingClaw(robot);
 
         sayAndPause("Arm: ", "Raising", 500);
-        //raiseArm(robot, 2360);
+        //raiseArm(robot, 2110);
 
         //extendLeadScrew(robot);
 
@@ -122,9 +122,9 @@ public class BottomBlueAuto extends RelicBaseAuto {
         telemetry.update();
         sleep(250);
 
-        driveForward(0.5, 42, robot);
+        driveForward(0.5, centerDistance, robot);
         //TODO: Turn, add vuforia logic for drive time ^^, forward, place block, TEST!!!
-        //turnCounterClockwise();
+        turnCounterClockwise(turnSpeed, turnTime, breakTime, robot);
 
 
         /* CODE FOR THE END OF THE PROGRAM*/
