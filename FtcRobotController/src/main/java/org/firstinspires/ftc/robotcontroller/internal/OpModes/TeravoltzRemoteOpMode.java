@@ -199,8 +199,8 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
             telemetry.addData("left_stick_y: ", gamepad1.left_stick_y);
             telemetry.addData("right_stick_x: ", gamepad1.right_stick_x);
 
-            robot.leftBackMotor.setPower(-left);
-            robot.rightBackMotor.setPower(-right);
+            robot.leftBackMotor.setPower(left);
+            robot.rightBackMotor.setPower(right);
             robot.leftFrontMotor.setPower(left);
             robot.rightFrontMotor.setPower(right);
             // End code for straight wheels

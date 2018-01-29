@@ -48,9 +48,9 @@ abstract class RelicBaseAuto extends BaseOpMode {
         robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.rightFrontMotor.setTargetPosition(ticks);
-        robot.rightBackMotor.setTargetPosition(-ticks);
+        robot.rightBackMotor.setTargetPosition(ticks);
         robot.leftFrontMotor.setTargetPosition(ticks);
-        robot.leftBackMotor.setTargetPosition(-ticks);
+        robot.leftBackMotor.setTargetPosition(ticks);
 
         robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -62,9 +62,9 @@ abstract class RelicBaseAuto extends BaseOpMode {
         telemetry.update();
 
         robot.rightFrontMotor.setPower(power);
-        robot.rightBackMotor.setPower(-power);
+        robot.rightBackMotor.setPower(power);
         robot.leftFrontMotor.setPower(power);
-        robot.leftBackMotor.setPower(-power);
+        robot.leftBackMotor.setPower(power);
 
         while(robot.leftFrontMotor.isBusy()) {
             telemetry.addData("rightFront position: ", robot.rightFrontMotor.getCurrentPosition());
@@ -93,19 +93,62 @@ abstract class RelicBaseAuto extends BaseOpMode {
         driveForward(power, -inches, robot);
     }
 
-    public void turnCounterClockwise(double power, long time, long pause, RelicRecoveryHardware robot) {
-        robot.rightFrontMotor.setPower(power);
+
+    //Distance between wheels is  = 14.525
+    public void turnCounterClockwise(double power, int degrees, RelicRecoveryHardware robot) {
+        /*robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
         robot.leftFrontMotor.setPower(-power);
         robot.leftBackMotor.setPower(-power);
         sleep(time);
         noDrive(robot);
-        sleep(pause);
+        sleep(pause); */
+
+        double _ticks = degrees * ((14.525 * Math.PI)/360);
+        int ticks = (int)_ticks;
+        telemetry.addData("Degrees: ", degrees);
+        telemetry.addData("Ticks: ", ticks);
+        telemetry.update();
+
+        robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.rightFrontMotor.setTargetPosition(ticks);
+        robot.rightBackMotor.setTargetPosition(ticks);
+        robot.leftFrontMotor.setTargetPosition(ticks);
+        robot.leftBackMotor.setTargetPosition(ticks);
+
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        telemetry.addData("Drivetrain: ", "Activating");
+        telemetry.addData("Power: ", power);
+        telemetry.update();
+
+        robot.rightFrontMotor.setPower(power);
+        robot.rightBackMotor.setPower(power);
+        robot.leftFrontMotor.setPower(power);
+        robot.leftBackMotor.setPower(power);
+
+        while(robot.leftFrontMotor.isBusy()) {
+            telemetry.addData("rightFront position: ", robot.rightFrontMotor.getCurrentPosition());
+            telemetry.addData("leftFront position: ", robot.leftFrontMotor.getCurrentPosition());
+            telemetry.addData("rightBack position: ", robot.rightBackMotor.getCurrentPosition());
+            telemetry.addData("leftBack position: ", robot.leftBackMotor.getCurrentPosition());
+            telemetry.update();
+        }
+        telemetry.addData("Drivetrain: ", "Done");
+        telemetry.update();
+        noDrive(robot);
     }
 
     //Turning counter clockwise with power and time inputs
-    public void turnClockwise(double power, long time, long pause, RelicRecoveryHardware robot) {
-        turnCounterClockwise(-power, time, pause, robot);
+    public void turnClockwise(double power, int degrees, long pause, RelicRecoveryHardware robot) {
+        turnCounterClockwise(-power, degrees, robot);
     }
 
     //place block (for vuforia)
