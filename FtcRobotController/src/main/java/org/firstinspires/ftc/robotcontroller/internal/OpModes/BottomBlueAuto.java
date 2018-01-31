@@ -66,7 +66,7 @@ public class BottomBlueAuto extends RelicBaseAuto {
         int leftColumn = 44;
         int middleColumn = 36;
         int rightColumn = 28;
-        long turnTime = 800;
+        int turnTicks = 800;
         double turnSpeed = 0.5;
         double straightSpeed = 0.2;
 
@@ -124,9 +124,11 @@ public class BottomBlueAuto extends RelicBaseAuto {
 
         driveForward(0.5, centerDistance, robot);
         //TODO: Turn, add vuforia logic for drive time ^^, forward, place block, TEST!!!
-        turnCounterClockwise(turnSpeed, turnTime, breakTime, robot);
+        blueVuforia(vuMark, robot);
 
+        turnCounterClockwise(turnSpeed, 90, robot);
 
+        placeBlock(robot, breakTime);
         /* CODE FOR THE END OF THE PROGRAM*/
 
         /*Turns all motors off*/

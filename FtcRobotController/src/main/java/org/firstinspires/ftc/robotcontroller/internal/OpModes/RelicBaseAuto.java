@@ -96,29 +96,28 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
     //Distance between wheels is  = 14.525
     public void turnCounterClockwise(double power, int degrees, RelicRecoveryHardware robot) {
-        /*robot.rightFrontMotor.setPower(power);
-        robot.rightBackMotor.setPower(power);
-        robot.leftFrontMotor.setPower(-power);
-        robot.leftBackMotor.setPower(-power);
-        sleep(time);
-        noDrive(robot);
-        sleep(pause); */
-
-        double _ticks = degrees * ((14.525 * Math.PI)/360);
+        //Setup. Declare ticks & ticks to degrees
+        /* ticksPerDegree is circumference of the circle determined by the distances between the
+           adjacent wheels on the robot, turned to motor ticks, then divided by 60 */
+        double ticksPerDegree = 21.444444444444445;
+        double _ticks = degrees * ticksPerDegree; //precision
         int ticks = (int)_ticks;
+
         telemetry.addData("Degrees: ", degrees);
         telemetry.addData("Ticks: ", ticks);
         telemetry.update();
 
+        //reset motor encoders to be safe
         robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        //set motor ticks and run to target
         robot.rightFrontMotor.setTargetPosition(ticks);
         robot.rightBackMotor.setTargetPosition(ticks);
-        robot.leftFrontMotor.setTargetPosition(ticks);
-        robot.leftBackMotor.setTargetPosition(ticks);
+        robot.leftFrontMotor.setTargetPosition(-ticks);
+        robot.leftBackMotor.setTargetPosition(-ticks);
 
         robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -131,9 +130,10 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
         robot.rightFrontMotor.setPower(power);
         robot.rightBackMotor.setPower(power);
-        robot.leftFrontMotor.setPower(power);
-        robot.leftBackMotor.setPower(power);
+        robot.leftFrontMotor.setPower(-power);
+        robot.leftBackMotor.setPower(-power);
 
+        //stop at end of turn
         while(robot.leftFrontMotor.isBusy()) {
             telemetry.addData("rightFront position: ", robot.rightFrontMotor.getCurrentPosition());
             telemetry.addData("leftFront position: ", robot.leftFrontMotor.getCurrentPosition());
@@ -148,16 +148,101 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
     //Turning counter clockwise with power and time inputs
     public void turnClockwise(double power, int degrees, long pause, RelicRecoveryHardware robot) {
-        turnCounterClockwise(-power, degrees, robot);
+        //Setup. Declare ticks & ticks to degrees
+        /* ticksPerDegree is circumference of the circle determined by the distances between the
+           adjacent wheels on the robot, turned to motor ticks, then divided by 60 */
+        double ticksPerDegree = 21.444444444444445;
+        double _ticks = degrees * ticksPerDegree; //precision
+        int ticks = (int)_ticks;
+
+        telemetry.addData("Degrees: ", degrees);
+        telemetry.addData("Ticks: ", ticks);
+        telemetry.update();
+
+        //reset motor encoders to be safe
+        robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //set motor ticks and run to target
+        robot.rightFrontMotor.setTargetPosition(-ticks);
+        robot.rightBackMotor.setTargetPosition(-ticks);
+        robot.leftFrontMotor.setTargetPosition(ticks);
+        robot.leftBackMotor.setTargetPosition(ticks);
+
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        telemetry.addData("Drivetrain: ", "Activating");
+        telemetry.addData("Power: ", power);
+        telemetry.update();
+
+        robot.rightFrontMotor.setPower(-power);
+        robot.rightBackMotor.setPower(-power);
+        robot.leftFrontMotor.setPower(power);
+        robot.leftBackMotor.setPower(power);
+
+        //stop at end of turn
+        while(robot.leftFrontMotor.isBusy()) {
+            telemetry.addData("rightFront position: ", robot.rightFrontMotor.getCurrentPosition());
+            telemetry.addData("leftFront position: ", robot.leftFrontMotor.getCurrentPosition());
+            telemetry.addData("rightBack position: ", robot.rightBackMotor.getCurrentPosition());
+            telemetry.addData("leftBack position: ", robot.leftBackMotor.getCurrentPosition());
+            telemetry.update();
+        }
+        telemetry.addData("Drivetrain: ", "Done");
+        telemetry.update();
+        noDrive(robot);
     }
 
     //place block (for vuforia)
     public void placeBlock(RelicRecoveryHardware robot, long breakTime) {
         sayAndPause("Arm: ", "Lowering", breakTime);
         lowerArm(robot, 3360);
+        sleep(1250);
         openingClaw(robot);
         sayAndPause("Arm: ", "Raising", breakTime);
         raiseArm(robot, 3360);
+        driveForward(.5, 10, robot);
+        while(robot.rightFrontMotor.isBusy()){
+            sleep(1);
+        }
+        driveBackward(0.5, 10, robot);
+        while(robot.rightFrontMotor.isBusy()){
+            sleep(1);
+        }
+        driveForward(.5, 10, robot);
+        while(robot.rightFrontMotor.isBusy()){
+            sleep(1);
+        }
+    }
+    public void redVuforia(RelicRecoveryVuMark vuMark, RelicRecoveryHardware robot) {
+        if(vuMark.equals(RelicRecoveryVuMark.LEFT)) {
+            driveForward(0.5, 4, robot);
+        }
+        else if(vuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+            driveBackward(-0.5, 4, robot);
+        }
+        else {
+            //Do nothing
+        }
+
+    }
+
+    public void blueVuforia(RelicRecoveryVuMark vuMark, RelicRecoveryHardware robot) {
+        if(vuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+            driveForward(0.5, 4, robot);
+        }
+        else if(vuMark.equals(RelicRecoveryVuMark.LEFT)) {
+            driveBackward(-0.5, 4, robot);
+        }
+        else {
+            //Do nothing
+        }
+
     }
 
     public void sayAndPause(String title, String caption, long pause) {
