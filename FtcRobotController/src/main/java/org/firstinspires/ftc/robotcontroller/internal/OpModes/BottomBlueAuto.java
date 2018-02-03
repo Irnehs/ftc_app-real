@@ -71,7 +71,7 @@ public class BottomBlueAuto extends RelicBaseAuto {
         double straightSpeed = 0.2;
 
         long breakTime = 250;
-
+        centerDistance = 41;
         /*Initialize the hardware variables with init button*/
         robot.init(hardwareMap);
 

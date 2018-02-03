@@ -209,13 +209,20 @@ abstract class RelicBaseAuto extends BaseOpMode {
         driveForward(.5, 10, robot);
         driveBackward(0.5, 10, robot);
         driveForward(.5, 10, robot);
+        driveBackward(.5, 2, robot);
     }
     public void redVuforia(RelicRecoveryVuMark vuMark, RelicRecoveryHardware robot) {
         if(vuMark.equals(RelicRecoveryVuMark.LEFT)) {
             driveForward(0.5, 4, robot);
+            while(robot.rightFrontMotor.isBusy()) {
+                sleep(1);
+            }
         }
         else if(vuMark.equals(RelicRecoveryVuMark.RIGHT)) {
             driveBackward(-0.5, 4, robot);
+            while(robot.rightFrontMotor.isBusy()) {
+                sleep(1);
+            }
         }
         else {
             //Do nothing
@@ -226,9 +233,15 @@ abstract class RelicBaseAuto extends BaseOpMode {
     public void blueVuforia(RelicRecoveryVuMark vuMark, RelicRecoveryHardware robot) {
         if(vuMark.equals(RelicRecoveryVuMark.RIGHT)) {
             driveForward(0.5, 4, robot);
+            while(robot.rightFrontMotor.isBusy()) {
+                sleep(1);
+            }
         }
         else if(vuMark.equals(RelicRecoveryVuMark.LEFT)) {
             driveBackward(-0.5, 4, robot);
+            while(robot.rightFrontMotor.isBusy()) {
+                sleep(1);
+            }
         }
         else {
             //Do nothing

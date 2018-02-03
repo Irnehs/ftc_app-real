@@ -25,19 +25,19 @@ public class BottomRedAuto extends RelicBaseAuto {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        /*Shows that opMode loaded correctly*/
+               /*Shows that opMode loaded correctly*/
         sayAndPause("RelicAuto: ", "Connected", 0);
 
         /*Drive variables*/
-        int leftColumn = 28;
+        int leftColumn = 44;
         int middleColumn = 36;
-        int rightColumn = 44;
-        long turnTime = 800;
+        int rightColumn = 28;
+        int turnTicks = 800;
         double turnSpeed = 0.5;
         double straightSpeed = 0.2;
 
         long breakTime = 250;
-
+        centerDistance = 41;
         /*Initialize the hardware variables with init button*/
         robot.init(hardwareMap);
 
@@ -58,12 +58,12 @@ public class BottomRedAuto extends RelicBaseAuto {
         //Game starts
         sayAndPause("Game starting", "", 250);
 
-        //Starts at 1300 (start + 1000) needed - 2240 +120 = 2360
+        //Starts at 1300(start + 1000) needed - 2240 +120 = 2360
         sayAndPause("Claw: ", "Closing", 500);
         closingClaw(robot);
 
         sayAndPause("Arm: ", "Raising", 500);
-        raiseArm(robot, 2360);
+        raiseArm(robot, 2110);
 
         extendLeadScrew(robot);
 
@@ -76,57 +76,25 @@ public class BottomRedAuto extends RelicBaseAuto {
         double vuforiaStart = getRuntime();
 
         while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Time elapsed: ", getRuntime() - (vuforiaStart));
             telemetry.update();
-            if(getRuntime() - vuforiaStart >= 2000) {
+            if((getRuntime() - (vuforiaStart)) > 2) {
                 vuMark = RelicRecoveryVuMark.CENTER;
             }
         }
-        /*
-        if(vuMark == RelicRecoveryVuMark.LEFT) {
-            telemetry.addData("Driving to: ", vuMark + " column");
-            telemetry.update();
-            driveBackward(straightSpeed, leftColumn);
-            noDrive();
-        }
-        if(vuMark == RelicRecoveryVuMark.CENTER) {
-            telemetry.addData("Driving to: ", vuMark + " column");
-            telemetry.update();
-            driveBackward(straightSpeed, middleColumn);
-            noDrive();
-        }
-        if(vuMark == RelicRecoveryVuMark.RIGHT) {
-            telemetry.addData("Driving to: ", vuMark + " column");
-            telemetry.update();
-            driveBackward(straightSpeed, rightColumn);
-            noDrive();
-        }
+        telemetry.addData("VuMark:", vuMark);
+        telemetry.update();
+        sleep(250);
 
-        sayAndPause("Turning: ", "Counter Clockwise", 500);
-        turnClockwise(turnSpeed, turnTime, 250);
+        driveBackward(0.5, centerDistance, robot);
+        //TODO: Turn, add vuforia logic for drive time ^^, forward, place block, TEST!!!
+        redVuforia(vuMark, robot);
 
-        sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(0.2, 200);
+        turnClockwise(turnSpeed, 90,0, robot);
 
-        sayAndPause("Arm: ", "Lowering", breakTime);
-        lowerArm(robot, 3360);
-
-        sayAndPause("Claw: ", "Opening", 3 * breakTime);
-        openingClaw(robot);
-
-        sayAndPause("Arm: ", "Raising", breakTime);
-        raiseArm(robot, 3360);
-
-        sayAndPause("Claw ", "Closing", breakTime);
-        driveForward(straightSpeed, 500);
-
-        sayAndPause("Driving", "Back", breakTime);
-        driveBackward(.2, 700);
-
-        sayAndPause("Driving: ", "Forward", breakTime);
-        driveForward(0.2, 1000);
-*/
+        placeBlock(robot, breakTime);
         /* CODE FOR THE END OF THE PROGRAM*/
 
         /*Turns all motors off*/
@@ -137,7 +105,6 @@ public class BottomRedAuto extends RelicBaseAuto {
         /*Declares end of program in telemetry*/
         telemetry.addData("Status: ", "Stopped");
         telemetry.update();
-
 
     }
 }

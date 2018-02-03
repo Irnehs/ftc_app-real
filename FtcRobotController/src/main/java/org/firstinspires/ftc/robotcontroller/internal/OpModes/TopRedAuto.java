@@ -147,6 +147,8 @@ public class TopRedAuto extends RelicBaseAuto {
         /*Shows that opMode loaded correctly*/
         sayAndPause("RelicAuto: ", "Connected", 0);
 
+        sayAndPause("RelicAuto: ", "Connected", 0);
+
         /*Drive variables*/
         int leftColumn = 44;
         int middleColumn = 36;
@@ -218,7 +220,7 @@ public class TopRedAuto extends RelicBaseAuto {
 
         redVuforia(vuMark, robot);
 
-        turnClockwise(turnSpeed, 93, 0, robot);
+        turnClockwise(turnSpeed, 93,0, robot);
 
         placeBlock(robot, breakTime);
         /* CODE FOR THE END OF THE PROGRAM*/
@@ -231,7 +233,6 @@ public class TopRedAuto extends RelicBaseAuto {
         /*Declares end of program in telemetry*/
         telemetry.addData("Status: ", "Stopped");
         telemetry.update();
-
 
     }
 }

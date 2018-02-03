@@ -59,15 +59,13 @@ public class TopBlueAuto extends RelicBaseAuto {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        /*Shows that opMode loaded correctly*/
         sayAndPause("RelicAuto: ", "Connected", 0);
 
         /*Drive variables*/
-        int leftColumn = 20;
-        int middleColumn = 12;
-        int rightColumn = 4;
-        int distanceToTurn = 24;
-        long turnTime = 800;
+        int leftColumn = 44;
+        int middleColumn = 36;
+        int rightColumn = 28;
+        int turnTicks = 800;
         double turnSpeed = 0.5;
         double straightSpeed = 0.2;
 
@@ -91,14 +89,14 @@ public class TopBlueAuto extends RelicBaseAuto {
         waitForStart();
 
         //Game starts
-        sayAndPause("Game starting", "", 250);
+        sayAndPause("Game starting", "", 100);
 
         //Starts at 1300(start + 1000) needed - 2240 +120 = 2360
-        sayAndPause("Claw: ", "Closing", 500);
+        sayAndPause("Claw: ", "Closing", 100);
         closingClaw(robot);
 
         sayAndPause("Arm: ", "Raising", 500);
-        raiseArm(robot, 2360);
+        raiseArm(robot, 2110);
 
         extendLeadScrew(robot);
 
@@ -111,15 +109,32 @@ public class TopBlueAuto extends RelicBaseAuto {
         double vuforiaStart = getRuntime();
 
         while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Time elapsed: ", getRuntime() - (vuforiaStart));
             telemetry.update();
-            if(getRuntime() - vuforiaStart >= 2000) {
+            if((getRuntime() - (vuforiaStart)) > 1) {
                 vuMark = RelicRecoveryVuMark.CENTER;
             }
         }
-/*
+        telemetry.addData("VuMark:", vuMark);
+        telemetry.update();
+        sleep(100);
 
+        driveForward(0.5, (centerDistance*2 + 3)/3, robot);
+        //TODO: Turn, add vuforia logic for drive time ^^, forward, place block, TEST!!!
+
+        turnClockwise(turnSpeed, 90,0, robot);
+        sleep(250);
+
+        driveForward(0.5, (centerDistance*1)/2, robot);
+        sleep(250);
+
+        blueVuforia(vuMark, robot);
+
+        turnCounterClockwise(turnSpeed, 93, robot);
+
+        placeBlock(robot, breakTime);
         /* CODE FOR THE END OF THE PROGRAM*/
 
         /*Turns all motors off*/
