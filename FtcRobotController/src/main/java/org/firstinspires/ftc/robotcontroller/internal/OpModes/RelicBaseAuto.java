@@ -25,7 +25,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
 
     //Driving
 
-    int centerDistance = 42;
+    int centerDistance = 39;
 
     //Turning drive train off with time input
     public void noDrive(RelicRecoveryHardware robot) {
@@ -99,7 +99,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
         //Setup. Declare ticks & ticks to degrees
         /* ticksPerDegree is circumference of the circle determined by the distances between the
            adjacent wheels on the robot, turned to motor ticks, then divided by 60 */
-        double ticksPerDegree = 21.444444444444445;
+        double ticksPerDegree = 20.5;
         double _ticks = degrees * ticksPerDegree; //precision
         int ticks = (int)_ticks;
 
@@ -151,7 +151,7 @@ abstract class RelicBaseAuto extends BaseOpMode {
         //Setup. Declare ticks & ticks to degrees
         /* ticksPerDegree is circumference of the circle determined by the distances between the
            adjacent wheels on the robot, turned to motor ticks, then divided by 60 */
-        double ticksPerDegree = 21.444444444444445;
+        double ticksPerDegree = 20.5;
         double _ticks = degrees * ticksPerDegree; //precision
         int ticks = (int)_ticks;
 
@@ -201,23 +201,14 @@ abstract class RelicBaseAuto extends BaseOpMode {
     //place block (for vuforia)
     public void placeBlock(RelicRecoveryHardware robot, long breakTime) {
         sayAndPause("Arm: ", "Lowering", breakTime);
-        lowerArm(robot, 3360);
+        lowerArm(robot, 3150);
         sleep(1250);
         openingClaw(robot);
         sayAndPause("Arm: ", "Raising", breakTime);
-        raiseArm(robot, 3360);
+        raiseArm(robot, 3150);
         driveForward(.5, 10, robot);
-        while(robot.rightFrontMotor.isBusy()){
-            sleep(1);
-        }
         driveBackward(0.5, 10, robot);
-        while(robot.rightFrontMotor.isBusy()){
-            sleep(1);
-        }
         driveForward(.5, 10, robot);
-        while(robot.rightFrontMotor.isBusy()){
-            sleep(1);
-        }
     }
     public void redVuforia(RelicRecoveryVuMark vuMark, RelicRecoveryHardware robot) {
         if(vuMark.equals(RelicRecoveryVuMark.LEFT)) {

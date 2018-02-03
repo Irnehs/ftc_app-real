@@ -97,9 +97,9 @@ public class BottomBlueAuto extends RelicBaseAuto {
         closingClaw(robot);
 
         sayAndPause("Arm: ", "Raising", 500);
-        //raiseArm(robot, 2110);
+        raiseArm(robot, 2110);
 
-        //extendLeadScrew(robot);
+        extendLeadScrew(robot);
 
         redBallKnock(robot);
 
