@@ -212,41 +212,18 @@ abstract class RelicBaseAuto extends BaseOpMode {
         driveBackward(.5, 2, robot);
     }
     public void redVuforia(RelicRecoveryVuMark vuMark, RelicRecoveryHardware robot) {
-        if(vuMark.equals(RelicRecoveryVuMark.LEFT)) {
+        if (vuMark.equals(RelicRecoveryVuMark.LEFT))
             driveForward(0.5, 4, robot);
-            while(robot.rightFrontMotor.isBusy()) {
-                sleep(1);
-            }
-        }
-        else if(vuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+        else if (vuMark.equals(RelicRecoveryVuMark.RIGHT))
             driveBackward(-0.5, 4, robot);
-            while(robot.rightFrontMotor.isBusy()) {
-                sleep(1);
-            }
-        }
-        else {
-            //Do nothing
-        }
 
     }
 
     public void blueVuforia(RelicRecoveryVuMark vuMark, RelicRecoveryHardware robot) {
-        if(vuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+        if(vuMark.equals(RelicRecoveryVuMark.RIGHT))
             driveForward(0.5, 4, robot);
-            while(robot.rightFrontMotor.isBusy()) {
-                sleep(1);
-            }
-        }
-        else if(vuMark.equals(RelicRecoveryVuMark.LEFT)) {
+        else if(vuMark.equals(RelicRecoveryVuMark.LEFT))
             driveBackward(-0.5, 4, robot);
-            while(robot.rightFrontMotor.isBusy()) {
-                sleep(1);
-            }
-        }
-        else {
-            //Do nothing
-        }
-
     }
 
     public void sayAndPause(String title, String caption, long pause) {

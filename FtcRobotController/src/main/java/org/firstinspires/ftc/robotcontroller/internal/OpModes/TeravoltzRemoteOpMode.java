@@ -94,8 +94,8 @@ public class TeravoltzRemoteOpMode extends BaseOpMode {
 
         //For stepless arm usage
 
-        final int armMaxPosition = robot.arm.getCurrentPosition();
-        final int armMinPosition = armMaxPosition - (6*halfRotation);
+        final int armMaxPosition = robot.arm.getCurrentPosition() + 100000;
+        final int armMinPosition = armMaxPosition - (6*halfRotation) - 100000;
 
         telemetry.addData("Arm current position: ", armMaxPosition);
         telemetry.update();

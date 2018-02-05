@@ -71,7 +71,7 @@ public class BottomBlueAuto extends RelicBaseAuto {
         double straightSpeed = 0.2;
 
         long breakTime = 250;
-        centerDistance = 41;
+        centerDistance = 44;
         /*Initialize the hardware variables with init button*/
         robot.init(hardwareMap);
 
@@ -124,8 +124,10 @@ public class BottomBlueAuto extends RelicBaseAuto {
 
         driveForward(0.5, centerDistance, robot);
         //TODO: Turn, add vuforia logic for drive time ^^, forward, place block, TEST!!!
-        blueVuforia(vuMark, robot);
-
+        if (vuMark.equals(RelicRecoveryVuMark.LEFT))
+            driveBackward(.5, 6, robot);
+        else if (vuMark.equals(RelicRecoveryVuMark.RIGHT))
+            driveForward(.5, 6, robot);
         turnCounterClockwise(turnSpeed, 90, robot);
 
         placeBlock(robot, breakTime);

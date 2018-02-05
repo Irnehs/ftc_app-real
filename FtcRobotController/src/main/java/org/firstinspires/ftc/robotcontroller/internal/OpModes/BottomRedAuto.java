@@ -92,7 +92,7 @@ public class BottomRedAuto extends RelicBaseAuto {
         //TODO: Turn, add vuforia logic for drive time ^^, forward, place block, TEST!!!
         redVuforia(vuMark, robot);
 
-        turnClockwise(turnSpeed, 90,0, robot);
+        turnClockwise(turnSpeed, 90, 0, robot);
 
         placeBlock(robot, breakTime);
         /* CODE FOR THE END OF THE PROGRAM*/
